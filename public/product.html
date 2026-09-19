@@ -73,70 +73,22 @@
           <button type="button" class="sava-carousel-arrow prev" onclick="slideGallery(-1)" aria-label="Previous Slide">‹</button>
           <button type="button" class="sava-carousel-arrow next" onclick="slideGallery(1)" aria-label="Next Slide">›</button>
 
-          <!-- Sliding Track containing all 8 Photos -->
+          <!-- START_GALLERY_TRACK -->
           <div class="sava-carousel-track" id="galleryTrack">
-            <!-- Slide 1: Studio White Background -->
             <div class="sava-carousel-slide">
-              <img src="/images/jewelry/cross_chain_main.jpg" alt="CROSS CHAIN | SILVER Studio View" />
-            </div>
-            <!-- Slide 2: Model Neck Back Under Sky -->
-            <div class="sava-carousel-slide">
-              <img src="/images/jewelry/cross_chain_neck_back.jpg" alt="CROSS CHAIN | SILVER Neck Back View" />
-            </div>
-            <!-- Slide 3: Chain Flatlay Detail -->
-            <div class="sava-carousel-slide">
-              <img src="/images/jewelry/cross_chain_flatlay.jpg" alt="CROSS CHAIN | SILVER Flatlay" />
-            </div>
-            <!-- Slide 4: Model In Blue Shirt -->
-            <div class="sava-carousel-slide">
-              <img src="/images/jewelry/cross_chain_blue_shirt.jpg" alt="CROSS CHAIN | SILVER Blue Shirt" />
-            </div>
-            <!-- Slide 5: Close-up Pendant On White Collar -->
-            <div class="sava-carousel-slide">
-              <img src="/images/jewelry/cross_chain_white_collar.jpg" alt="CROSS CHAIN | SILVER White Collar" />
-            </div>
-            <!-- Slide 6: Model In Plaid Grey Shirt -->
-            <div class="sava-carousel-slide">
-              <img src="/images/jewelry/cross_chain_plaid_shirt.jpg" alt="CROSS CHAIN | SILVER Plaid Shirt" />
-            </div>
-            <!-- Slide 7: Model In Sunset Lighting -->
-            <div class="sava-carousel-slide">
-              <img src="/images/jewelry/cross_chain_sunset.jpg" alt="CROSS CHAIN | SILVER Sunset" />
-            </div>
-            <!-- Slide 8: Model Back Double Layer -->
-            <div class="sava-carousel-slide">
-              <img src="/images/jewelry/cross_chain_double_layer.jpg" alt="CROSS CHAIN | SILVER Double Layer" />
+              <img src="/images/jewelry/cross_chain_main.jpg" alt="Product Image" />
             </div>
           </div>
+          <!-- END_GALLERY_TRACK -->
         </div>
 
-        <!-- 8-Thumbnail Interactive Strip Below -->
+        <!-- START_THUMB_STRIP -->
         <div class="sava-thumbs-strip" id="galleryThumbStrip">
           <button type="button" class="sava-thumb-btn active" onclick="goToSlide(0)">
             <img src="/images/jewelry/cross_chain_main.jpg" alt="Thumb 1" />
           </button>
-          <button type="button" class="sava-thumb-btn" onclick="goToSlide(1)">
-            <img src="/images/jewelry/cross_chain_neck_back.jpg" alt="Thumb 2" />
-          </button>
-          <button type="button" class="sava-thumb-btn" onclick="goToSlide(2)">
-            <img src="/images/jewelry/cross_chain_flatlay.jpg" alt="Thumb 3" />
-          </button>
-          <button type="button" class="sava-thumb-btn" onclick="goToSlide(3)">
-            <img src="/images/jewelry/cross_chain_blue_shirt.jpg" alt="Thumb 4" />
-          </button>
-          <button type="button" class="sava-thumb-btn" onclick="goToSlide(4)">
-            <img src="/images/jewelry/cross_chain_white_collar.jpg" alt="Thumb 5" />
-          </button>
-          <button type="button" class="sava-thumb-btn" onclick="goToSlide(5)">
-            <img src="/images/jewelry/cross_chain_plaid_shirt.jpg" alt="Thumb 6" />
-          </button>
-          <button type="button" class="sava-thumb-btn" onclick="goToSlide(6)">
-            <img src="/images/jewelry/cross_chain_sunset.jpg" alt="Thumb 7" />
-          </button>
-          <button type="button" class="sava-thumb-btn" onclick="goToSlide(7)">
-            <img src="/images/jewelry/cross_chain_double_layer.jpg" alt="Thumb 8" />
-          </button>
         </div>
+        <!-- END_THUMB_STRIP -->
       </div>
 
       <!-- Right Column: Cohesive Luxury Buy Box (Unified SAVA CI) -->
@@ -641,7 +593,9 @@
     // 1. True 2-Slide Interactive Gallery Slider
     // ==========================================
     let currentSlideIndex = 0;
-    let totalSlides = 8;
+    let totalSlides = (window.__INITIAL_PRODUCT__ && Array.isArray(window.__INITIAL_PRODUCT__.gallery) && window.__INITIAL_PRODUCT__.gallery.length > 0)
+      ? window.__INITIAL_PRODUCT__.gallery.length
+      : (document.querySelectorAll('#galleryTrack .sava-carousel-slide').length || 1);
     const track = document.getElementById('galleryTrack');
 
     function updateSliderPosition() {
@@ -684,8 +638,8 @@
     // ==========================================
     let selectedPackageId = 2; // Default to Package 2 (890 B, Bestseller)
     let selectedPackageIdx = 1;
-    let currentLoadedProduct = null;
-    let currentProductPackages = [];
+    let currentLoadedProduct = window.__INITIAL_PRODUCT__ || null;
+    let currentProductPackages = (window.__INITIAL_PRODUCT__ && window.__INITIAL_PRODUCT__.packages) || [];
     let currentPaymentType = 'cod';
 
     async function syncProductFromApi() {
@@ -704,9 +658,15 @@
         }
         if (!productSlug) productSlug = 'cross-chain';
 
-        const res = await fetch(`/api/products/${productSlug}`);
-        if (!res.ok) return;
-        const prod = await res.json();
+        let prod = null;
+        if (window.__INITIAL_PRODUCT__ && (window.__INITIAL_PRODUCT__.slug === productSlug || window.__INITIAL_PRODUCT__.id === productSlug)) {
+          prod = window.__INITIAL_PRODUCT__;
+        } else {
+          const res = await fetch(`/api/products/${productSlug}`);
+          if (res.ok) {
+            prod = await res.json();
+          }
+        }
         if (!prod) return;
 
         currentLoadedProduct = prod;
@@ -715,24 +675,27 @@
         const titleEl = document.querySelector('.sava-pdp-title');
         if (titleEl && prod.name) titleEl.textContent = prod.name;
 
-        // 2. Sync Gallery (Live Sync from Admin)
+        // 2. Sync Gallery (Only touch DOM if current DOM slide count doesn't match data)
         if (Array.isArray(prod.gallery) && prod.gallery.length > 0) {
           totalSlides = prod.gallery.length;
-          if (track) {
-            track.innerHTML = prod.gallery.map((img, i) => `
-              <div class="sava-carousel-slide" style="${totalSlides === 1 ? 'flex: 0 0 100%; max-width: 100%;' : ''}">
-                <img src="${img}" alt="${prod.name} View ${i + 1}" onerror="this.src='/images/jewelry/cross_chain_main.jpg'" />
-              </div>
-            `).join('');
-          }
+          const currentTrackSlides = track ? track.querySelectorAll('.sava-carousel-slide') : [];
+          if (currentTrackSlides.length !== totalSlides) {
+            if (track) {
+              track.innerHTML = prod.gallery.map((img, i) => `
+                <div class="sava-carousel-slide" style="${totalSlides === 1 ? 'flex: 0 0 100%; max-width: 100%;' : ''}">
+                  <img src="${img}" alt="${prod.name} View ${i + 1}" onerror="this.src='/images/jewelry/cross_chain_main.jpg'" />
+                </div>
+              `).join('');
+            }
 
-          const thumbStrip = document.getElementById('galleryThumbStrip');
-          if (thumbStrip) {
-            thumbStrip.innerHTML = prod.gallery.map((img, i) => `
-              <button type="button" class="sava-thumb-btn ${i === 0 ? 'active' : ''}" onclick="goToSlide(${i})">
-                <img src="${img}" alt="Thumb ${i + 1}" onerror="this.src='/images/jewelry/cross_chain_main.jpg'" />
-              </button>
-            `).join('');
+            const thumbStrip = document.getElementById('galleryThumbStrip');
+            if (thumbStrip) {
+              thumbStrip.innerHTML = prod.gallery.map((img, i) => `
+                <button type="button" class="sava-thumb-btn ${i === 0 ? 'active' : ''}" onclick="goToSlide(${i})">
+                  <img src="${img}" alt="Thumb ${i + 1}" onerror="this.src='/images/jewelry/cross_chain_main.jpg'" />
+                </button>
+              `).join('');
+            }
           }
 
           currentSlideIndex = 0;
@@ -935,46 +898,55 @@
       el.classList.add('active');
     }
 
+    function getPdpActiveItem() {
+      const prod = currentLoadedProduct || {
+        id: 'cross-chain',
+        name: 'CROSS CHAIN | SILVER',
+        price: 590,
+        originalPrice: 790,
+        image: '/images/jewelry/cross_chain_main.jpg'
+      };
+
+      const hasDynamicPkgs = Array.isArray(currentProductPackages) && currentProductPackages.length > 0;
+      let activePkg = hasDynamicPkgs ? currentProductPackages[selectedPackageIdx] : null;
+
+      const isPkg2 = (selectedPackageId === 2);
+      const pkgTitle = activePkg ? activePkg.title : (isPkg2 ? 'เซ็ตคู่ 2 ชิ้น (ซื้อ 1 แถม 1 ฟรี)' : 'ซื้อ 1 ชิ้น');
+      const pkgPrice = activePkg ? Number(activePkg.price) : (isPkg2 ? (Number(prod.bundle2Price) || 890) : Number(prod.price || 590));
+      const pkgOrig = activePkg ? Number(activePkg.originalPrice) : (isPkg2 ? (Number(prod.bundle2OriginalPrice) || 1180) : Number(prod.originalPrice || 790));
+      const isFreeShip = activePkg ? Boolean(activePkg.freeShipping) : isPkg2;
+      const img = (Array.isArray(prod.gallery) && prod.gallery[0]) || prod.image || '/images/jewelry/cross_chain_main.jpg';
+
+      return {
+        id: `${prod.id}-pkg-${selectedPackageIdx || (isPkg2 ? 2 : 1)}`,
+        productId: prod.id,
+        name: `${prod.name} (${pkgTitle})`,
+        price: pkgPrice,
+        originalPrice: pkgOrig,
+        image: img,
+        quantity: 1,
+        isBundle: isPkg2,
+        freeShipping: isFreeShip
+      };
+    }
+
     // Add To Bag / Cart logic that opens slide-out drawer
     function addToBagFromPdp() {
-      const isPkg2 = (selectedPackageId === 2);
+      const item = getPdpActiveItem();
       
-      // Clear previous cross-chain entry so package choice is updated cleanly
-      window.MinozaStore.cart = window.MinozaStore.cart.filter(item => !item.id.includes('cross-chain'));
-
-      if (isPkg2) {
-        window.MinozaStore.cart.unshift({
-          id: 'cross-chain-bundle-2',
-          name: 'CROSS CHAIN | SILVER (เซ็ตคู่ 2 เส้น ซื้อ 1 แถม 1 ฟรี)',
-          price: 890,
-          originalPrice: 1180,
-          image: '/images/jewelry/cross_chain_main.jpg',
-          quantity: 1,
-          isBundle: true,
-          freeShipping: true
-        });
-      } else {
-        window.MinozaStore.cart.unshift({
-          id: 'cross-chain-single',
-          name: 'CROSS CHAIN | SILVER (ซื้อ 1 เส้น)',
-          price: 590,
-          originalPrice: 790,
-          image: '/images/jewelry/cross_chain_main.jpg',
-          quantity: 1,
-          isBundle: false,
-          shipping: 50
-        });
-      }
+      // Clear previous entry for this product so package choice is updated cleanly
+      window.MinozaStore.cart = window.MinozaStore.cart.filter(cartItem => !cartItem.id.includes(item.productId));
+      window.MinozaStore.cart.unshift(item);
 
       window.MinozaStore.updateCartUI();
       window.MinozaStore.openCartDrawer();
       updateCheckoutSummary();
 
       window.MinozaTracking.track('AddToCart', {
-        content_name: isPkg2 ? 'CROSS CHAIN | SILVER (เซ็ตคู่ 2 เส้น ซื้อ 1 แถม 1 ฟรี)' : 'CROSS CHAIN | SILVER (ซื้อ 1 เส้น)',
-        content_ids: ['cross-chain'],
+        content_name: item.name,
+        content_ids: [item.productId],
         content_type: 'product',
-        value: isPkg2 ? 890 : 590,
+        value: item.price,
         currency: 'THB'
       });
     }
@@ -992,7 +964,6 @@
 
     // Dynamic Separation of Order Summary & PromptPay 50 THB Discount
     function updateCheckoutSummary() {
-      const isPkg2 = (selectedPackageId === 2);
       const itemsList = document.getElementById('checkoutItemsList');
       const itemCountBadge = document.getElementById('summaryItemCountBadge');
       const subtotalEl = document.getElementById('summarySubtotalText');
@@ -1006,16 +977,7 @@
       if (window.MinozaStore && window.MinozaStore.cart && window.MinozaStore.cart.length > 0) {
         items = window.MinozaStore.cart;
       } else {
-        items = [{
-          id: isPkg2 ? 'cross-chain-bundle-2' : 'cross-chain-single',
-          name: isPkg2 ? 'CROSS CHAIN | SILVER (เซ็ตคู่ 2 เส้น ซื้อ 1 แถม 1 ฟรี)' : 'CROSS CHAIN | SILVER (ซื้อ 1 เส้น)',
-          price: isPkg2 ? 890 : 590,
-          originalPrice: isPkg2 ? 1180 : 790,
-          image: '/images/jewelry/cross_chain_main.jpg',
-          quantity: 1,
-          isBundle: isPkg2,
-          freeShipping: isPkg2
-        }];
+        items = [getPdpActiveItem()];
       }
 
       // Render Itemized Rows with Thumbnails & Quantity Pills (Separated out of form as sketched)
@@ -1029,7 +991,7 @@
               </div>
               <div class="sava-order-item-info">
                 <span class="sava-order-item-name">${item.name}</span>
-                <span class="sava-order-item-sub">Stainless Steel 316L / Silver</span>
+                <span class="sava-order-item-sub">Stainless Steel 316L / Waterproof</span>
               </div>
             </div>
             <div class="sava-order-item-price">${(item.price * item.quantity).toLocaleString()} ฿</div>
@@ -1124,17 +1086,17 @@
       btn.disabled = true;
       btnConfirmText.textContent = 'กำลังบันทึกคำสั่งซื้อ...';
 
-      const isPkg2 = (selectedPackageId === 2);
       let items = [];
       if (window.MinozaStore && window.MinozaStore.cart && window.MinozaStore.cart.length > 0) {
         items = window.MinozaStore.cart.map(i => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity, freeShipping: i.freeShipping }));
       } else {
+        const activeItem = getPdpActiveItem();
         items = [{
-          id: isPkg2 ? 'cross-chain-bundle-2' : 'cross-chain-single',
-          name: isPkg2 ? 'CROSS CHAIN | SILVER (เซ็ตคู่ 2 เส้น ซื้อ 1 แถม 1 ฟรี)' : 'CROSS CHAIN | SILVER (ซื้อ 1 เส้น)',
-          price: isPkg2 ? 890 : 590,
-          quantity: 1,
-          freeShipping: isPkg2
+          id: activeItem.id,
+          name: activeItem.name,
+          price: activeItem.price,
+          quantity: activeItem.quantity,
+          freeShipping: activeItem.freeShipping
         }];
       }
 
@@ -1276,8 +1238,8 @@
       updateCheckoutSummary();
       startAuthenticCutoffTimer();
       window.MinozaTracking.track('ViewContent', {
-        content_name: 'CROSS CHAIN | SILVER',
-        value: 890,
+        content_name: currentLoadedProduct ? currentLoadedProduct.name : 'CROSS CHAIN | SILVER',
+        value: currentLoadedProduct ? (currentLoadedProduct.price || 890) : 890,
         currency: 'THB'
       });
     });

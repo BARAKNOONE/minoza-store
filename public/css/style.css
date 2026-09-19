@@ -1870,15 +1870,18 @@ button {
   right: 12px;
 }
 
-/* 8-Item Thumbnail Strip */
+/* Dynamic Thumbnail Strip */
 .sava-thumbs-strip {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   padding: 4px 0;
 }
 
 .sava-thumb-btn {
+  width: 54px;
+  height: 54px;
+  flex: 0 0 54px;
   aspect-ratio: 1 / 1;
   border: 1.5px solid transparent;
   border-radius: 3px;
@@ -1887,6 +1890,14 @@ button {
   cursor: pointer;
   padding: 0;
   transition: all 0.2s;
+}
+
+@media (max-width: 960px) {
+  .sava-thumb-btn {
+    width: 46px;
+    height: 46px;
+    flex: 0 0 46px;
+  }
 }
 
 .sava-thumb-btn.active {
