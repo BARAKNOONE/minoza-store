@@ -432,15 +432,13 @@
             <span class="badge-pill ${badgeClass}">${p.badge || 'STANDARD'}</span>
           </td>
           <td>
-            <div style="display: flex; flex-direction: column; gap: 4px; align-items: flex-start;">
-              ${p.isSoldOut 
-                ? '<span style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 2px 7px; border-radius: 4px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;">🔴 ของหมด</span>'
-                : '<span style="background: #dcfce7; color: #15803d; border: 1px solid #86efac; padding: 2px 7px; border-radius: 4px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;">🟢 พร้อมส่ง</span>'
-              }
-              <button type="button" class="btn-action-stock ${p.isSoldOut ? 'btn-stock-sold' : 'btn-stock-live'}" onclick="window.MinozaAdmin.toggleStockStatus('${p.id}')" title="คลิกเพื่อสลับสถานะ">
-                ${p.isSoldOut ? '🟢 เปิดขาย' : '🔴 ปิดของหมด'}
-              </button>
-            </div>
+            <button type="button" 
+                    class="stock-toggle-pill ${p.isSoldOut ? 'is-sold-out' : 'is-in-stock'}" 
+                    onclick="window.MinozaAdmin.toggleStockStatus('${p.id}')" 
+                    title="${p.isSoldOut ? 'สถานะ: ของหมด (คลิกเพื่อเปิดขาย)' : 'สถานะ: พร้อมส่ง (คลิกเพื่อปิดของหมด)'}">
+              <span class="stock-pill-indicator"></span>
+              <span class="stock-pill-text">${p.isSoldOut ? 'ของหมด' : 'พร้อมส่ง'}</span>
+            </button>
           </td>
           <td>
             <span style="font-size: 13px; color: #15803d; font-weight: 700;">
