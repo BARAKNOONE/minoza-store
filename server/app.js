@@ -71,10 +71,12 @@ function getIndexHtmlTemplate() {
     return cachedIndexHtml;
   }
   const possiblePaths = [
+    path.join(__dirname, 'views/index.html'),
+    path.join(process.cwd(), 'server/views/index.html'),
+    path.join(__dirname, '../server/views/index.html'),
+    path.join(__dirname, '../views/index.html'),
     path.join(__dirname, '../public/index.html'),
-    path.join(process.cwd(), 'public/index.html'),
-    path.join(__dirname, 'public/index.html'),
-    path.join(__dirname, '../../public/index.html')
+    path.join(process.cwd(), 'public/index.html')
   ];
   for (const p of possiblePaths) {
     if (fs.existsSync(p)) {
