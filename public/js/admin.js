@@ -797,6 +797,14 @@
   async function saveHomepageSettings(e) {
     if (e) e.preventDefault();
 
+    const saveBtn = document.getElementById('saveHomepageBtn');
+    let origHtml = '';
+    if (saveBtn) {
+      origHtml = saveBtn.innerHTML;
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = '<span>⏳ กำลังบันทึกการตั้งค่า...</span>';
+    }
+
     const payload = {
       hero: {
         rating: document.getElementById('settingHeroRating')?.value || '',
@@ -826,16 +834,28 @@
     try {
       const res = await fetch('/api/settings/homepage', {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeader()
+        },
         body: JSON.stringify(payload)
       });
       const json = await res.json();
       if (!res.ok || !json.success) throw new Error(json.error || 'Failed to save');
 
+      try {
+        localStorage.setItem('minoza_homepage_settings', JSON.stringify(payload));
+      } catch (e) {}
+
       showToast('บันทึกการตั้งค่าหน้าแรกสำเร็จ! หน้าเว็บอัปเดตเรียบร้อย');
     } catch (err) {
       console.error(err);
       showToast('บันทึกล้มเหลว: ' + err.message, true);
+    } finally {
+      if (saveBtn) {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = origHtml || '<span>💾 บันทึกการตั้งค่าหน้าแรก (Save Homepage Settings)</span>';
+      }
     }
   }
 
