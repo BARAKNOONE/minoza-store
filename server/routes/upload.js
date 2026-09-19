@@ -7,18 +7,19 @@ const { supabase, isEnabled } = require('../lib/supabase');
 const uploadDir = path.join(__dirname, '../../public/uploads');
 const BUCKET = 'uploads';
 
-// Local fallback dir only needed when Supabase Storage isn't configured
-// (e.g. local dev). On Vercel this directory is read-only at runtime, so
-// this branch is only ever hit when Supabase is not set up yet.
-if (!isEnabled() && !fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+// Safe directory initialization
+try {
+  if (!isEnabled() && !fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
+} catch (e) {
+  // Ignored if running on read-only serverless filesystem like Vercel
 }
 
 /**
  * POST /api/upload
  * Accepts { data: "data:image/png;base64,...", filename: "image.png" }
- * Saves file to Supabase Storage (or /public/uploads/ locally) and
- * returns { success: true, url: "..." }
+ * Saves file to Supabase Storage (or returns data URL / local file)
  */
 router.post('/', async (req, res) => {
   try {
@@ -47,31 +48,56 @@ router.post('/', async (req, res) => {
     const safeBase = (filename || 'upload').replace(/[^a-zA-Z0-9_-]/g, '_');
     const uniqueName = `${safeBase}-${Date.now()}${ext}`;
 
+    // 1. Try Supabase Storage if configured
     if (isEnabled()) {
-      const { error } = await supabase.storage
-        .from(BUCKET)
-        .upload(uniqueName, buffer, { contentType: mimeType, upsert: false });
-      if (error) throw error;
+      try {
+        const { error } = await supabase.storage
+          .from(BUCKET)
+          .upload(uniqueName, buffer, { contentType: mimeType, upsert: false });
+        if (!error) {
+          const { data: publicData } = supabase.storage.from(BUCKET).getPublicUrl(uniqueName);
+          return res.json({
+            success: true,
+            url: publicData.publicUrl,
+            filename: uniqueName,
+            sizeBytes: buffer.length
+          });
+        }
+      } catch (sbErr) {
+        console.warn('Supabase storage upload failed, falling back to data URL:', sbErr.message);
+      }
+    }
 
-      const { data: publicData } = supabase.storage.from(BUCKET).getPublicUrl(uniqueName);
+    // 2. On Vercel / serverless:
+    // Return the base64 data URL directly so image works immediately with zero disk write dependency
+    if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME) {
       return res.json({
         success: true,
-        url: publicData.publicUrl,
+        url: data,
         filename: uniqueName,
         sizeBytes: buffer.length
       });
     }
 
-    const filePath = path.join(uploadDir, uniqueName);
-    fs.writeFileSync(filePath, buffer);
-
-    const publicUrl = `/uploads/${uniqueName}`;
-    res.json({
-      success: true,
-      url: publicUrl,
-      filename: uniqueName,
-      sizeBytes: buffer.length
-    });
+    // 3. Local development fallback: write to public/uploads
+    try {
+      const filePath = path.join(uploadDir, uniqueName);
+      fs.writeFileSync(filePath, buffer);
+      return res.json({
+        success: true,
+        url: `/uploads/${uniqueName}`,
+        filename: uniqueName,
+        sizeBytes: buffer.length
+      });
+    } catch (fsErr) {
+      // If filesystem is read-only or write fails, return the data URL safely
+      return res.json({
+        success: true,
+        url: data,
+        filename: uniqueName,
+        sizeBytes: buffer.length
+      });
+    }
   } catch (err) {
     console.error('Upload error:', err);
     res.status(500).json({ error: err.message });

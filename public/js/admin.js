@@ -82,17 +82,31 @@
     }, 3500);
   }
 
-  // File Upload Helper
+  // File Upload Helper with Automatic Client-Side Compression for High-Res Photos
   async function uploadImageFile(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = async () => {
         try {
+          let payload = reader.result;
+
+          // If image is a large photo, resize to web resolution via canvas
+          if (file.type && file.type.startsWith('image/') && !file.type.includes('svg')) {
+            try {
+              payload = await compressImage(reader.result, 1920, 0.88);
+            } catch (e) {
+              payload = reader.result;
+            }
+          }
+
           const res = await fetch('/api/upload', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+              ...getAuthHeader()
+            },
             body: JSON.stringify({
-              data: reader.result,
+              data: payload,
               filename: file.name
             })
           });
@@ -105,6 +119,33 @@
       };
       reader.onerror = reject;
       reader.readAsDataURL(file);
+    });
+  }
+
+  function compressImage(dataUrl, maxDim = 1920, quality = 0.88) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = () => resolve(dataUrl);
+      img.src = dataUrl;
     });
   }
 
