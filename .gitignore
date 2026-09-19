@@ -5,3 +5,5 @@ node_modules/
 *.log
 public/uploads/*
 !public/uploads/.gitkeep
+
+.vercel
