@@ -551,24 +551,24 @@
       <form id="expressCheckoutForm" onsubmit="handleModalCheckoutSubmit(event)">
         <div style="display: flex; flex-direction: column; gap: 14px;">
           <div>
-            <label style="display: block; font-size: 12px; font-weight: 700; margin-bottom: 4px;">ชื่อ - นามสกุล (Customer Name) *</label>
-            <input type="text" id="mCustName" required placeholder="เช่น สมชาย ใจดี" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 14px;" />
+            <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 5px;">ชื่อ - นามสกุล (Customer Name) *</label>
+            <input type="text" id="mCustName" required placeholder="เช่น สมชาย ใจดี" autocomplete="name" style="width: 100%; padding: 12px 14px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 16px; min-height: 48px; box-sizing: border-box;" />
           </div>
 
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div style="display: flex; flex-direction: column; gap: 12px;">
             <div>
-              <label style="display: block; font-size: 12px; font-weight: 700; margin-bottom: 4px;">เบอร์โทรศัพท์ (Phone) *</label>
-              <input type="tel" id="mCustPhone" required placeholder="0812345678" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 14px;" />
+              <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 5px;">เบอร์โทรศัพท์ (Phone) *</label>
+              <input type="tel" id="mCustPhone" required placeholder="0812345678" inputmode="numeric" pattern="[0-9]*" autocomplete="tel" style="width: 100%; padding: 12px 14px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 16px; min-height: 48px; box-sizing: border-box;" />
             </div>
             <div>
-              <label style="display: block; font-size: 12px; font-weight: 700; margin-bottom: 4px;">อีเมล (Email) *</label>
-              <input type="email" id="mCustEmail" required placeholder="somchai@example.com" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 14px;" />
+              <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 5px;">อีเมล (Email) <span style="font-weight: 400; color: #64748b;">(ไม่บังคับ)</span></label>
+              <input type="email" id="mCustEmail" placeholder="somchai@example.com" inputmode="email" autocomplete="email" style="width: 100%; padding: 12px 14px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 16px; min-height: 48px; box-sizing: border-box;" />
             </div>
           </div>
 
           <div>
-            <label style="display: block; font-size: 12px; font-weight: 700; margin-bottom: 4px;">ที่อยู่จัดส่งสินค้า (Delivery Address) *</label>
-            <textarea id="mCustAddress" required rows="2" placeholder="บ้านเลขที่ ถนน แขวง/ตำบล เขต/อำเภอ จังหวัด รหัสไปรษณีย์" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 14px; resize: vertical;"></textarea>
+            <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 5px;">ที่อยู่จัดส่งสินค้า (Delivery Address) *</label>
+            <textarea id="mCustAddress" required rows="2" placeholder="บ้านเลขที่ ถนน แขวง/ตำบล เขต/อำเภอ จังหวัด รหัสไปรษณีย์" autocomplete="street-address" style="width: 100%; padding: 12px 14px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 16px; min-height: 70px; resize: vertical; box-sizing: border-box;"></textarea>
           </div>
 
           <div>

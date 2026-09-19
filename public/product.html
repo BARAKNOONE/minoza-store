@@ -319,54 +319,58 @@
         <!-- Left Column: Form & Payment -->
         <div class="sava-checkout-form-box">
           <form id="expressOrderForm" onsubmit="handleExpressFormSubmit(event)">
-            <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div class="sava-form-fields-stack">
+              <!-- 1. Customer Name -->
               <div class="sava-form-group">
-                <label data-i18n="formCustName">ชื่อ - นามสกุล ผู้รับสินค้า (Customer Name) *</label>
-                <input type="text" id="custName" required placeholder="เช่น ธนกร วัฒนศิลป์" />
+                <label for="custName" data-i18n="formCustName">ชื่อ - นามสกุล ผู้รับสินค้า (Customer Name) *</label>
+                <input type="text" id="custName" required placeholder="เช่น ธนกร วัฒนศิลป์" autocomplete="name" />
               </div>
 
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <!-- 2. Phone & Email (Stacked on mobile so phone is full-width & comfortable to type) -->
+              <div class="sava-form-row sava-phone-email-row">
                 <div class="sava-form-group">
-                  <label data-i18n="formCustPhone">เบอร์โทรศัพท์ติดต่อ (Phone Number) *</label>
-                  <input type="tel" id="custPhone" required placeholder="0812345678" />
+                  <label for="custPhone" data-i18n="formCustPhone">เบอร์โทรศัพท์ติดต่อ (Phone Number) *</label>
+                  <input type="tel" id="custPhone" required placeholder="0812345678" inputmode="numeric" pattern="[0-9]*" autocomplete="tel" />
                 </div>
                 <div class="sava-form-group">
-                  <label data-i18n="formCustEmail">อีเมล (Email สำหรับแจ้งสถานะพัสดุ)</label>
-                  <input type="email" id="custEmail" placeholder="yourname@gmail.com" />
+                  <label for="custEmail" data-i18n="formCustEmail">อีเมล (Email สำหรับแจ้งสถานะพัสดุ)</label>
+                  <input type="email" id="custEmail" placeholder="yourname@gmail.com" inputmode="email" autocomplete="email" />
                 </div>
               </div>
 
-              <!-- Easy Thai Address Section with Dropdowns -->
+              <!-- 3. Street Address -->
               <div class="sava-form-group">
-                <label data-i18n="formCustStreet">บ้านเลขที่ / หมู่บ้าน / อาคาร / ซอย / ถนน *</label>
-                <input type="text" id="custStreet" required placeholder="เช่น 128/9 หมู่บ้านพฤกษา ซอยสุขุมวิท 55 ถนนสุขุมวิท" />
+                <label for="custStreet" data-i18n="formCustStreet">บ้านเลขที่ / หมู่บ้าน / อาคาร / ซอย / ถนน *</label>
+                <input type="text" id="custStreet" required placeholder="เช่น 128/9 หมู่บ้านพฤกษา ซอยสุขุมวิท 55 ถนนสุขุมวิท" autocomplete="street-address" />
               </div>
 
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <!-- 4. Province & District (Stacked on mobile so province names don't get truncated) -->
+              <div class="sava-form-row sava-location-row">
                 <div class="sava-form-group">
-                  <label data-i18n="formCustProvince">จังหวัด (Province) *</label>
-                  <select id="custProvince" required style="width: 100%; padding: 13px 15px; border: 1.5px solid #d4d4d8; border-radius: 3px; font-size: 14.5px; font-family: inherit; color: #000000; background: #ffffff; line-height: 1.6;">
+                  <label for="custProvince" data-i18n="formCustProvince">จังหวัด (Province) *</label>
+                  <select id="custProvince" required class="sava-select-input" autocomplete="address-level1">
                     <option value="">โปรดระบุ</option>
                   </select>
                 </div>
                 <div class="sava-form-group">
-                  <label data-i18n="formCustDistrict">เขต / อำเภอ (District) *</label>
-                  <select id="custDistrict" required style="width: 100%; padding: 13px 15px; border: 1.5px solid #d4d4d8; border-radius: 3px; font-size: 14.5px; font-family: inherit; color: #000000; background: #ffffff; line-height: 1.6;">
+                  <label for="custDistrict" data-i18n="formCustDistrict">เขต / อำเภอ (District) *</label>
+                  <select id="custDistrict" required class="sava-select-input" autocomplete="address-level2">
                     <option value="">โปรดระบุ</option>
                   </select>
                 </div>
               </div>
 
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <!-- 5. Subdistrict & Postal Code (Responsive row) -->
+              <div class="sava-form-row sava-subdistrict-zip-row">
                 <div class="sava-form-group">
-                  <label data-i18n="formCustSubdistrict">แขวง / ตำบล (Subdistrict)</label>
-                  <select id="custSubdistrict" style="width: 100%; padding: 13px 15px; border: 1.5px solid #d4d4d8; border-radius: 3px; font-size: 14.5px; font-family: inherit; color: #000000; background: #ffffff; line-height: 1.6;">
+                  <label for="custSubdistrict" data-i18n="formCustSubdistrict">แขวง / ตำบล (Subdistrict)</label>
+                  <select id="custSubdistrict" class="sava-select-input" autocomplete="address-level3">
                     <option value="">โปรดระบุ</option>
                   </select>
                 </div>
                 <div class="sava-form-group">
-                  <label data-i18n="formCustZipcode">รหัสไปรษณีย์ (Postal Code) *</label>
-                  <input type="text" id="custZipcode" required placeholder="เช่น 10110" />
+                  <label for="custZipcode" data-i18n="formCustZipcode">รหัสไปรษณีย์ (Postal Code) *</label>
+                  <input type="text" id="custZipcode" required placeholder="เช่น 10110" inputmode="numeric" maxlength="5" autocomplete="postal-code" />
                 </div>
               </div>
 
@@ -375,24 +379,24 @@
 
               <!-- Payment Selector Cards -->
               <div>
-                <label data-i18n="formPaymentMethod" style="display: block; font-size: 11px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 8px;">เลือกช่องทางชำระเงิน (Payment Method) *</label>
+                <label data-i18n="formPaymentMethod" class="sava-payment-label">เลือกช่องทางชำระเงิน (Payment Method) *</label>
                 <div class="sava-payment-options">
                   <!-- COD Option -->
                   <div class="sava-pay-option-card selected" id="cardPayCod" onclick="selectPaymentType('cod')">
-                    <input type="radio" name="payType" id="radioCod" value="cod" checked style="margin-top: 2px;" />
+                    <input type="radio" name="payType" id="radioCod" value="cod" checked />
                     <div>
-                      <div style="font-size: 13px; font-weight: 800; color: #000;" data-i18n="formCodTitle">🚚 เก็บเงินปลายทาง (COD)</div>
-                      <div style="font-size: 11px; color: #71717a; margin-top: 2px;" data-i18n="formCodSub">ตรวจรับของก่อนจ่ายเงินสดหน้าบ้าน</div>
+                      <div class="pay-option-title" data-i18n="formCodTitle">🚚 เก็บเงินปลายทาง (COD)</div>
+                      <div class="pay-option-sub" data-i18n="formCodSub">ตรวจรับของก่อนจ่ายเงินสดหน้าบ้าน</div>
                     </div>
                   </div>
 
                   <!-- PromptPay QR Option -->
                   <div class="sava-pay-option-card" id="cardPayPromptPay" onclick="selectPaymentType('promptpay')">
                     <span class="discount-pill" data-i18n="formPromptPayPromo">⚡ ลดทันที 50 ฿</span>
-                    <input type="radio" name="payType" id="radioPromptPay" value="promptpay" style="margin-top: 2px;" />
+                    <input type="radio" name="payType" id="radioPromptPay" value="promptpay" />
                     <div>
-                      <div style="font-size: 13px; font-weight: 800; color: #000;" data-i18n="formPromptPayTitle">⚡ PromptPay QR Code</div>
-                      <div style="font-size: 11px; color: #71717a; margin-top: 2px;" data-i18n="formPromptPaySub">สแกนจ่ายผ่าน QR รับส่วนลดทันที 50 บาท</div>
+                      <div class="pay-option-title" data-i18n="formPromptPayTitle">⚡ PromptPay QR Code</div>
+                      <div class="pay-option-sub" data-i18n="formPromptPaySub">สแกนจ่ายผ่าน QR รับส่วนลดทันที 50 บาท</div>
                     </div>
                   </div>
                 </div>

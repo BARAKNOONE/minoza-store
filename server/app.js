@@ -43,6 +43,11 @@ app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/admin.html'));
 });
 
+// Orders PWA Dashboard routes
+app.get(['/orders', '/admin/orders'], (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/orders.html'));
+});
+
 let cachedProductHtml = null;
 function getProductHtmlTemplate() {
   if (cachedProductHtml && process.env.NODE_ENV === 'production') {

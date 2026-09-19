@@ -1,1 +1,31 @@
-[]
+[
+  {
+    "orderId": "MNZ87671125",
+    "trackingNumber": "TH405735114",
+    "createdAt": "2026-09-19T03:14:31.125Z",
+    "customer": {
+      "name": "Test User",
+      "phone": "0812345678",
+      "email": "test@test.com",
+      "address": "Bangkok"
+    },
+    "items": [
+      {
+        "id": "cross-chain",
+        "name": "CROSS CHAIN",
+        "price": 590,
+        "quantity": 1
+      }
+    ],
+    "amount": 590,
+    "currency": "THB",
+    "paymentMethod": "cod",
+    "paymentStatus": "PENDING_CASH_ON_DELIVERY",
+    "fulfillmentStatus": "DISPATCHED_TO_FLASH_EXPRESS",
+    "marketing": {
+      "utmSource": "meta_ads",
+      "utmCampaign": "direct_response_pdp",
+      "eventId": "evt_MNZ87671125"
+    }
+  }
+]

@@ -8,6 +8,8 @@
     { "source": "/api/(.*)", "destination": "/api" },
     { "source": "/product/(.*)", "destination": "/api" },
     { "source": "/admin", "destination": "/api" },
+    { "source": "/orders", "destination": "/api" },
+    { "source": "/admin/orders", "destination": "/api" },
     { "source": "/", "destination": "/api" },
     { "source": "/index.html", "destination": "/api" }
   ],

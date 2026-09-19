@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>MINOZA ORDERS — จัดการคำสั่งซื้อ (PWA)</title>
+  
+  <!-- SEO & PWA Meta Tags -->
+  <meta name="description" content="ระบบจัดการและตรวจสอบคำสั่งซื้อสำหรับร้าน MINOZA THAILAND" />
+  <meta name="theme-color" content="#090d16" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Minoza Orders" />
+  
+  <!-- App Icons -->
+  <link rel="icon" type="image/svg+xml" href="/images/logo.svg" />
+  <link rel="apple-touch-icon" href="/images/logo_square_avatar.png" />
+  <link rel="manifest" href="/manifest.json" />
+  
+  <!-- Web Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="/css/orders.css?v=2.0" />
+</head>
+<body>
+
+  <!-- In-App Notification Banner (Apple Dynamic Island Style) -->
+  <div class="ios-banner-container" id="iosNotificationBanner" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+    <div class="ios-banner-card">
+      <div class="ios-banner-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+      </div>
+      <div class="ios-banner-content">
+        <div class="ios-banner-header">
+          <span class="ios-banner-appname">MINOZA ORDERS</span>
+          <span class="ios-banner-time">เมื่อสักครู่</span>
+        </div>
+        <div class="ios-banner-title" id="iosBannerTitle">มีคำสั่งซื้อใหม่เข้ามา</div>
+        <div class="ios-banner-desc" id="iosBannerDesc">กำลังโหลดข้อมูล...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Application Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <a href="/orders" class="brand-section">
+        <div class="brand-logo">
+          <img src="/images/logo_square_avatar.png" alt="Minoza Logo" />
+        </div>
+        <div class="brand-title-group">
+          <h1>
+            <span>MINOZA ORDERS</span>
+            <span class="pwa-badge">PWA</span>
+          </h1>
+          <span class="brand-subtitle">ระบบจัดการคำสั่งซื้อร้านค้า</span>
+        </div>
+      </a>
+
+      <!-- Header Action Controls -->
+      <div class="header-actions">
+        <!-- Sound Toggle Button -->
+        <button type="button" class="btn-icon-pill" id="btnToggleSound" onclick="window.MinozaOrders.toggleSound()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+          <span id="soundBtnText">เสียงเตือน: เปิด</span>
+        </button>
+
+        <!-- Test Order Simulation Button -->
+        <button type="button" class="btn-icon-pill btn-test-order" onclick="window.MinozaOrders.simulateOrder()" title="จำลองคำสั่งซื้อใหม่เพื่อทดสอบการแจ้งเตือน">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+          <span>ทดสอบออเดอร์ใหม่</span>
+        </button>
+
+        <!-- Link to Admin Console -->
+        <a href="/admin" class="btn-icon-pill" title="กลับไปหน้าแอดมิน">
+          <span>จัดการสินค้า (Admin)</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Live Sync Status Strip -->
+  <div class="live-status-strip">
+    <div class="live-status-container">
+      <div class="live-indicator">
+        <span class="pulse-dot"></span>
+        <span>ระบบเรียลไทม์ (ซิงค์อัตโนมัติ)</span>
+      </div>
+      <div class="sync-meta">
+        <span id="syncTimeText">กำลังตรวจสอบข้อมูล...</span>
+        <button type="button" class="btn-text-link" onclick="window.MinozaOrders.refresh()">ซิงค์ทันที</button>
+        <span class="divider-dot">&bull;</span>
+        <button type="button" class="btn-text-link btn-danger-text" onclick="window.MinozaOrders.resetOrders()">ล้างข้อมูลทดสอบ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PWA Install Prompt Bar (Shown if installable) -->
+  <div class="install-pwa-bar" id="installPwaBar">
+    <div class="install-pwa-info">
+      <div class="install-pwa-title">ติดตั้ง MINOZA ORDERS บนอุปกรณ์ของคุณ</div>
+      <div class="install-pwa-sub">เปิดใช้งานแบบเต็มจอ รวดเร็ว และรับเสียงแจ้งเตือนคำสั่งซื้อ</div>
+    </div>
+    <button type="button" class="btn-install-app" id="btnInstallApp" onclick="window.MinozaOrders.handleInstallClick()">
+      ติดตั้งแอป
+    </button>
+  </div>
+
+  <!-- Main Content Body -->
+  <main class="main-wrapper">
+
+    <!-- KPI / Summary Metrics Grid -->
+    <section class="metrics-grid">
+      <!-- Total Revenue -->
+      <div class="metric-card">
+        <div class="metric-label">ยอดขายรวม</div>
+        <div class="metric-value" id="metricRevenue">฿0</div>
+        <div class="metric-sub">ยอดคำสั่งซื้อทั้งหมด</div>
+      </div>
+
+      <!-- Total Orders -->
+      <div class="metric-card">
+        <div class="metric-label">จำนวนคำสั่งซื้อทั้งหมด</div>
+        <div class="metric-value" id="metricOrders">0</div>
+        <div class="metric-sub">รายการทั้งหมดในระบบ</div>
+      </div>
+
+      <!-- Today's Orders -->
+      <div class="metric-card">
+        <div class="metric-label">คำสั่งซื้อวันนี้</div>
+        <div class="metric-value" id="metricToday">0 รายการ</div>
+        <div class="metric-sub">ยอดประจำวัน</div>
+      </div>
+
+      <!-- Pending Shipment -->
+      <div class="metric-card">
+        <div class="metric-label">รอจัดส่ง</div>
+        <div class="metric-value" id="metricPending">0 รายการ</div>
+        <div class="metric-sub">ที่ต้องเตรียมแพ็คส่ง</div>
+      </div>
+    </section>
+
+    <!-- Filter & Search Controls Bar -->
+    <section class="controls-card">
+      <div class="search-and-actions">
+        <!-- Search Input -->
+        <div class="search-input-box">
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" class="search-input" id="orderSearchInput" 
+                 placeholder="ค้นหาชื่อลูกค้า, เบอร์โทร, รหัสคำสั่งซื้อ หรือเลขพัสดุ..." />
+        </div>
+
+        <!-- Quick Audio Test Button -->
+        <button type="button" class="btn-icon-pill" onclick="window.MinozaOrders.playIosChime('tritone')" title="กดฟังตัวอย่างเสียงเตือน">
+          <span>ทดสอบเสียงเตือน</span>
+        </button>
+      </div>
+
+      <!-- Filter Tabs (Clean Segmented Tabs) -->
+      <div class="quick-filter-tabs">
+        <button type="button" class="filter-chip active" data-filter="all" id="chipAll">
+          <span>ทั้งหมด</span><span class="chip-count">0</span>
+        </button>
+        <button type="button" class="filter-chip" data-filter="cod" id="chipCod">
+          <span>เก็บเงินปลายทาง (COD)</span><span class="chip-count">0</span>
+        </button>
+        <button type="button" class="filter-chip" data-filter="paid" id="chipPaid">
+          <span>ชำระเงินแล้ว</span><span class="chip-count">0</span>
+        </button>
+        <button type="button" class="filter-chip" data-filter="pending" id="chipPending">
+          <span>รอชำระเงิน</span><span class="chip-count">0</span>
+        </button>
+        <button type="button" class="filter-chip" data-filter="shipped" id="chipShipped">
+          <span>จัดส่งแล้ว</span><span class="chip-count">0</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Orders Section Header -->
+    <div class="orders-section-header">
+      <div class="section-title-group">
+        <h2 class="section-title">รายการคำสั่งซื้อ</h2>
+        <span class="orders-count-badge" id="ordersCountBadge">0 รายการ</span>
+      </div>
+    </div>
+
+    <!-- Orders Dynamic List Container -->
+    <section class="orders-list" id="ordersListContainer">
+      <div class="empty-state">
+        <h3 class="empty-state-title">กำลังโหลดรายการคำสั่งซื้อ...</h3>
+        <p class="empty-state-desc">ระบบกำลังดึงข้อมูลล่าสุดจากฐานข้อมูล</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- iOS Add to Home Screen Modal Instruction -->
+  <div class="modal-backdrop" id="iosModal" onclick="if(event.target === this) window.MinozaOrders.showIosModal(false)">
+    <div class="ios-instructions-card">
+      <div class="ios-card-header">
+        <h3>วิธีเพิ่มไปยังหน้าจอโฮมบน iPhone / iPad</h3>
+        <button type="button" onclick="window.MinozaOrders.showIosModal(false)" class="btn-close-icon">&times;</button>
+      </div>
+      <p style="font-size: 13px; color: #94a3b8; margin-bottom: 14px;">
+        เพิ่มหน้านี้ไปยังหน้าจอโฮมเพื่อการเปิดใช้งานแบบเต็มจอและรับเสียงแจ้งเตือน:
+      </p>
+      <ul class="ios-steps-list">
+        <li class="ios-step-item">
+          <span class="step-number">1</span>
+          <div>กดปุ่ม <strong>แชร์ (Share)</strong> ที่แถบล่างของ Safari</div>
+        </li>
+        <li class="ios-step-item">
+          <span class="step-number">2</span>
+          <div>เลือก <strong>"เพิ่มไปยังหน้าจอโฮม" (Add to Home Screen)</strong></div>
+        </li>
+        <li class="ios-step-item">
+          <span class="step-number">3</span>
+          <div>กด <strong>"เพิ่ม" (Add)</strong> เพื่อติดตั้งไอคอนแอปบนหน้าจอ</div>
+        </li>
+      </ul>
+      <button type="button" class="btn-close-modal" onclick="window.MinozaOrders.showIosModal(false)">ปิดหน้าต่างนี้</button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/orders.js?v=2.0"></script>
+</body>
+</html>

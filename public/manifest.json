@@ -1,0 +1,45 @@
+{
+  "name": "MINOZA Orders — ระบบคำสั่งซื้อ",
+  "short_name": "Minoza Orders",
+  "description": "ระบบจัดการและแจ้งเตือนคำสั่งซื้อสำหรับร้านค้า Minoza Thailand",
+  "start_url": "/orders",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#090d16",
+  "theme_color": "#0f172a",
+  "orientation": "any",
+  "categories": ["business", "productivity", "shopping"],
+  "icons": [
+    {
+      "src": "/images/logo_square_avatar.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/logo_square_avatar.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "ดูคำสั่งซื้อวันนี้",
+      "short_name": "Orders Today",
+      "url": "/orders?filter=today",
+      "icons": [{ "src": "/images/logo_square_avatar.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "จัดการหลังบ้าน",
+      "short_name": "Admin",
+      "url": "/admin",
+      "icons": [{ "src": "/images/logo_square_avatar.png", "sizes": "192x192" }]
+    }
+  ]
+}

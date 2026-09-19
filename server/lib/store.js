@@ -204,6 +204,53 @@ async function clearOrders() {
   return [];
 }
 
+async function updateOrder(orderId, patch) {
+  if (isEnabled()) {
+    const { data: existing, error: fetchErr } = await supabase
+      .from('orders')
+      .select('data')
+      .eq('order_id', orderId)
+      .maybeSingle();
+    if (fetchErr) throw fetchErr;
+    if (!existing) return null;
+
+    const merged = { ...existing.data, ...patch };
+    const { error: updateErr } = await supabase
+      .from('orders')
+      .update({
+        data: merged,
+        amount: merged.amount || 0
+      })
+      .eq('order_id', orderId);
+    if (updateErr) throw updateErr;
+    return merged;
+  }
+
+  const orders = readJson(ordersFilePath, []);
+  const index = orders.findIndex(o => o.orderId === orderId);
+  if (index === -1) return null;
+
+  orders[index] = { ...orders[index], ...patch };
+  writeJson(ordersFilePath, orders);
+  return orders[index];
+}
+
+async function deleteOrder(orderId) {
+  if (isEnabled()) {
+    const { error } = await supabase
+      .from('orders')
+      .delete()
+      .eq('order_id', orderId);
+    if (error) throw error;
+    return true;
+  }
+
+  const orders = readJson(ordersFilePath, []);
+  const filtered = orders.filter(o => o.orderId !== orderId);
+  writeJson(ordersFilePath, filtered);
+  return true;
+}
+
 // ---------------------------------------------------------------------------
 // Site settings (single row)
 // ---------------------------------------------------------------------------
@@ -353,6 +400,8 @@ module.exports = {
   deleteProduct,
   getOrders,
   addOrder,
+  updateOrder,
+  deleteOrder,
   clearOrders,
   getSettings,
   updateSettings,
