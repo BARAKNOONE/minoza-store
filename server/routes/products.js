@@ -5,6 +5,7 @@ const store = require('../lib/store');
 // Prevent caching on all product API calls
 router.use((req, res, next) => {
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('X-Storage-Backend', store.isEnabled() ? 'supabase' : 'file');
   next();
 });
 
