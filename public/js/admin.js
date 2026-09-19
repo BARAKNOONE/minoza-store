@@ -348,9 +348,10 @@
   // Load Products & Orders
   async function loadData() {
     try {
+      const ts = Date.now();
       const [prodRes, orderRes] = await Promise.all([
-        fetch('/api/products').then(r => r.json()),
-        fetch('/api/orders').then(r => r.json()).catch(() => ({ totalOrders: 0, totalRevenue: 0 }))
+        fetch(`/api/products?_t=${ts}`, { cache: 'no-store' }).then(r => r.json()),
+        fetch(`/api/orders?_t=${ts}`, { cache: 'no-store' }).then(r => r.json()).catch(() => ({ totalOrders: 0, totalRevenue: 0 }))
       ]);
 
       products = Array.isArray(prodRes) ? prodRes : [];
@@ -797,23 +798,65 @@
     }
   }
 
-  // Quick Stock Status Toggle (In Stock / Sold Out)
+  // Quick Stock Status Toggle (In Stock / Sold Out) with Instant Optimistic UI Update
   async function toggleStockStatus(id) {
+    const p = products.find(prod => prod.id === id || prod.slug === id);
+    if (!p) return;
+
+    // 1. Instant Optimistic UI Update (0ms delay)
+    const prevSoldOut = Boolean(p.isSoldOut);
+    const nextSoldOut = !prevSoldOut;
+    p.isSoldOut = nextSoldOut;
+    p.inStock = !nextSoldOut;
+
+    // Directly update DOM pill button
+    const tr = document.querySelector(`tr[data-id="${id}"]`);
+    if (tr) {
+      const pillBtn = tr.querySelector('.stock-toggle-pill');
+      if (pillBtn) {
+        pillBtn.className = `stock-toggle-pill ${nextSoldOut ? 'is-sold-out' : 'is-in-stock'}`;
+        pillBtn.title = nextSoldOut ? 'สถานะ: ของหมด (คลิกเพื่อเปิดขาย)' : 'สถานะ: พร้อมส่ง (คลิกเพื่อปิดของหมด)';
+        pillBtn.innerHTML = `
+          <span class="stock-pill-indicator"></span>
+          <span class="stock-pill-text">${nextSoldOut ? 'ของหมด' : 'พร้อมส่ง'}</span>
+        `;
+      }
+    }
+
+    const statusMsg = nextSoldOut 
+      ? `🔴 ตั้งสถานะ "${p.name}" เป็น "ของหมด" เรียบร้อยแล้ว` 
+      : `🟢 ตั้งสถานะ "${p.name}" เป็น "พร้อมส่ง" เรียบร้อยแล้ว`;
+    showToast(statusMsg);
+
+    // 2. Persist to server in background
     try {
-      const res = await fetch(`/api/products/${id}/toggle-stock`, { method: 'PATCH' });
+      const res = await fetch(`/api/products/${id}/toggle-stock`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeader()
+        }
+      });
       const data = await res.json();
       if (!res.ok || !data.success) {
-        throw new Error(data.error || 'เกิดข้อผิดพลาดในการเปลี่ยนสถานะสินค้า');
+        throw new Error(data.error || 'เกิดข้อผิดพลาดในการบันทึกสถานะ');
       }
-
-      const statusMsg = data.isSoldOut 
-        ? '🔴 ตั้งสถานะ "สินค้าหมดชั่วคราว" เรียบร้อยแล้ว (ปิดการสั่งซื้อบนหน้าเว็บ)' 
-        : '🟢 เปลี่ยนสถานะเป็น "พร้อมจัดส่ง" เรียบร้อยแล้ว (เปิดรับคำสั่งซื้อ)';
-      showToast(statusMsg);
-      await loadData();
     } catch (err) {
       console.error('Toggle stock error:', err);
-      showToast(err.message, true);
+      // Revert optimistic state if server failed
+      p.isSoldOut = prevSoldOut;
+      p.inStock = !prevSoldOut;
+      if (tr) {
+        const pillBtn = tr.querySelector('.stock-toggle-pill');
+        if (pillBtn) {
+          pillBtn.className = `stock-toggle-pill ${prevSoldOut ? 'is-sold-out' : 'is-in-stock'}`;
+          pillBtn.innerHTML = `
+            <span class="stock-pill-indicator"></span>
+            <span class="stock-pill-text">${prevSoldOut ? 'ของหมด' : 'พร้อมส่ง'}</span>
+          `;
+        }
+      }
+      showToast('ไม่สามารถเปลี่ยนสถานะได้: ' + err.message, true);
     }
   }
 

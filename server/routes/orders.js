@@ -2,17 +2,10 @@ const express = require('express');
 const router = express.Router();
 const store = require('../lib/store');
 
-/**
- * GET /api/products
- * Fetch store product catalog
- */
-router.get('/products', async (req, res) => {
-  try {
-    const products = await store.getProducts();
-    res.json(products);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+// Prevent caching on orders API calls
+router.use((req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  next();
 });
 
 /**

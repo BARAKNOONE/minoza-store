@@ -2,6 +2,12 @@ const express = require('express');
 const router = express.Router();
 const store = require('../lib/store');
 
+// Prevent caching on all product API calls
+router.use((req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  next();
+});
+
 /**
  * GET /api/products
  * Fetch all products
