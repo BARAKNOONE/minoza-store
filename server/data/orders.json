@@ -1,0 +1,519 @@
+[
+  {
+    "orderId": "MNZ72590333",
+    "trackingNumber": "TH623068134",
+    "createdAt": "2026-09-18T23:03:10.333Z",
+    "customer": {
+      "name": "ทดสอบ ส่วนลดพร้อมเพย์",
+      "phone": "0899999999",
+      "email": "test-discount@example.com",
+      "address": "99/9 อาคารทดสอบ สุขุมวิท กรุงเทพฯ 10110"
+    },
+    "items": [
+      {
+        "id": "cross-chain-bundle-2",
+        "name": "CROSS CHAIN | SILVER (เซ็ตคู่ 2 เส้น Buy 1 Get 1 Free)",
+        "price": 890,
+        "quantity": 1,
+        "freeShipping": true
+      }
+    ],
+    "amount": 840,
+    "currency": "THB",
+    "paymentMethod": "promptpay",
+    "paymentStatus": "PAID",
+    "fulfillmentStatus": "DISPATCHED_TO_FLASH_EXPRESS",
+    "marketing": {
+      "utmSource": "meta_ads",
+      "utmCampaign": "direct_response_pdp",
+      "eventId": "evt_MNZ72590333"
+    }
+  },
+  {
+    "orderId": "MNZ72346707",
+    "trackingNumber": "TH522227817",
+    "createdAt": "2026-09-18T22:59:06.708Z",
+    "customer": {
+      "name": "ทดสอบ ส่วนลดพร้อมเพย์",
+      "phone": "0899999999",
+      "email": "test-discount@example.com",
+      "address": "99/9 อาคารทดสอบ สุขุมวิท กรุงเทพฯ 10110"
+    },
+    "items": [
+      {
+        "id": "cross-chain-bundle-2",
+        "name": "CROSS CHAIN | SILVER (เซ็ตคู่ 2 เส้น Buy 1 Get 1 Free)",
+        "price": 890,
+        "quantity": 1,
+        "freeShipping": true
+      }
+    ],
+    "amount": 840,
+    "currency": "THB",
+    "paymentMethod": "promptpay",
+    "paymentStatus": "PAID",
+    "fulfillmentStatus": "DISPATCHED_TO_FLASH_EXPRESS",
+    "marketing": {
+      "utmSource": "meta_ads",
+      "utmCampaign": "direct_response_pdp",
+      "eventId": "evt_MNZ72346707"
+    }
+  },
+  {
+    "orderId": "MNZ71900637",
+    "trackingNumber": "TH353429501",
+    "createdAt": "2026-09-18T22:51:40.637Z",
+    "customer": {
+      "name": "ทดสอบ ส่วนลดพร้อมเพย์",
+      "phone": "0899999999",
+      "email": "test-discount@example.com",
+      "address": "99/9 อาคารทดสอบ สุขุมวิท กรุงเทพฯ 10110"
+    },
+    "items": [
+      {
+        "id": "cross-chain-bundle-2",
+        "name": "CROSS CHAIN | SILVER (เซ็ตคู่ 2 เส้น Buy 1 Get 1 Free)",
+        "price": 890,
+        "quantity": 1,
+        "freeShipping": true
+      }
+    ],
+    "amount": 840,
+    "currency": "THB",
+    "paymentMethod": "promptpay",
+    "paymentStatus": "PAID",
+    "fulfillmentStatus": "DISPATCHED_TO_FLASH_EXPRESS",
+    "marketing": {
+      "utmSource": "meta_ads",
+      "utmCampaign": "direct_response_pdp",
+      "eventId": "evt_MNZ71900637"
+    }
+  },
+  {
+    "orderId": "MNZ71725648",
+    "trackingNumber": "TH866134582",
+    "createdAt": "2026-09-18T22:48:45.648Z",
+    "customer": {
+      "name": "ทดสอบ ส่วนลดพร้อมเพย์",
+      "phone": "0899999999",
+      "email": "test-discount@example.com",
+      "address": "99/9 อาคารทดสอบ สุขุมวิท กรุงเทพฯ 10110"
+    },
+    "items": [
+      {
+        "id": "cross-chain-bundle-2",
+        "name": "CROSS CHAIN | SILVER (เซ็ตคู่ 2 เส้น Buy 1 Get 1 Free)",
+        "price": 890,
+        "quantity": 1,
+        "freeShipping": true
+      }
+    ],
+    "amount": 840,
+    "currency": "THB",
+    "paymentMethod": "promptpay",
+    "paymentStatus": "PAID",
+    "fulfillmentStatus": "DISPATCHED_TO_FLASH_EXPRESS",
+    "marketing": {
+      "utmSource": "meta_ads",
+      "utmCampaign": "direct_response_pdp",
+      "eventId": "evt_MNZ71725648"
+    }
+  },
+  {
+    "orderId": "MNZ70766825",
+    "trackingNumber": "TH428980070",
+    "createdAt": "2026-09-18T22:32:46.825Z",
+    "customer": {
+      "name": "ทดสอบ ส่วนลดพร้อมเพย์",
+      "phone": "0899999999",
+      "email": "test-discount@example.com",
+      "address": "99/9 อาคารทดสอบ สุขุมวิท กรุงเทพฯ 10110"
+    },
+    "items": [
+      {
+        "id": "cross-chain-bundle-2",
+        "name": "CROSS CHAIN | SILVER (เซ็ตคู่ 2 เส้น Buy 1 Get 1 Free)",
+        "price": 890,
+        "quantity": 1,
+        "freeShipping": true
+      }
+    ],
+    "amount": 840,
+    "currency": "THB",
+    "paymentMethod": "promptpay",
+    "paymentStatus": "PAID",
+    "fulfillmentStatus": "DISPATCHED_TO_FLASH_EXPRESS",
+    "marketing": {
+      "utmSource": "meta_ads",
+      "utmCampaign": "direct_response_pdp",
+      "eventId": "evt_MNZ70766825"
+    }
+  },
+  {
+    "orderId": "MNZ70749519",
+    "trackingNumber": "TH455923216",
+    "createdAt": "2026-09-18T22:32:29.519Z",
+    "customer": {
+      "name": "ทดสอบ ส่วนลดพร้อมเพย์",
+      "phone": "0899999999",
+      "email": "test-discount@example.com",
+      "address": "99/9 อาคารทดสอบ สุขุมวิท กรุงเทพฯ 10110"
+    },
+    "items": [
+      {
+        "id": "cross-chain-bundle-2",
+        "name": "CROSS CHAIN | SILVER (เซ็ตคู่ 2 เส้น Buy 1 Get 1 Free)",
+        "price": 890,
+        "quantity": 1,
+        "freeShipping": true
+      }
+    ],
+    "amount": 840,
+    "currency": "THB",
+    "paymentMethod": "promptpay",
+    "paymentStatus": "PAID",
+    "fulfillmentStatus": "DISPATCHED_TO_FLASH_EXPRESS",
+    "marketing": {
+      "utmSource": "meta_ads",
+      "utmCampaign": "direct_response_pdp",
+      "eventId": "evt_MNZ70749519"
+    }
+  },
+  {
+    "orderId": "MNZ70014640",
+    "trackingNumber": "TH350011044",
+    "createdAt": "2026-09-18T22:20:14.641Z",
+    "customer": {
+      "name": "ทดสอบ ส่วนลดพร้อมเพย์",
+      "phone": "0899999999",
+      "email": "test-discount@example.com",
+      "address": "99/9 อาคารทดสอบ สุขุมวิท กรุงเทพฯ 10110"
+    },
+    "items": [
+      {
+        "id": "cross-chain-bundle-2",
+        "name": "CROSS CHAIN | SILVER (เซ็ตคู่ 2 เส้น Buy 1 Get 1 Free)",
+        "price": 890,
+        "quantity": 1,
+        "freeShipping": true
+      }
+    ],
+    "amount": 840,
+    "currency": "THB",
+    "paymentMethod": "promptpay",
+    "paymentStatus": "PAID",
+    "fulfillmentStatus": "DISPATCHED_TO_FLASH_EXPRESS",
+    "marketing": {
+      "utmSource": "meta_ads",
+      "utmCampaign": "direct_response_pdp",
+      "eventId": "evt_MNZ70014640"
+    }
+  },
+  {
+    "orderId": "MNZ69837891",
+    "trackingNumber": "TH950185450",
+    "createdAt": "2026-09-18T22:17:17.891Z",
+    "customer": {
+      "name": "ทดสอบ ส่วนลดพร้อมเพย์",
+      "phone": "0899999999",
+      "email": "test-discount@example.com",
+      "address": "99/9 อาคารทดสอบ สุขุมวิท กรุงเทพฯ 10110"
+    },
+    "items": [
+      {
+        "id": "cross-chain-bundle-2",
+        "name": "CROSS CHAIN | SILVER (เซ็ตคู่ 2 เส้น Buy 1 Get 1 Free)",
+        "price": 890,
+        "quantity": 1,
+        "freeShipping": true
+      }
+    ],
+    "amount": 840,
+    "currency": "THB",
+    "paymentMethod": "promptpay",
+    "paymentStatus": "PAID",
+    "fulfillmentStatus": "DISPATCHED_TO_FLASH_EXPRESS",
+    "marketing": {
+      "utmSource": "meta_ads",
+      "utmCampaign": "direct_response_pdp",
+      "eventId": "evt_MNZ69837891"
+    }
+  },
+  {
+    "orderId": "MNZ69818983",
+    "trackingNumber": "TH448542336",
+    "createdAt": "2026-09-18T22:16:58.984Z",
+    "customer": {
+      "name": "ทดสอบ ส่วนลดพร้อมเพย์",
+      "phone": "0899999999",
+      "email": "test-discount@example.com",
+      "address": "99/9 อาคารทดสอบ สุขุมวิท กรุงเทพฯ 10110"
+    },
+    "items": [
+      {
+        "id": "cross-chain-bundle-2",
+        "name": "CROSS CHAIN | SILVER (เซ็ตคู่ 2 เส้น Buy 1 Get 1 Free)",
+        "price": 890,
+        "quantity": 1,
+        "freeShipping": true
+      }
+    ],
+    "amount": 840,
+    "currency": "THB",
+    "paymentMethod": "promptpay",
+    "paymentStatus": "PAID",
+    "fulfillmentStatus": "DISPATCHED_TO_FLASH_EXPRESS",
+    "marketing": {
+      "utmSource": "meta_ads",
+      "utmCampaign": "direct_response_pdp",
+      "eventId": "evt_MNZ69818983"
+    }
+  },
+  {
+    "orderId": "MNZ68281159",
+    "trackingNumber": "TH254861646",
+    "createdAt": "2026-09-18T21:51:21.160Z",
+    "customer": {
+      "name": "คุณสมชาย ยอดนักช้อป",
+      "phone": "0891234567",
+      "email": "",
+      "address": "123/45 ถนนสุขุมวิท แขวงคลองเตยเหนือ เขตวัฒนา กรุงเทพฯ 10110"
+    },
+    "items": [
+      {
+        "id": "cross-chain",
+        "name": "CROSS CHAIN | SILVER (เซ็ตคู่ 2 เส้น Buy 1 Get 1 Free)",
+        "price": 890,
+        "quantity": 2
+      }
+    ],
+    "amount": 890,
+    "currency": "THB",
+    "paymentMethod": "cod",
+    "paymentStatus": "PENDING_CASH_ON_DELIVERY",
+    "fulfillmentStatus": "DISPATCHED_TO_FLASH_EXPRESS",
+    "marketing": {
+      "utmSource": "meta_ads",
+      "utmCampaign": "direct_response_pdp",
+      "eventId": "evt_MNZ68281159"
+    }
+  },
+  {
+    "orderId": "MNZ67122796",
+    "status": "PAID",
+    "createdAt": "2026-09-18T21:32:02.805Z",
+    "amount": 2329,
+    "currency": "THB",
+    "paymentMethod": "PromptPay QR",
+    "paymentIntentId": "mock_pi_MNZ67122796",
+    "customer": {
+      "name": "คุณสมชาย วิจิตรศิลป์",
+      "phone": "0891234567",
+      "address": "99/1 ซอยอารีย์สัมพันธ์ 1 ถนนพหลโยธิน แขวงพญาไท เขตพญาไท",
+      "province": "กรุงเทพมหานคร",
+      "postalCode": "10400"
+    },
+    "items": [
+      {
+        "id": "cross-bracelet",
+        "name": "CROSS BRACELET | SILVER",
+        "price": 1940,
+        "quantity": 1
+      },
+      {
+        "id": "crucifix-chain",
+        "name": "CRUCIFIX CHAIN | SILVER",
+        "price": 2329,
+        "quantity": 1
+      }
+    ],
+    "trackingNumber": "MNZ523452478TH",
+    "estimatedDelivery": "4-7 วันทำการ",
+    "marketing": {
+      "utmSource": "meta_ads",
+      "utmMedium": "cpc",
+      "utmCampaign": "campaign_winning_gadget_01",
+      "utmContent": "",
+      "fbc": "",
+      "fbp": "",
+      "metaCapiStatus": "DISPATCHED"
+    }
+  },
+  {
+    "orderId": "MNZ65079564",
+    "status": "PAID",
+    "createdAt": "2026-09-18T20:58:05.356Z",
+    "amount": 16900,
+    "currency": "THB",
+    "paymentMethod": "PromptPay QR (สแกนจ่ายสำเร็จ)",
+    "paymentIntentId": "mock_pi_MNZ65079564",
+    "customer": {
+      "name": "Kritsana Jinaou",
+      "phone": "0626291841",
+      "address": "99/35 Baan Lumpini Town Ville Permsin-Watcharapol",
+      "province": "กรุงเทพมหานคร",
+      "postalCode": "10220"
+    },
+    "items": [
+      {
+        "id": "halo-desk-lamp-b2",
+        "name": "Halo Smart Desk Lamp (เซ็ตคู่ 2 ชิ้น)",
+        "price": 1690,
+        "originalPrice": 3402,
+        "image": "/images/halo_lamp.jpg",
+        "quantity": 10
+      }
+    ],
+    "trackingNumber": "MNZ856876179TH",
+    "estimatedDelivery": "4-7 วันทำการ",
+    "marketing": {
+      "utmSource": "meta_ads",
+      "utmMedium": "cpc",
+      "utmCampaign": "launch_promo",
+      "utmContent": "",
+      "fbc": "",
+      "fbp": "fb.0.1788038707629.421928926246278735",
+      "metaCapiStatus": "DISPATCHED"
+    }
+  },
+  {
+    "orderId": "MNZ64981691",
+    "status": "PAID",
+    "createdAt": "2026-09-18T20:56:21.698Z",
+    "amount": 1290,
+    "currency": "THB",
+    "paymentMethod": "PromptPay QR",
+    "paymentIntentId": "mock_pi_MNZ64981691",
+    "customer": {
+      "name": "คุณสมชาย วิจิตรศิลป์",
+      "phone": "0891234567",
+      "address": "99/1 ซอยอารีย์สัมพันธ์ 1 ถนนพหลโยธิน แขวงพญาไท เขตพญาไท",
+      "province": "กรุงเทพมหานคร",
+      "postalCode": "10400"
+    },
+    "items": [
+      {
+        "id": "magfold-3in1",
+        "name": "Minoza MagFold 3-in-1 (เซ็ตสุดคุ้ม 2 ชิ้น)",
+        "price": 1290,
+        "quantity": 1
+      }
+    ],
+    "trackingNumber": "MNZ108717915TH",
+    "estimatedDelivery": "4-7 วันทำการ",
+    "marketing": {
+      "utmSource": "meta_ads",
+      "utmMedium": "cpc",
+      "utmCampaign": "campaign_winning_gadget_01",
+      "utmContent": "",
+      "fbc": "",
+      "fbp": "",
+      "metaCapiStatus": "DISPATCHED"
+    }
+  },
+  {
+    "orderId": "MNZ63368730",
+    "status": "PAID",
+    "createdAt": "2026-09-18T20:29:28.737Z",
+    "amount": 1290,
+    "currency": "THB",
+    "paymentMethod": "PromptPay QR",
+    "paymentIntentId": "mock_pi_MNZ63368730",
+    "customer": {
+      "name": "คุณสมชาย วิจิตรศิลป์",
+      "phone": "0891234567",
+      "address": "99/1 ซอยอารีย์สัมพันธ์ 1 ถนนพหลโยธิน แขวงพญาไท เขตพญาไท",
+      "province": "กรุงเทพมหานคร",
+      "postalCode": "10400"
+    },
+    "items": [
+      {
+        "id": "magfold-3in1",
+        "name": "Minoza MagFold 3-in-1 (เซ็ตสุดคุ้ม 2 ชิ้น)",
+        "price": 1290,
+        "quantity": 1
+      }
+    ],
+    "trackingNumber": "MNZ645000143TH",
+    "estimatedDelivery": "4-7 วันทำการ",
+    "marketing": {
+      "utmSource": "meta_ads",
+      "utmMedium": "cpc",
+      "utmCampaign": "campaign_winning_gadget_01",
+      "utmContent": "",
+      "fbc": "",
+      "fbp": "",
+      "metaCapiStatus": "DISPATCHED"
+    }
+  },
+  {
+    "orderId": "MNZ62671704",
+    "status": "PAID",
+    "createdAt": "2026-09-18T20:17:51.711Z",
+    "amount": 1290,
+    "currency": "THB",
+    "paymentMethod": "PromptPay QR",
+    "paymentIntentId": "mock_pi_MNZ62671704",
+    "customer": {
+      "name": "คุณสมชาย วิจิตรศิลป์",
+      "phone": "0891234567",
+      "address": "99/1 ซอยอารีย์สัมพันธ์ 1 ถนนพหลโยธิน แขวงพญาไท เขตพญาไท",
+      "province": "กรุงเทพมหานคร",
+      "postalCode": "10400"
+    },
+    "items": [
+      {
+        "id": "magfold-3in1",
+        "name": "Minoza MagFold 3-in-1 (เซ็ตสุดคุ้ม 2 ชิ้น)",
+        "price": 1290,
+        "quantity": 1
+      }
+    ],
+    "trackingNumber": "MNZ344932457TH",
+    "estimatedDelivery": "4-7 วันทำการ",
+    "marketing": {
+      "utmSource": "meta_ads",
+      "utmMedium": "cpc",
+      "utmCampaign": "campaign_winning_gadget_01",
+      "utmContent": "",
+      "fbc": "",
+      "fbp": "",
+      "metaCapiStatus": "DISPATCHED"
+    }
+  },
+  {
+    "orderId": "MNZ62222252",
+    "status": "PAID",
+    "createdAt": "2026-09-18T20:10:22.263Z",
+    "amount": 1290,
+    "currency": "THB",
+    "paymentMethod": "PromptPay QR (สแกนจ่ายสำเร็จ)",
+    "paymentIntentId": "pi_mock_MNZ62222252",
+    "customer": {
+      "name": "คุณสมชาย วิจิตรศิลป์",
+      "phone": "0891234567",
+      "address": "99/1 ซอยอารีย์สัมพันธ์ 1 ถนนพหลโยธิน แขวงพญาไท เขตพญาไท",
+      "province": "กรุงเทพมหานคร",
+      "postalCode": "10400"
+    },
+    "items": [
+      {
+        "id": "magfold-3in1",
+        "name": "Minoza MagFold 3-in-1 (เซ็ตสุดคุ้ม 2 ชิ้น)",
+        "price": 1290,
+        "quantity": 1
+      }
+    ],
+    "trackingNumber": "MNZ428615469TH",
+    "estimatedDelivery": "4-7 วันทำการ",
+    "marketing": {
+      "utmSource": "meta_ads",
+      "utmMedium": "reels",
+      "utmCampaign": "campaign_winning_gadget_01",
+      "utmContent": "video_hook_03",
+      "fbc": "fb.1.1726700000.IwAR2345678",
+      "fbp": "fb.1.1726700000.123456789",
+      "metaCapiStatus": "DISPATCHED"
+    }
+  }
+]

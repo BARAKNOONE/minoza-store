@@ -1,0 +1,22 @@
+{
+  "hero": {
+    "rating": "★★★★★ 4.9/5 จากรีวิวลูกค้ากว่า 180,000+ คน",
+    "title": "โปรโมชั่น 1 แถม 1 ฟรี<br>ลดพิเศษส่งท้ายซีซั่น",
+    "bgImage": "/images/hero_yacht_model.jpg"
+  },
+  "marquee": {
+    "text": "ซื้อ 1 แถม 1 ฟรี (BUY 1 GET 1 FREE) • ลดพิเศษรอบสุดท้าย • มีบริการเก็บเงินปลายทาง (COD) • จัดส่งด่วนฟรีทั่วไทย"
+  },
+  "tiles": {
+    "leftTitle": "LIMITED EDITION",
+    "leftSubtitle": "นาฬิการุ่นลิมิเต็ด",
+    "leftButton": "ดูคอลเลกชันนาฬิกา →",
+    "leftLink": "/#bestSellers",
+    "leftImage": "/images/tile_watches.jpg",
+    "rightTitle": "BESTSELLER COLLECTION",
+    "rightSubtitle": "คอลเลกชันขายดีที่สุด",
+    "rightButton": "เลือกซื้อเลย →",
+    "rightLink": "/#bestSellers",
+    "rightImage": "/images/tile_jewelry.jpg"
+  }
+}

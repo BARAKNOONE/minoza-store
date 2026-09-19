@@ -1,0 +1,278 @@
+[
+  {
+    "id": "riviera-silver",
+    "slug": "riviera-silver",
+    "name": "RIVIERA | SILVER",
+    "shortName": "Riviera | Silver",
+    "badge": "NEW",
+    "category": "Watches",
+    "rating": 4.9,
+    "reviewCount": 134,
+    "price": 6990,
+    "originalPrice": 8200,
+    "eurPrice": "€195,00",
+    "eurOriginalPrice": "€230,00",
+    "bundle2Price": 6990,
+    "bundle2Savings": 6990,
+    "image": "/images/jewelry/riviera_silver.jpg",
+    "gallery": [
+      "/images/jewelry/riviera_silver.jpg",
+      "/images/jewelry/riviera_watch_silver.jpg"
+    ],
+    "tagline": "Architectural rectangular tank luxury watch in high-polish 316L stainless steel with sapphire crystal glass.",
+    "description": "Inspired by timeless Riviera heritage. 5 ATM water resistance, scratch-resistant sapphire crystal, and Japanese precision quartz movement.",
+    "bundle1Title": "ซื้อ 1 เรือน (6,990 ฿)",
+    "bundle2Title": "โปรโมชั่น 1 แถม 1 ฟรี (BOGO Offer)",
+    "bundle2Bullets": [
+      "ซื้อเรือนที่ 1 รับเรือนที่ 2 ฟรีทันที (ประหยัด 6,990 ฿)",
+      "กล่องพรีเมียม MINOZA Leather Watch Box",
+      "รับประกันตัวเรือนและกลไกศูนย์ 2 ปีเต็ม"
+    ]
+  },
+  {
+    "id": "minoza-one-white",
+    "slug": "minoza-one-white",
+    "name": "MINOZA ONE WHITE | SILVER",
+    "shortName": "Minoza One White | Silver",
+    "badge": "BESTSELLER",
+    "category": "Watches",
+    "rating": 4.9,
+    "reviewCount": 119,
+    "price": 6990,
+    "originalPrice": 8200,
+    "eurPrice": "€195,00",
+    "eurOriginalPrice": "€230,00",
+    "bundle2Price": 6990,
+    "bundle2Savings": 6990,
+    "image": "/images/jewelry/minoza_one_white.jpg",
+    "gallery": [
+      "/images/jewelry/minoza_one_white.jpg"
+    ],
+    "tagline": "Signature octagonal bezel integrated bracelet luxury watch with sunburst white tapisserie dial.",
+    "description": "Crafted from surgical-grade 316L stainless steel with brushed and mirror-polished facets. Built for modern understated luxury.",
+    "bundle1Title": "ซื้อ 1 เรือน (6,990 ฿)",
+    "bundle2Title": "โปรโมชั่น 1 แถม 1 ฟรี (BOGO Offer)",
+    "bundle2Bullets": [
+      "ซื้อ 1 แถม 1 ชิ้นฟรีทันที",
+      "กระจก Sapphire Crystal กันรอย 100%",
+      "กันน้ำลึก 50 เมตร (5 ATM)"
+    ]
+  },
+  {
+    "id": "cross-chain",
+    "slug": "cross-chain",
+    "name": "CROSS CHAIN | SILVER",
+    "shortName": "Cross Chain | Silver",
+    "badge": "BESTSELLER",
+    "category": "Chains & Necklaces",
+    "rating": 4.9,
+    "reviewCount": 1421,
+    "price": 590,
+    "originalPrice": 790,
+    "shippingSingle": 50,
+    "eurPrice": "€49,95",
+    "eurOriginalPrice": "€60,00",
+    "bundle2Price": 890,
+    "bundle2OriginalPrice": 1180,
+    "bundle2Shipping": 0,
+    "bundle2Savings": 290,
+    "image": "/images/jewelry/cross_chain_main.jpg",
+    "gallery": [
+      "/images/jewelry/cross_chain_main.jpg",
+      "/images/jewelry/cross_chain_neck_back.jpg",
+      "/images/jewelry/cross_chain_flatlay.jpg",
+      "/images/jewelry/cross_chain_blue_shirt.jpg",
+      "/images/jewelry/cross_chain_white_shirt.jpg",
+      "/images/jewelry/cross_chain_grey_shirt.jpg"
+    ],
+    "tagline": "Introducing the iconic Cross Chain, a timeless symbol crafted to be worn with pride. Made from premium surgical-grade 316L stainless steel.",
+    "description": "Featuring a waterproof design, you can confidently wear it in the sea, pool, or shower, while its heat and sweat-resistant properties make it ideal for workouts.",
+    "bundle1Title": "ซื้อ 1 เส้น (590 ฿ + ค่าส่ง 50 ฿)",
+    "bundle2Title": "เซ็ตคู่ 2 เส้น (890 ฿ ส่งฟรี! ประหยัด 290 ฿)",
+    "bundle2Bullets": [
+      "ซื้อเซ็ตคู่ 2 เส้น เพียง 890 ฿ (จากปกติ 1,180 ฿)",
+      "ฟรีค่าจัดส่งด่วนทั่วประเทศ (มูลค่า 50 ฿)",
+      "รับประกันสีไม่ลอก ไม่ดำตลอดอายุการใช้งาน (Lifetime Warranty)",
+      "มีบริการเก็บเงินปลายทาง (COD) ตรวจเช็กของก่อนจ่ายเงินได้"
+    ]
+  },
+  {
+    "id": "cross-bracelet",
+    "slug": "cross-bracelet",
+    "name": "CROSS BRACELET | SILVER",
+    "shortName": "Cross Bracelet | Silver",
+    "badge": "BESTSELLER",
+    "category": "Bracelets",
+    "rating": 4.9,
+    "reviewCount": 1243,
+    "price": 1790,
+    "originalPrice": 2150,
+    "eurPrice": "€49,95",
+    "eurOriginalPrice": "€59,95",
+    "bundle2Price": 1790,
+    "bundle2Savings": 1790,
+    "image": "/images/jewelry/cross_bracelet_silver.jpg",
+    "gallery": [
+      "/images/jewelry/cross_bracelet_silver.jpg",
+      "/images/jewelry/cross_bracelet_1.jpg",
+      "/images/jewelry/cross_bracelet_model.jpg"
+    ],
+    "tagline": "Handcrafted minimalist cross bracelet in surgical-grade 316L stainless steel.",
+    "description": "Inspired by European understated luxury. 100% waterproof, sweatproof, and corrosion-resistant. Wear it in the shower, sea, or gym.",
+    "bundle1Title": "ซื้อ 1 ชิ้น (1,790 ฿)",
+    "bundle2Title": "โปรโมชั่น 1 แถม 1 ฟรี (BOGO Offer)",
+    "bundle2Bullets": [
+      "ซื้อชิ้นที่ 1 รับชิ้นที่ 2 ฟรีทันที (ประหยัด 1,790 ฿)",
+      "แถมกล่องพรีเมียม MINOZA Velvet Jewelry Box",
+      "รับประกันสีไม่ลอก ไม่ดำตลอดอายุการใช้งาน"
+    ]
+  },
+  {
+    "id": "rope-chain-3mm",
+    "slug": "rope-chain-3mm",
+    "name": "ROPE CHAIN 3MM | SILVER",
+    "shortName": "Rope Chain 3mm | Silver",
+    "badge": "BESTSELLER",
+    "category": "Chains & Necklaces",
+    "rating": 4.9,
+    "reviewCount": 921,
+    "price": 1790,
+    "originalPrice": 2150,
+    "eurPrice": "€49,95",
+    "eurOriginalPrice": "€59,95",
+    "bundle2Price": 1790,
+    "bundle2Savings": 1790,
+    "image": "/images/jewelry/rope_chain_silver.jpg",
+    "gallery": [
+      "/images/jewelry/rope_chain_silver.jpg",
+      "/images/jewelry/rope_chain_model.jpg"
+    ],
+    "tagline": "Classic diamond-cut twisted rope chain (3mm width, 50cm length) offering brilliant multi-angle light reflection.",
+    "description": "The ultimate essential chain for layering or solo wear. Solid 316L stainless steel that maintains its brilliant shine through everyday wear.",
+    "bundle1Title": "ซื้อ 1 เส้น (1,790 ฿)",
+    "bundle2Title": "โปรโมชั่น 1 แถม 1 ฟรี (BOGO Offer)",
+    "bundle2Bullets": [
+      "ซื้อ 1 แถม 1 ชิ้นฟรีทันที",
+      "ความยาวมาตรฐาน 50 ซม. สวมใส่พอดีคอ",
+      "กันน้ำ 100% ใส่อาบน้ำ เล่นกีฬา ว่ายน้ำได้เลย"
+    ]
+  },
+  {
+    "id": "green-gemstone-chain",
+    "slug": "green-gemstone-chain",
+    "name": "GREEN GEMSTONE CHAIN | 18K GOLD",
+    "shortName": "Green Gemstone Chain | 18K Gold",
+    "badge": "BESTSELLER",
+    "category": "Chains & Necklaces",
+    "rating": 4.9,
+    "reviewCount": 185,
+    "price": 2150,
+    "originalPrice": 2550,
+    "eurPrice": "€59,95",
+    "eurOriginalPrice": "€70,95",
+    "bundle2Price": 2150,
+    "bundle2Savings": 2150,
+    "image": "/images/jewelry/green_gemstone_gold.jpg",
+    "gallery": [
+      "/images/jewelry/green_gemstone_gold.jpg"
+    ],
+    "tagline": "Vibrant emerald green baguette-cut gemstone pendant set in radiant 18K PVD gold bezel with 53cm curb chain.",
+    "description": "Deep emerald cut center stone reflecting rich green hues. Triple 18K PVD gold electroplating over solid surgical steel.",
+    "bundle1Title": "ซื้อ 1 เส้น (2,150 ฿)",
+    "bundle2Title": "โปรโมชั่น 1 แถม 1 ฟรี (BOGO Offer)",
+    "bundle2Bullets": [
+      "ซื้อ 1 แถม 1 เส้นฟรีทันที",
+      "พลอยมรกตสังเคราะห์เกรดพรีเมียม สวยสะกดตา",
+      "ชุบทองแท้ 18K หนาพิเศษ ไม่ลอก ไม่หมอง"
+    ]
+  },
+  {
+    "id": "rope-bracelet-3mm",
+    "slug": "rope-bracelet-3mm",
+    "name": "ROPE BRACELET 3MM | SILVER",
+    "shortName": "Rope Bracelet 3mm | Silver",
+    "badge": "BESTSELLER",
+    "category": "Bracelets",
+    "rating": 4.9,
+    "reviewCount": 830,
+    "price": 1490,
+    "originalPrice": 1690,
+    "eurPrice": "€39,95",
+    "eurOriginalPrice": "€45,95",
+    "bundle2Price": 1490,
+    "bundle2Savings": 1490,
+    "image": "/images/jewelry/rope_bracelet_silver.jpg",
+    "gallery": [
+      "/images/jewelry/rope_bracelet_silver.jpg"
+    ],
+    "tagline": "Twisted diamond-cut rope bracelet in polished 316L stainless steel with branded tag and secure lobster lock.",
+    "description": "Clean, tactile, and comfortable for daily wear. Pairs seamlessly alongside watches and minimal cuff bracelets.",
+    "bundle1Title": "ซื้อ 1 เส้น (1,490 ฿)",
+    "bundle2Title": "โปรโมชั่น 1 แถม 1 ฟรี (BOGO Offer)",
+    "bundle2Bullets": [
+      "ซื้อ 1 รับฟรี 1 ชิ้นทันที",
+      "ปรับความยาวข้อมือได้ 17 - 21 ซม.",
+      "ทนทานต่อน้ำและเหงื่อ ไม่เป็นสนิมตลอดชีพ"
+    ]
+  },
+  {
+    "id": "ocean-clover-bracelet",
+    "slug": "ocean-clover-bracelet",
+    "name": "OCEAN CLOVER BRACELET | SILVER",
+    "shortName": "Ocean Clover Bracelet | Silver",
+    "badge": "BESTSELLER",
+    "category": "Bracelets",
+    "rating": 4.9,
+    "reviewCount": 306,
+    "price": 2150,
+    "originalPrice": 2690,
+    "eurPrice": "€59,95",
+    "eurOriginalPrice": "€74,95",
+    "bundle2Price": 2150,
+    "bundle2Savings": 2150,
+    "image": "/images/jewelry/ocean_clover_silver.jpg",
+    "gallery": [
+      "/images/jewelry/ocean_clover_silver.jpg",
+      "/images/jewelry/ocean_clover_1.jpg",
+      "/images/jewelry/ocean_clover_model.jpg"
+    ],
+    "tagline": "Turquoise blue four-leaf clover motifs set in polished 316L stainless steel links with adjustable extension chain.",
+    "description": "Symbolizing fortune and Mediterranean summer elegance. Vibrant turquoise gemstones precision-inlaid into hypoallergenic steel frames.",
+    "bundle1Title": "ซื้อ 1 เส้น (2,150 ฿)",
+    "bundle2Title": "โปรโมชั่น 1 แถม 1 ฟรี (BOGO Offer)",
+    "bundle2Bullets": [
+      "รับชิ้นที่ 2 ฟรีทันที (BOGO Offer)",
+      "ปรับขนาดข้อมือได้ 17 - 21 ซม.",
+      "รับประกันเปลี่ยนชิ้นใหม่ใน 30 วัน"
+    ],
+    "isSoldOut": false,
+    "inStock": true,
+    "updatedAt": "2026-09-18T23:14:55.664Z",
+    "material": "พรีเมียม 316L Stainless Steel (กันน้ำ 100%)",
+    "colors": [
+      "Silver",
+      "18K Gold"
+    ],
+    "packages": [
+      {
+        "id": 1,
+        "title": "ซื้อ 1 เส้น (2,150 ฿)",
+        "price": 2150,
+        "originalPrice": 2690,
+        "qty": 1,
+        "isSoldOut": false,
+        "freeShipping": false
+      },
+      {
+        "id": 2,
+        "title": "โปรโมชั่น 1 แถม 1 ฟรี (BOGO Offer)",
+        "price": 2150,
+        "originalPrice": 5380,
+        "qty": 2,
+        "isSoldOut": false,
+        "badge": "BESTSELLER / คู่คุ้มสุด",
+        "freeShipping": true
+      }
+    ]
+  }
+]

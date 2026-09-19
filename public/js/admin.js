@@ -1,0 +1,808 @@
+/**
+ * MINOZA STORE — ADMIN DASHBOARD CONTROLLER (v2)
+ * Features:
+ * 1. Non-overflowing responsive modal with sticky save footer
+ * 2. Drag & Drop file uploads (Base64 -> /api/upload -> /uploads/...)
+ * 3. Multi-image gallery manager with preview & delete
+ * 4. Dynamic package tiers builder (1 แถม 1, 2 แถม 1, 1 แถม 2, etc.)
+ * 5. Color swatches & Material settings
+ * 6. Homepage Banners & Dual Tiles manager
+ */
+
+(function () {
+  let products = [];
+  let editingProductId = null;
+  let currentGallery = [];
+  let currentPackages = [];
+
+  // DOM: Tabs
+  const tabBtnProducts = document.getElementById('tabBtnProducts');
+  const tabBtnHomepage = document.getElementById('tabBtnHomepage');
+  const tabPaneProducts = document.getElementById('tabPaneProducts');
+  const tabPaneHomepage = document.getElementById('tabPaneHomepage');
+
+  // DOM: Products Table & Filters
+  const productsTableBody = document.getElementById('productsTableBody');
+  const searchInput = document.getElementById('searchInput');
+  const categoryFilter = document.getElementById('categoryFilter');
+  const totalProductsEl = document.getElementById('totalProductsCount');
+  const bogoProductsEl = document.getElementById('bogoProductsCount');
+  const totalOrdersEl = document.getElementById('totalOrdersCount');
+  const totalRevenueEl = document.getElementById('totalRevenueCount');
+
+  // DOM: Product Modal
+  const productModal = document.getElementById('productModal');
+  const modalTitle = document.getElementById('modalTitle');
+  const productForm = document.getElementById('productForm');
+  const inputId = document.getElementById('prodId');
+  const inputSlug = document.getElementById('prodSlug');
+  const inputName = document.getElementById('prodName');
+  const inputCategory = document.getElementById('prodCategory');
+  const inputPrice = document.getElementById('prodPrice');
+  const inputOriginalPrice = document.getElementById('prodOriginalPrice');
+  const inputBadge = document.getElementById('prodBadge');
+  const inputImage = document.getElementById('prodImage');
+  const imagePreview = document.getElementById('imagePreview');
+  const inputTagline = document.getElementById('prodTagline');
+  const inputDescription = document.getElementById('prodDescription');
+  const inputMaterial = document.getElementById('prodMaterial');
+  const inputIsSoldOut = document.getElementById('prodIsSoldOut');
+  const modalViewLiveBtn = document.getElementById('modalViewLiveBtn');
+  const galleryGrid = document.getElementById('galleryGrid');
+  const packagesContainer = document.getElementById('packagesContainer');
+
+  // Drop Zones
+  const mainDropZone = document.getElementById('mainDropZone');
+  const mainFileInput = document.getElementById('mainFileInput');
+  const galleryDropZone = document.getElementById('galleryDropZone');
+  const galleryFileInput = document.getElementById('galleryFileInput');
+
+  // Delete Modal
+  const deleteModal = document.getElementById('deleteModal');
+  const deleteItemName = document.getElementById('deleteItemName');
+  let pendingDeleteId = null;
+
+  // Toast
+  const toast = document.getElementById('adminToast');
+  let toastTimer = null;
+
+  function showToast(message, isError = false) {
+    if (!toast) return;
+    toast.textContent = (isError ? '⚠️ ' : '✅ ') + message;
+    toast.className = 'toast-notification active ' + (isError ? 'toast-error' : 'toast-success');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      toast.className = 'toast-notification';
+    }, 3500);
+  }
+
+  // File Upload Helper
+  async function uploadImageFile(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = async () => {
+        try {
+          const res = await fetch('/api/upload', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              data: reader.result,
+              filename: file.name
+            })
+          });
+          const json = await res.json();
+          if (!res.ok || !json.success) throw new Error(json.error || 'Upload failed');
+          resolve(json.url);
+        } catch (err) {
+          reject(err);
+        }
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // Setup Drag & Drop Handlers
+  function setupDropZone(dropZoneEl, fileInputEl, onFileUploaded) {
+    if (!dropZoneEl || !fileInputEl) return;
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropZoneEl.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZoneEl.classList.add('dragover');
+      });
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropZoneEl.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZoneEl.classList.remove('dragover');
+      });
+    });
+
+    dropZoneEl.addEventListener('drop', async (e) => {
+      const files = e.dataTransfer.files;
+      if (files && files.length > 0) {
+        handleFiles(files);
+      }
+    });
+
+    fileInputEl.addEventListener('change', (e) => {
+      const files = e.target.files;
+      if (files && files.length > 0) {
+        handleFiles(files);
+      }
+    });
+
+    async function handleFiles(files) {
+      showToast('กำลังอัปโหลดรูปภาพ...');
+      try {
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          if (!file.type.startsWith('image/')) continue;
+          const url = await uploadImageFile(file);
+          onFileUploaded(url);
+        }
+        showToast('อัปโหลดรูปภาพสำเร็จ!');
+      } catch (err) {
+        console.error(err);
+        showToast('อัปโหลดรูปล้มเหลว: ' + err.message, true);
+      }
+    }
+  }
+
+  // Setup Drop Zones for Main & Gallery
+  setupDropZone(mainDropZone, mainFileInput, (url) => {
+    inputImage.value = url;
+    imagePreview.src = url;
+  });
+
+  setupDropZone(galleryDropZone, galleryFileInput, (url) => {
+    if (!currentGallery.includes(url)) {
+      currentGallery.push(url);
+      renderGallery();
+    }
+  });
+
+  function renderGallery() {
+    if (!galleryGrid) return;
+    galleryGrid.innerHTML = currentGallery.map((url, idx) => `
+      <div class="gallery-item">
+        <img src="${url}" alt="Gallery ${idx + 1}" onerror="this.src='/images/jewelry/cross_chain_main.jpg'" />
+        <button type="button" class="btn-del-gallery" onclick="window.MinozaAdmin.removeGalleryItem(${idx})" title="ลบรูป">✕</button>
+      </div>
+    `).join('');
+  }
+
+  function removeGalleryItem(idx) {
+    currentGallery.splice(idx, 1);
+    renderGallery();
+  }
+
+  // Dynamic Packages Builder
+  function renderPackages() {
+    if (!packagesContainer) return;
+    if (currentPackages.length === 0) {
+      currentPackages = [
+        {
+          id: 1,
+          title: 'ซื้อ 1 เส้น (ชิ้นเดี่ยว)',
+          qty: 1,
+          price: 590,
+          originalPrice: 790,
+          badge: '',
+          freeShipping: false,
+          subText: '+ ค่าจัดส่งด่วน 50 ฿'
+        },
+        {
+          id: 2,
+          title: '2 เส้น (คู่) — ซื้อ 1 แถม 1 ฟรี',
+          qty: 2,
+          price: 890,
+          originalPrice: 1180,
+          badge: 'BESTSELLER / คู่คุ้มสุด',
+          freeShipping: true,
+          subText: '✓ ฟรีค่าจัดส่งด่วนทั่วประเทศ'
+        }
+      ];
+    }
+
+    packagesContainer.innerHTML = currentPackages.map((pkg, idx) => `
+      <div class="package-tier-item">
+        <div class="tier-header">
+          <span class="tier-title-pill">แบบที่ ${idx + 1}: ${pkg.title || 'แพ็กเกจ'}</span>
+          ${currentPackages.length > 1 ? `<button type="button" class="btn-del-tier" onclick="window.MinozaAdmin.removePackageTier(${idx})">🗑️ ลบแบบนี้</button>` : ''}
+        </div>
+        <div class="form-grid-3">
+          <div class="form-group">
+            <label>ชื่อตัวเลือกแพ็กเกจ *</label>
+            <input type="text" value="${pkg.title || ''}" oninput="window.MinozaAdmin.updatePackageField(${idx}, 'title', this.value)" placeholder="เช่น ซื้อ 2 แถม 1 ฟรี" required />
+          </div>
+          <div class="form-group">
+            <label>ราคาขายจริง ฿ *</label>
+            <input type="number" value="${pkg.price || 0}" oninput="window.MinozaAdmin.updatePackageField(${idx}, 'price', Number(this.value))" required />
+          </div>
+          <div class="form-group">
+            <label>ราคาปกติขีดฆ่า ฿</label>
+            <input type="number" value="${pkg.originalPrice || 0}" oninput="window.MinozaAdmin.updatePackageField(${idx}, 'originalPrice', Number(this.value))" />
+          </div>
+        </div>
+        <div class="form-grid-3" style="margin-bottom: 0;">
+          <div class="form-group">
+            <label>จำนวนชิ้นที่ได้รับ (Qty)</label>
+            <input type="number" value="${pkg.qty || 1}" oninput="window.MinozaAdmin.updatePackageField(${idx}, 'qty', Number(this.value))" min="1" />
+          </div>
+          <div class="form-group">
+            <label>ป้ายกำกับ (Badge)</label>
+            <input type="text" value="${pkg.badge || ''}" oninput="window.MinozaAdmin.updatePackageField(${idx}, 'badge', this.value)" placeholder="เช่น BESTSELLER, คุ้มสุด" />
+          </div>
+          <div class="form-group" style="display: flex; align-items: center; gap: 14px; margin-top: 24px; flex-wrap: wrap;">
+            <label for="freeShip_${idx}" style="display: flex; align-items: center; gap: 6px; margin-bottom: 0; cursor: pointer;">
+              <input type="checkbox" id="freeShip_${idx}" ${pkg.freeShipping ? 'checked' : ''} onchange="window.MinozaAdmin.updatePackageField(${idx}, 'freeShipping', this.checked)" style="width: auto;" />
+              <span>จัดส่งฟรี</span>
+            </label>
+            <label for="soldOut_${idx}" style="display: flex; align-items: center; gap: 6px; margin-bottom: 0; cursor: pointer; color: #dc2626; font-weight: 700;">
+              <input type="checkbox" id="soldOut_${idx}" ${pkg.isSoldOut ? 'checked' : ''} onchange="window.MinozaAdmin.updatePackageField(${idx}, 'isSoldOut', this.checked)" style="width: auto; accent-color: #dc2626;" />
+              <span>🔴 ตัวเลือกนี้หมด (Sold Out)</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function addPackageTier(templateType) {
+    let newTier = {
+      id: currentPackages.length + 1,
+      title: 'ตัวเลือกใหม่',
+      qty: 1,
+      price: 990,
+      originalPrice: 1490,
+      badge: '',
+      freeShipping: true,
+      subText: '✓ ฟรีค่าจัดส่งด่วน'
+    };
+
+    if (templateType === 'bogo') {
+      newTier.title = '2 ชิ้น — ซื้อ 1 แถม 1 ฟรี';
+      newTier.qty = 2;
+      newTier.badge = 'BESTSELLER / คู่คุ้มสุด';
+    } else if (templateType === 'buy2get1') {
+      newTier.title = '3 ชิ้น — ซื้อ 2 แถม 1 ฟรี (เซ็ต 3 ชิ้น)';
+      newTier.qty = 3;
+      newTier.badge = 'คุ้มค่าที่สุด';
+    } else if (templateType === 'buy1get2') {
+      newTier.title = '3 ชิ้น — ซื้อ 1 แถม 2 ฟรี (ลิมิเต็ด)';
+      newTier.qty = 3;
+      newTier.badge = 'MEGA DEAL';
+    }
+
+    currentPackages.push(newTier);
+    renderPackages();
+  }
+
+  function removePackageTier(idx) {
+    if (currentPackages.length <= 1) return;
+    currentPackages.splice(idx, 1);
+    renderPackages();
+  }
+
+  function updatePackageField(idx, field, value) {
+    if (currentPackages[idx]) {
+      currentPackages[idx][field] = value;
+    }
+  }
+
+  // Tab Switcher
+  if (tabBtnProducts && tabBtnHomepage) {
+    tabBtnProducts.addEventListener('click', () => {
+      tabBtnProducts.classList.add('active');
+      tabBtnHomepage.classList.remove('active');
+      tabPaneProducts.classList.add('active');
+      tabPaneHomepage.classList.remove('active');
+    });
+
+    tabBtnHomepage.addEventListener('click', () => {
+      tabBtnHomepage.classList.add('active');
+      tabBtnProducts.classList.remove('active');
+      tabPaneHomepage.classList.add('active');
+      tabPaneProducts.classList.remove('active');
+      loadHomepageSettings();
+    });
+  }
+
+  // Load Products & Orders
+  async function loadData() {
+    try {
+      const [prodRes, orderRes] = await Promise.all([
+        fetch('/api/products').then(r => r.json()),
+        fetch('/api/orders').then(r => r.json()).catch(() => ({ totalOrders: 0, totalRevenue: 0 }))
+      ]);
+
+      products = Array.isArray(prodRes) ? prodRes : [];
+      renderMetrics(orderRes);
+      renderProducts();
+    } catch (err) {
+      console.error('Failed to load products:', err);
+      showToast('ไม่สามารถดึงข้อมูลสินค้าได้: ' + err.message, true);
+    }
+  }
+
+  function renderMetrics(orderData) {
+    if (totalProductsEl) totalProductsEl.textContent = products.length;
+    if (bogoProductsEl) {
+      const bogoCount = products.filter(p => p.bundle2Price !== undefined || (p.packages && p.packages.length > 1)).length;
+      bogoProductsEl.textContent = bogoCount;
+    }
+    if (totalOrdersEl && orderData) {
+      totalOrdersEl.textContent = (orderData.totalOrders || 0).toLocaleString();
+    }
+    if (totalRevenueEl && orderData) {
+      totalRevenueEl.textContent = '฿' + (orderData.totalRevenue || 0).toLocaleString();
+    }
+  }
+
+  function renderProducts() {
+    if (!productsTableBody) return;
+
+    const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
+    const cat = categoryFilter ? categoryFilter.value : '';
+
+    const filtered = products.filter(p => {
+      const matchesSearch = !query ||
+        (p.name && p.name.toLowerCase().includes(query)) ||
+        (p.slug && p.slug.toLowerCase().includes(query)) ||
+        (p.category && p.category.toLowerCase().includes(query));
+      const matchesCategory = !cat || p.category === cat;
+      return matchesSearch && matchesCategory;
+    });
+
+    if (filtered.length === 0) {
+      productsTableBody.innerHTML = `
+        <tr>
+          <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-muted);">
+            📦 ไม่พบรายการสินค้าตามเงื่อนไขที่ค้นหา
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    productsTableBody.innerHTML = filtered.map(p => {
+      const badgeClass = p.badge === 'BESTSELLER' ? 'badge-bestseller' : (p.badge === 'NEW' ? 'badge-new' : 'badge-sale');
+      const imgUrl = p.image || '/images/jewelry/cross_chain_main.jpg';
+      const origPrice = p.originalPrice ? `<span class="price-orig">${p.originalPrice.toLocaleString()} ฿</span>` : '';
+      const pkgCount = (p.packages && p.packages.length) ? `${p.packages.length} แบบราคา` : (p.bundle2Price ? '1 แถม 1' : 'ชิ้นเดี่ยว');
+
+      return `
+        <tr data-id="${p.id}">
+          <td>
+            <div class="product-cell-wrap">
+              <div class="product-thumb-box">
+                <img src="${imgUrl}" alt="${p.name}" onerror="this.src='/images/jewelry/cross_chain_main.jpg'" />
+              </div>
+              <div>
+                <div class="product-title-text">${p.name}</div>
+                <div class="product-slug-text">/${p.slug || p.id}</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <span class="badge-category">${p.category || 'General'}</span>
+          </td>
+          <td>
+            <span class="price-bold">${Number(p.price || 0).toLocaleString()} ฿</span>
+            ${origPrice}
+          </td>
+          <td>
+            <span class="badge-pill ${badgeClass}">${p.badge || 'STANDARD'}</span>
+          </td>
+          <td>
+            <div style="display: flex; flex-direction: column; gap: 4px; align-items: flex-start;">
+              ${p.isSoldOut 
+                ? '<span style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 2px 7px; border-radius: 4px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;">🔴 ของหมด</span>'
+                : '<span style="background: #dcfce7; color: #15803d; border: 1px solid #86efac; padding: 2px 7px; border-radius: 4px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;">🟢 พร้อมส่ง</span>'
+              }
+              <button type="button" class="btn-action-stock ${p.isSoldOut ? 'btn-stock-sold' : 'btn-stock-live'}" onclick="window.MinozaAdmin.toggleStockStatus('${p.id}')" title="คลิกเพื่อสลับสถานะ">
+                ${p.isSoldOut ? '🟢 เปิดขาย' : '🔴 ปิดของหมด'}
+              </button>
+            </div>
+          </td>
+          <td>
+            <span style="font-size: 13px; color: #15803d; font-weight: 700;">
+              🏷️ ${pkgCount}
+            </span>
+          </td>
+          <td>
+            <div class="action-buttons-group">
+              <button type="button" class="btn-action-edit" onclick="window.MinozaAdmin.openEditModal('${p.id}')">
+                ✏️ แก้ไข
+              </button>
+              <a href="/product/${p.slug || p.id}" target="_blank" class="btn-action-view" title="ดูหน้าสินค้าจริง">
+                👁️
+              </a>
+              <button type="button" class="btn-action-del" onclick="window.MinozaAdmin.confirmDelete('${p.id}', '${escapeHtml(p.name)}')" title="ลบสินค้า">
+                🗑️
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+  }
+
+  // Open Create Modal
+  function openCreateModal() {
+    editingProductId = null;
+    if (modalTitle) modalTitle.textContent = '➕ เพิ่มสินค้าใหม่ (Add Product)';
+    if (productForm) productForm.reset();
+    if (inputId) inputId.value = '';
+    if (inputBadge) inputBadge.value = 'NEW';
+    if (inputCategory) inputCategory.value = 'Chains & Necklaces';
+    if (imagePreview) imagePreview.src = '/images/jewelry/cross_chain_main.jpg';
+    if (inputMaterial) inputMaterial.value = 'MATERIAL — พรีเมียม 316L Stainless Steel (กันน้ำ 100%)';
+
+    // Reset Swatches
+    document.querySelectorAll('.swatch-checkbox').forEach(cb => {
+      cb.checked = (cb.value === 'Silver' || cb.value === '18K Gold');
+    });
+
+    currentGallery = ['/images/jewelry/cross_chain_main.jpg'];
+    renderGallery();
+
+    currentPackages = [
+      {
+        id: 1,
+        title: 'ซื้อ 1 เส้น (ชิ้นเดี่ยว)',
+        qty: 1,
+        price: 590,
+        originalPrice: 790,
+        badge: '',
+        freeShipping: false,
+        subText: '+ ค่าจัดส่งด่วน 50 ฿'
+      },
+      {
+        id: 2,
+        title: '2 เส้น (คู่) — ซื้อ 1 แถม 1 ฟรี',
+        qty: 2,
+        price: 890,
+        originalPrice: 1180,
+        badge: 'BESTSELLER / คู่คุ้มสุด',
+        freeShipping: true,
+        subText: '✓ ฟรีค่าจัดส่งด่วนทั่วประเทศ'
+      }
+    ];
+    renderPackages();
+
+    if (inputIsSoldOut) inputIsSoldOut.checked = false;
+    if (modalViewLiveBtn) modalViewLiveBtn.style.display = 'none';
+
+    if (productModal) productModal.classList.add('active');
+  }
+
+  // Open Edit Modal
+  function openEditModal(id) {
+    const p = products.find(prod => prod.id === id || prod.slug === id);
+    if (!p) {
+      showToast('ไม่พบข้อมูลสินค้านี้', true);
+      return;
+    }
+
+    editingProductId = p.id;
+    if (modalTitle) modalTitle.textContent = '✏️ แก้ไขสินค้า: ' + p.name;
+    if (inputId) inputId.value = p.id;
+    if (inputSlug) inputSlug.value = p.slug || p.id;
+    if (inputName) inputName.value = p.name || '';
+    if (inputCategory) inputCategory.value = p.category || 'Chains & Necklaces';
+    if (inputPrice) inputPrice.value = p.price || '';
+    if (inputOriginalPrice) inputOriginalPrice.value = p.originalPrice || '';
+    if (inputBadge) inputBadge.value = p.badge || 'BESTSELLER';
+    if (inputImage) inputImage.value = p.image || '';
+    if (imagePreview) imagePreview.src = p.image || '/images/jewelry/cross_chain_main.jpg';
+    if (inputTagline) inputTagline.value = p.tagline || '';
+    if (inputDescription) inputDescription.value = p.description || '';
+    if (inputMaterial) inputMaterial.value = p.material || 'MATERIAL — พรีเมียม 316L Stainless Steel (กันน้ำ 100%)';
+    if (inputIsSoldOut) inputIsSoldOut.checked = Boolean(p.isSoldOut);
+
+    if (modalViewLiveBtn) {
+      modalViewLiveBtn.href = '/product/' + (p.slug || p.id);
+      modalViewLiveBtn.style.display = 'inline-block';
+    }
+
+    // Color Swatches
+    const prodColors = Array.isArray(p.colors) ? p.colors : ['Silver', '18K Gold'];
+    document.querySelectorAll('.swatch-checkbox').forEach(cb => {
+      cb.checked = prodColors.includes(cb.value);
+    });
+
+    // Gallery
+    currentGallery = Array.isArray(p.gallery) && p.gallery.length > 0 ? [...p.gallery] : [p.image || '/images/jewelry/cross_chain_main.jpg'];
+    renderGallery();
+
+    // Packages
+    if (Array.isArray(p.packages) && p.packages.length > 0) {
+      currentPackages = JSON.parse(JSON.stringify(p.packages));
+    } else {
+      currentPackages = [
+        {
+          id: 1,
+          title: p.bundle1Title || `ซื้อ 1 ชิ้น (${p.price} ฿)`,
+          qty: 1,
+          price: p.price,
+          originalPrice: p.originalPrice,
+          badge: '',
+          freeShipping: false,
+          subText: '+ ค่าจัดส่งด่วน 50 ฿'
+        },
+        {
+          id: 2,
+          title: p.bundle2Title || '2 ชิ้น — ซื้อ 1 แถม 1 ฟรี',
+          qty: 2,
+          price: p.bundle2Price !== undefined ? p.bundle2Price : p.price,
+          originalPrice: (p.originalPrice || p.price * 1.3) * 2,
+          badge: 'BESTSELLER / คู่คุ้มสุด',
+          freeShipping: true,
+          subText: '✓ ฟรีค่าจัดส่งด่วนทั่วประเทศ'
+        }
+      ];
+    }
+    renderPackages();
+
+    if (productModal) productModal.classList.add('active');
+  }
+
+  function closeModal() {
+    if (productModal) productModal.classList.remove('active');
+    editingProductId = null;
+  }
+
+  // Save Product (Create or Update)
+  async function handleFormSubmit(e) {
+    e.preventDefault();
+
+    // Collect checked colors
+    const selectedColors = [];
+    document.querySelectorAll('.swatch-checkbox:checked').forEach(cb => {
+      selectedColors.push(cb.value);
+    });
+
+    const payload = {
+      name: inputName.value.trim(),
+      slug: inputSlug.value.trim() || undefined,
+      category: inputCategory.value,
+      price: Number(inputPrice.value),
+      originalPrice: inputOriginalPrice.value ? Number(inputOriginalPrice.value) : undefined,
+      badge: inputBadge.value,
+      image: inputImage.value.trim() || '/images/jewelry/cross_chain_main.jpg',
+      gallery: currentGallery.length > 0 ? currentGallery : [inputImage.value.trim() || '/images/jewelry/cross_chain_main.jpg'],
+      tagline: inputTagline.value.trim(),
+      description: inputDescription.value.trim(),
+      material: inputMaterial.value.trim(),
+      colors: selectedColors,
+      packages: currentPackages,
+      isSoldOut: inputIsSoldOut ? inputIsSoldOut.checked : false,
+      inStock: inputIsSoldOut ? !inputIsSoldOut.checked : true,
+      bundle2Title: currentPackages[1] ? currentPackages[1].title : undefined,
+      bundle2Price: currentPackages[1] ? currentPackages[1].price : undefined
+    };
+
+    try {
+      const url = editingProductId ? `/api/products/${editingProductId}` : '/api/products';
+      const method = editingProductId ? 'PUT' : 'POST';
+
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'เกิดข้อผิดพลาดในการบันทึกสินค้า');
+      }
+
+      showToast(editingProductId ? 'แก้ไขสินค้าเรียบร้อยแล้ว!' : 'เพิ่มสินค้าใหม่เรียบร้อยแล้ว!');
+      closeModal();
+      await loadData();
+    } catch (err) {
+      console.error('Save error:', err);
+      showToast(err.message, true);
+    }
+  }
+
+  // Delete flow
+  function confirmDelete(id, name) {
+    pendingDeleteId = id;
+    if (deleteItemName) deleteItemName.textContent = name || id;
+    if (deleteModal) deleteModal.classList.add('active');
+  }
+
+  function closeDeleteModal() {
+    if (deleteModal) deleteModal.classList.remove('active');
+    pendingDeleteId = null;
+  }
+
+  async function executeDelete() {
+    if (!pendingDeleteId) return;
+
+    try {
+      const res = await fetch(`/api/products/${pendingDeleteId}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'ไม่สามารถลบสินค้าได้');
+      }
+
+      showToast('ลบสินค้าออกจากระบบเรียบร้อยแล้ว');
+      closeDeleteModal();
+      await loadData();
+    } catch (err) {
+      console.error('Delete error:', err);
+      showToast(err.message, true);
+    }
+  }
+
+  // =========================================================================
+  // HOMEPAGE SETTINGS CONTROLLER
+  // =========================================================================
+  async function loadHomepageSettings() {
+    try {
+      const res = await fetch('/api/settings/homepage');
+      const settings = await res.json();
+
+      const hero = settings.hero || {};
+      const marquee = settings.marquee || {};
+      const tiles = settings.tiles || {};
+
+      const heroRating = document.getElementById('settingHeroRating');
+      const heroTitle = document.getElementById('settingHeroTitle');
+      const heroImage = document.getElementById('settingHeroImage');
+      const heroPreview = document.getElementById('heroImagePreview');
+      const marqueeText = document.getElementById('settingMarqueeText');
+
+      const leftTitle = document.getElementById('settingLeftTileTitle');
+      const leftSubtitle = document.getElementById('settingLeftTileSubtitle');
+      const leftImage = document.getElementById('settingLeftTileImage');
+      const leftPreview = document.getElementById('leftTileImagePreview');
+
+      const rightTitle = document.getElementById('settingRightTileTitle');
+      const rightSubtitle = document.getElementById('settingRightTileSubtitle');
+      const rightImage = document.getElementById('settingRightTileImage');
+      const rightPreview = document.getElementById('rightTileImagePreview');
+
+      if (heroRating) heroRating.value = hero.rating || '';
+      if (heroTitle) heroTitle.value = hero.title || '';
+      if (heroImage) heroImage.value = hero.bgImage || '';
+      if (heroPreview) heroPreview.src = hero.bgImage || '/images/hero_yacht_model.jpg';
+      if (marqueeText) marqueeText.value = marquee.text || '';
+
+      if (leftTitle) leftTitle.value = tiles.leftTitle || '';
+      if (leftSubtitle) leftSubtitle.value = tiles.leftSubtitle || '';
+      if (leftImage) leftImage.value = tiles.leftImage || '';
+      if (leftPreview) leftPreview.src = tiles.leftImage || '/images/tile_watches.jpg';
+
+      if (rightTitle) rightTitle.value = tiles.rightTitle || '';
+      if (rightSubtitle) rightSubtitle.value = tiles.rightSubtitle || '';
+      if (rightImage) rightImage.value = tiles.rightImage || '';
+      if (rightPreview) rightPreview.src = tiles.rightImage || '/images/tile_jewelry.jpg';
+
+      // Setup dropzones for Homepage images
+      setupDropZone(document.getElementById('heroDropZone'), document.getElementById('heroFileInput'), (url) => {
+        if (heroImage) heroImage.value = url;
+        if (heroPreview) heroPreview.src = url;
+      });
+
+      setupDropZone(document.getElementById('leftTileDropZone'), document.getElementById('leftTileFileInput'), (url) => {
+        if (leftImage) leftImage.value = url;
+        if (leftPreview) leftPreview.src = url;
+      });
+
+      setupDropZone(document.getElementById('rightTileDropZone'), document.getElementById('rightTileFileInput'), (url) => {
+        if (rightImage) rightImage.value = url;
+        if (rightPreview) rightPreview.src = url;
+      });
+
+    } catch (err) {
+      console.error('Failed to load homepage settings:', err);
+      showToast('ไม่สามารถดึงข้อมูลหน้าแรกได้', true);
+    }
+  }
+
+  async function saveHomepageSettings(e) {
+    if (e) e.preventDefault();
+
+    const payload = {
+      hero: {
+        rating: document.getElementById('settingHeroRating')?.value || '',
+        title: document.getElementById('settingHeroTitle')?.value || '',
+        bgImage: document.getElementById('settingHeroImage')?.value || '/images/hero_yacht_model.jpg',
+        bullets: ['1 แถม 1 ฟรี', 'รับประกันตลอดชีพ', 'จัดส่งฟรีทั่วไทย'],
+        buttonText: 'เลือกชมสินค้า →',
+        buttonLink: '#bestSellers'
+      },
+      marquee: {
+        text: document.getElementById('settingMarqueeText')?.value || ''
+      },
+      tiles: {
+        leftTitle: document.getElementById('settingLeftTileTitle')?.value || '',
+        leftSubtitle: document.getElementById('settingLeftTileSubtitle')?.value || '',
+        leftButton: 'ดูคอลเลกชันนาฬิกา →',
+        leftLink: '/#bestSellers',
+        leftImage: document.getElementById('settingLeftTileImage')?.value || '/images/tile_watches.jpg',
+        rightTitle: document.getElementById('settingRightTileTitle')?.value || '',
+        rightSubtitle: document.getElementById('settingRightTileSubtitle')?.value || '',
+        rightButton: 'เลือกซื้อเลย →',
+        rightLink: '/#bestSellers',
+        rightImage: document.getElementById('settingRightTileImage')?.value || '/images/tile_jewelry.jpg'
+      }
+    };
+
+    try {
+      const res = await fetch('/api/settings/homepage', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const json = await res.json();
+      if (!res.ok || !json.success) throw new Error(json.error || 'Failed to save');
+
+      showToast('บันทึกการตั้งค่าหน้าแรกสำเร็จ! หน้าเว็บอัปเดตเรียบร้อย');
+    } catch (err) {
+      console.error(err);
+      showToast('บันทึกล้มเหลว: ' + err.message, true);
+    }
+  }
+
+  // Quick Stock Status Toggle (In Stock / Sold Out)
+  async function toggleStockStatus(id) {
+    try {
+      const res = await fetch(`/api/products/${id}/toggle-stock`, { method: 'PATCH' });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'เกิดข้อผิดพลาดในการเปลี่ยนสถานะสินค้า');
+      }
+
+      const statusMsg = data.isSoldOut 
+        ? '🔴 ตั้งสถานะ "สินค้าหมดชั่วคราว" เรียบร้อยแล้ว (ปิดการสั่งซื้อบนหน้าเว็บ)' 
+        : '🟢 เปลี่ยนสถานะเป็น "พร้อมจัดส่ง" เรียบร้อยแล้ว (เปิดรับคำสั่งซื้อ)';
+      showToast(statusMsg);
+      await loadData();
+    } catch (err) {
+      console.error('Toggle stock error:', err);
+      showToast(err.message, true);
+    }
+  }
+
+  // Event Listeners
+  if (searchInput) searchInput.addEventListener('input', renderProducts);
+  if (categoryFilter) categoryFilter.addEventListener('change', renderProducts);
+  if (productForm) productForm.addEventListener('submit', handleFormSubmit);
+
+  const homepageForm = document.getElementById('homepageSettingsForm');
+  if (homepageForm) homepageForm.addEventListener('submit', saveHomepageSettings);
+
+  // Global exports for inline onclick attributes
+  window.MinozaAdmin = {
+    openCreateModal,
+    openEditModal,
+    closeModal,
+    confirmDelete,
+    closeDeleteModal,
+    executeDelete,
+    toggleStockStatus,
+    removeGalleryItem,
+    addPackageTier,
+    removePackageTier,
+    updatePackageField,
+    saveHomepageSettings
+  };
+
+  // Init
+  document.addEventListener('DOMContentLoaded', loadData);
+})();

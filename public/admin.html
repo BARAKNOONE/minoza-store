@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MINOZA STORE — จัดการร้านค้าและสินค้าหลังบ้าน (Admin Console v2)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body>
+
+  <!-- Top Admin Navbar -->
+  <header class="admin-navbar">
+    <a href="/admin" class="admin-nav-brand">
+      <span class="admin-logo-badge">MINOZA</span>
+      <div>
+        <span class="admin-brand-text">ADMIN CONSOLE</span>
+        <span class="admin-brand-sub">THAILAND BRAND</span>
+      </div>
+    </a>
+    <div class="admin-nav-actions">
+      <a href="/" target="_blank" class="btn-nav-outline">
+        <span>🛍️ ดูหน้าแรก (Home)</span>
+      </a>
+      <a href="/product/cross-chain" target="_blank" class="btn-nav-outline">
+        <span>✝️ ดูหน้าสินค้า (PDP)</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="admin-tabs-bar">
+    <button type="button" class="admin-tab-btn active" id="tabBtnProducts">
+      <span>📦 จัดการสินค้า (Products)</span>
+    </button>
+    <button type="button" class="admin-tab-btn" id="tabBtnHomepage">
+      <span>🏠 จัดการหน้าแรก (Homepage Banners &amp; Tiles)</span>
+    </button>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="admin-container">
+
+    <!-- TAB 1: PRODUCTS MANAGEMENT -->
+    <div class="tab-pane active" id="tabPaneProducts">
+      <!-- Page Header -->
+      <div class="admin-page-header">
+        <div class="admin-title-area">
+          <h1>📦 จัดการสินค้า (Product Catalog)</h1>
+          <p>เพิ่ม แก้ไขราคา รูปภาพประกอบ และแพ็กเกจโปรโมชั่น 1 แถม 1, 2 แถม 1, 1 แถม 2 ได้อย่างอิสระ</p>
+        </div>
+        <button type="button" class="btn-primary-luxury" onclick="window.MinozaAdmin.openCreateModal()">
+          <span>➕ เพิ่มสินค้าใหม่ (Add Product)</span>
+        </button>
+      </div>
+
+      <!-- Quick Stats Grid -->
+      <section class="admin-stats-grid">
+        <div class="stat-card">
+          <div class="stat-info">
+            <div class="stat-label">สินค้าในระบบทั้งหมด</div>
+            <div class="stat-value" id="totalProductsCount">--</div>
+          </div>
+          <div class="stat-icon">💎</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-info">
+            <div class="stat-label">สินค้าที่มีโปรโมชั่น (BOGO)</div>
+            <div class="stat-value" id="bogoProductsCount">--</div>
+          </div>
+          <div class="stat-icon">🏷️</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-info">
+            <div class="stat-label">คำสั่งซื้อสะสม (Orders)</div>
+            <div class="stat-value" id="totalOrdersCount">--</div>
+          </div>
+          <div class="stat-icon">📦</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-info">
+            <div class="stat-label">ยอดขายรวมสุทธิ (Revenue)</div>
+            <div class="stat-value" id="totalRevenueCount" style="color: #15803d;">--</div>
+          </div>
+          <div class="stat-icon">💰</div>
+        </div>
+      </section>
+
+      <!-- Action Toolbar (Search & Category Filter) -->
+      <div class="admin-action-bar">
+        <div class="search-filter-group">
+          <div class="search-input-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="ค้นหาชื่อสินค้า, SKU, หมวดหมู่..." />
+          </div>
+          <select id="categoryFilter" class="category-select">
+            <option value="">ทุกหมวดหมู่ (All Categories)</option>
+            <option value="Watches">Watches (นาฬิกา)</option>
+            <option value="Chains &amp; Necklaces">Chains &amp; Necklaces (สร้อยคอ)</option>
+            <option value="Bracelets &amp; Cuffs">Bracelets &amp; Cuffs (สร้อยข้อมือ)</option>
+            <option value="Rings &amp; Bands">Rings &amp; Bands (แหวน)</option>
+          </select>
+        </div>
+        <div>
+          <span style="font-size: 13px; color: var(--text-secondary);">อัปเดตข้อมูลอัตโนมัติพร้อมแสดงผลบนหน้าเว็บทันที</span>
+        </div>
+      </div>
+
+      <!-- Products Table Card -->
+      <div class="admin-table-card">
+        <div class="table-responsive">
+          <table class="admin-products-table">
+            <thead>
+              <tr>
+                <th style="width: 28%;">สินค้า (Product)</th>
+                <th style="width: 13%;">หมวดหมู่ (Category)</th>
+                <th style="width: 13%;">ราคาขาย (Price)</th>
+                <th style="width: 11%;">ป้ายสินค้า (Badge)</th>
+                <th style="width: 13%;">สถานะสต็อก (Stock)</th>
+                <th style="width: 10%;">แพ็กเกจราคา</th>
+                <th style="width: 12%;">การจัดการ (Actions)</th>
+              </tr>
+            </thead>
+            <tbody id="productsTableBody">
+              <tr>
+                <td colspan="7" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                  กำลังโหลดข้อมูลสินค้า...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: HOMEPAGE SETTINGS -->
+    <div class="tab-pane" id="tabPaneHomepage">
+      <div class="admin-page-header">
+        <div class="admin-title-area">
+          <h1>🏠 จัดการแบนเนอร์และภาพหน้าแรก (Homepage Settings)</h1>
+          <p>เปลี่ยนรูป Hero Yacht, แบนเนอร์แบ่งครึ่ง 50/50 ซ้าย-ขวา, และข้อความแถบวิ่งสีทอง</p>
+        </div>
+      </div>
+
+      <form id="homepageSettingsForm" class="homepage-settings-card">
+        <!-- 1. Hero Banner Section -->
+        <div class="form-section-box">
+          <div class="form-section-title">
+            <span>⚓ 1. ภาพแบนเนอร์หลักบนเรือยอชต์ (Hero Yacht Banner)</span>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>ข้อความรีวิวด้านบน (Rating Badge)</label>
+              <input type="text" id="settingHeroRating" placeholder="★★★★★ 4.9/5 จากรีวิวลูกค้ากว่า 180,000+ คน" />
+            </div>
+            <div class="form-group">
+              <label>Headline หลัก (รองรับ &lt;br&gt; ตัดบรรทัด)</label>
+              <input type="text" id="settingHeroTitle" placeholder="โปรโมชั่น 1 แถม 1 ฟรี<br>ลดพิเศษส่งท้ายซีซั่น" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>รูปภาพพื้นหลัง Hero (Drag &amp; Drop หรือระบุ URL)</label>
+            <div class="drop-zone" id="heroDropZone">
+              <span class="drop-zone-icon">📁</span>
+              <div class="drop-zone-text">ลากไฟล์รูปภาพมาวางที่นี่ หรือคลิกเพื่อเลือกไฟล์</div>
+              <div class="drop-zone-sub">รองรับ JPG, PNG, WebP ความละเอียดสูง</div>
+              <input type="file" id="heroFileInput" accept="image/*" />
+            </div>
+            <div class="image-preview-bar">
+              <img id="heroImagePreview" src="/images/hero_yacht_model.jpg" alt="Hero Preview" class="preview-thumb-main" />
+              <input type="text" id="settingHeroImage" placeholder="/images/hero_yacht_model.jpg" />
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Golden Marquee Section -->
+        <div class="form-section-box">
+          <div class="form-section-title">
+            <span>⚡ 2. ข้อความแถบวิ่งสีทอง (Golden Marquee Ticker)</span>
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label>ข้อความที่วิ่งบนแถบสีทอง</label>
+            <input type="text" id="settingMarqueeText" placeholder="ซื้อ 1 แถม 1 ฟรี (BUY 1 GET 1 FREE) • ลดพิเศษรอบสุดท้าย • มีบริการเก็บเงินปลายทาง (COD) • จัดส่งด่วนฟรีทั่วไทย" />
+          </div>
+        </div>
+
+        <!-- 3. Dual Tiles 50/50 Section -->
+        <div class="form-section-box">
+          <div class="form-section-title">
+            <span>🖼️ 3. แบนเนอร์คู่ 50/50 (Dual Tiles ซ้าย-ขวา)</span>
+          </div>
+          <div class="form-grid-2">
+            <!-- Left Tile -->
+            <div class="tile-setting-box">
+              <h4 style="font-size: 13.5px; font-weight: 800; margin-bottom: 12px;">ฝั่งซ้าย (นาฬิกาลิมิเต็ด)</h4>
+              <div class="form-group">
+                <label>หัวข้อ (Title)</label>
+                <input type="text" id="settingLeftTileTitle" placeholder="LIMITED EDITION" />
+              </div>
+              <div class="form-group">
+                <label>คำบรรยาย (Subtitle)</label>
+                <input type="text" id="settingLeftTileSubtitle" placeholder="นาฬิการุ่นลิมิเต็ด" />
+              </div>
+              <div class="form-group">
+                <label>รูปภาพฝั่งซ้าย (Drag &amp; Drop หรือ URL)</label>
+                <div class="drop-zone" id="leftTileDropZone" style="padding: 16px 10px;">
+                  <span class="drop-zone-icon" style="font-size: 22px;">📁</span>
+                  <div class="drop-zone-text" style="font-size: 12px;">ลากไฟล์มาวาง หรือคลิกเลือกรูป</div>
+                  <input type="file" id="leftTileFileInput" accept="image/*" />
+                </div>
+                <div class="image-preview-bar">
+                  <img id="leftTileImagePreview" src="/images/tile_watches.jpg" alt="Left Preview" class="preview-thumb-main" />
+                  <input type="text" id="settingLeftTileImage" placeholder="/images/tile_watches.jpg" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Tile -->
+            <div class="tile-setting-box">
+              <h4 style="font-size: 13.5px; font-weight: 800; margin-bottom: 12px;">ฝั่งขวา (คอลเลกชันขายดี)</h4>
+              <div class="form-group">
+                <label>หัวข้อ (Title)</label>
+                <input type="text" id="settingRightTileTitle" placeholder="BESTSELLER COLLECTION" />
+              </div>
+              <div class="form-group">
+                <label>คำบรรยาย (Subtitle)</label>
+                <input type="text" id="settingRightTileSubtitle" placeholder="คอลเลกชันขายดีที่สุด" />
+              </div>
+              <div class="form-group">
+                <label>รูปภาพฝั่งขวา (Drag &amp; Drop หรือ URL)</label>
+                <div class="drop-zone" id="rightTileDropZone" style="padding: 16px 10px;">
+                  <span class="drop-zone-icon" style="font-size: 22px;">📁</span>
+                  <div class="drop-zone-text" style="font-size: 12px;">ลากไฟล์มาวาง หรือคลิกเลือกรูป</div>
+                  <input type="file" id="rightTileFileInput" accept="image/*" />
+                </div>
+                <div class="image-preview-bar">
+                  <img id="rightTileImagePreview" src="/images/tile_jewelry.jpg" alt="Right Preview" class="preview-thumb-main" />
+                  <input type="text" id="settingRightTileImage" placeholder="/images/tile_jewelry.jpg" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align: right; margin-top: 18px;">
+          <button type="submit" class="btn-primary-luxury">
+            <span>💾 บันทึกการตั้งค่าหน้าแรก (Save Homepage Settings)</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </main>
+
+  <!-- =========================================================================
+       ADD / EDIT PRODUCT MODAL (FIXED NON-OVERFLOWING STICKY LAYOUT)
+       ========================================================================= -->
+  <div class="admin-modal-overlay" id="productModal">
+    <div class="admin-modal-card">
+      
+      <!-- Sticky Modal Header -->
+      <div class="admin-modal-header">
+        <h3 id="modalTitle">➕ เพิ่มสินค้าใหม่ (Add Product)</h3>
+        <a id="modalViewLiveBtn" href="#" target="_blank" style="display: none; font-size: 12px; margin-left: auto; margin-right: 12px; padding: 6px 12px; background: #e0f2fe; color: #0369a1; border-radius: 4px; text-decoration: none; font-weight: 700; border: 1px solid #bae6fd;">👁️ ดูหน้าเว็บสินค้าจริง</a>
+        <button type="button" class="btn-modal-close" onclick="window.MinozaAdmin.closeModal()">✕</button>
+      </div>
+
+      <!-- Scrollable Form Container -->
+      <form id="productForm" style="display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden;">
+        <div class="admin-modal-body">
+          <input type="hidden" id="prodId" />
+
+          <!-- Section 1: Basic Info -->
+          <div class="form-section-box">
+            <div class="form-section-title">
+              <span>📌 1. ข้อมูลพื้นฐานสินค้า</span>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label for="prodName">ชื่อสินค้า (Product Name) *</label>
+                <input type="text" id="prodName" required placeholder="เช่น CROSS CHAIN | SILVER" />
+              </div>
+              <div class="form-group">
+                <label for="prodSlug">URL Slug / รหัสสินค้า</label>
+                <input type="text" id="prodSlug" placeholder="เช่น cross-chain (เว้นว่างเพื่อสร้างอัตโนมัติ)" />
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label for="prodCategory">หมวดหมู่ (Category) *</label>
+                <select id="prodCategory" required>
+                  <option value="Chains &amp; Necklaces">Chains &amp; Necklaces (สร้อยคอ)</option>
+                  <option value="Watches">Watches (นาฬิกา)</option>
+                  <option value="Bracelets &amp; Cuffs">Bracelets &amp; Cuffs (สร้อยข้อมือ)</option>
+                  <option value="Rings &amp; Bands">Rings &amp; Bands (แหวน)</option>
+                  <option value="Accessories">Accessories (อุปกรณ์เสริม)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="prodBadge">ป้ายกำกับ (Badge)</label>
+                <select id="prodBadge">
+                  <option value="NEW">NEW (สินค้าใหม่)</option>
+                  <option value="BESTSELLER">BESTSELLER (ขายดีอันดับ 1)</option>
+                  <option value="LIMITED EDITION">LIMITED EDITION (รุ่นลิมิเต็ด)</option>
+                  <option value="HOT SALE">HOT SALE (ลดราคาพิเศษ)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label for="prodPrice">ราคาขายจริง ฿ (Sale Price) *</label>
+                <input type="number" id="prodPrice" required min="1" placeholder="เช่น 890" />
+              </div>
+              <div class="form-group">
+                <label for="prodOriginalPrice">ราคาปกติขีดฆ่า ฿ (Original Price)</label>
+                <input type="number" id="prodOriginalPrice" min="1" placeholder="เช่น 1180 (ไม่ใส่จะคำนวณให้)" />
+              </div>
+            </div>
+
+            <!-- Stock Status Checkbox -->
+            <div class="form-group" style="background: #fff5f5; border: 1.5px solid #fecaca; border-radius: 6px; padding: 12px 14px; margin-top: 10px; margin-bottom: 0;">
+              <label style="cursor: pointer; display: flex; align-items: center; gap: 12px; margin-bottom: 0;">
+                <input type="checkbox" id="prodIsSoldOut" style="width: 20px; height: 20px; accent-color: #dc2626; cursor: pointer;" />
+                <div>
+                  <span style="font-weight: 800; color: #dc2626; font-size: 13.5px;">🔴 ทำเครื่องหมายว่า "สินค้าหมดชั่วคราว" (Mark as Sold Out)</span>
+                  <div style="font-size: 12px; color: #64748b; font-weight: 400; margin-top: 2px;">
+                    หากติ๊กเลือก หน้าเว็บจะแสดงป้าย [สินค้าหมด] และปิดปุ่มกดสั่งซื้อ/เพิ่มลงตะกร้าทันที
+                  </div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Section 2: Main Image (Drag & Drop) -->
+          <div class="form-section-box">
+            <div class="form-section-title">
+              <span>📸 2. รูปภาพสินค้าหลัก (Drag &amp; Drop Upload)</span>
+            </div>
+            <div class="form-group">
+              <label>ลากไฟล์รูปภาพมาวาง หรือคลิกเพื่ออัปโหลดจากเครื่อง</label>
+              <div class="drop-zone" id="mainDropZone">
+                <span class="drop-zone-icon">📁</span>
+                <div class="drop-zone-text">คลิกหรือลากไฟล์รูปภาพหลักมาวางที่นี่</div>
+                <div class="drop-zone-sub">รองรับ JPG, PNG, WebP (จะถูกบันทึกเข้าเซิร์ฟเวอร์ทันที)</div>
+                <input type="file" id="mainFileInput" accept="image/*" />
+              </div>
+              <div class="image-preview-bar">
+                <img id="imagePreview" src="/images/jewelry/cross_chain_main.jpg" alt="Preview" class="preview-thumb-main" onerror="this.src='/images/jewelry/cross_chain_main.jpg'" />
+                <input type="text" id="prodImage" required placeholder="/images/jewelry/cross_chain_main.jpg หรือ /uploads/..." />
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 3: Product Gallery (Multi-Images) -->
+          <div class="form-section-box">
+            <div class="form-section-title">
+              <span>🖼️ 3. รูปภาพประกอบสินค้า (Product Gallery - หลายมุมมอง)</span>
+            </div>
+            <div class="form-group">
+              <label>ลากไฟล์รูปภาพหลายๆ รูปรวมกันมาวาง เพื่อเพิ่มภาพในแกลเลอรี</label>
+              <div class="drop-zone" id="galleryDropZone">
+                <span class="drop-zone-icon">🖼️</span>
+                <div class="drop-zone-text">ลากไฟล์รูปภาพประกอบหลายรูปมาวางที่นี่ หรือคลิกเพื่อเลือกไฟล์</div>
+                <div class="drop-zone-sub">รูปจะถูกเพิ่มในแกลเลอรีมุมมองสินค้าทันที</div>
+                <input type="file" id="galleryFileInput" accept="image/*" multiple />
+              </div>
+              <div class="gallery-container">
+                <div style="font-size: 12px; font-weight: 700; color: var(--text-secondary);">รูปภาพในแกลเลอรีปัจจุบัน:</div>
+                <div class="gallery-grid" id="galleryGrid"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 4: Material & Colors -->
+          <div class="form-section-box">
+            <div class="form-section-title">
+              <span>🎨 4. วัสดุ (MATERIAL) และตัวเลือกสี (Colors)</span>
+            </div>
+            <div class="form-group">
+              <label for="prodMaterial">ข้อความระบุวัสดุ (MATERIAL)</label>
+              <input type="text" id="prodMaterial" placeholder="เช่น MATERIAL — พรีเมียม 316L Stainless Steel (กันน้ำ 100%)" />
+            </div>
+            <div class="form-group">
+              <label>เลือกสีที่มีของสินค้านี้ (Color Swatches):</label>
+              <div class="swatches-selector">
+                <label class="swatch-check-label">
+                  <input type="checkbox" class="swatch-checkbox" value="Silver" checked />
+                  <span class="color-dot" style="background: #e2e8f0;"></span>
+                  <span>Silver (เงินแท้สถิต)</span>
+                </label>
+                <label class="swatch-check-label">
+                  <input type="checkbox" class="swatch-checkbox" value="18K Gold" checked />
+                  <span class="color-dot" style="background: #eab308;"></span>
+                  <span>18K Gold (ทองคำ 18K)</span>
+                </label>
+                <label class="swatch-check-label">
+                  <input type="checkbox" class="swatch-checkbox" value="Rose Gold" />
+                  <span class="color-dot" style="background: #fda4af;"></span>
+                  <span>Rose Gold (โรสโกลด์)</span>
+                </label>
+                <label class="swatch-check-label">
+                  <input type="checkbox" class="swatch-checkbox" value="Matte Black" />
+                  <span class="color-dot" style="background: #18181b;"></span>
+                  <span>Matte Black (ดำด้าน)</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 5: Descriptions -->
+          <div class="form-section-box">
+            <div class="form-section-title">
+              <span>📝 5. คำโปรยและรายละเอียดสินค้า</span>
+            </div>
+            <div class="form-group">
+              <label for="prodTagline">คำโปรยสั้น (Tagline)</label>
+              <input type="text" id="prodTagline" placeholder="เช่น Minimalist luxury pendant chain crafted from 316L stainless steel." />
+            </div>
+            <div class="form-group">
+              <label for="prodDescription">รายละเอียดสินค้า (Description)</label>
+              <textarea id="prodDescription" rows="3" placeholder="ระบุวัสดุ, คุณสมบัติกันน้ำ, ขนาด, การรับประกัน..."></textarea>
+            </div>
+          </div>
+
+          <!-- Section 6: Dynamic Packages Tier Builder -->
+          <div class="form-section-box" style="border-color: #bbf7d0; background: #fdfefe;">
+            <div class="form-section-title" style="color: #15803d; border-color: #bbf7d0;">
+              <span>🏷️ 6. ตัวสร้างแพ็กเกจราคาโปรโมชั่น (Dynamic Pricing Tiers: 1 แถม 1, 2 แถม 1, 1 แถม 2)</span>
+            </div>
+            <div style="font-size: 12.5px; color: var(--text-secondary); margin-bottom: 12px;">
+              กำหนดรูปแบบราคาที่ลูกค้าสามารถเลือกได้บนหน้าเว็บ เช่น 1 ชิ้นเดี่ยว, 1 แถม 1, 2 แถม 1, หรือ 1 แถม 2:
+            </div>
+
+            <!-- Packages Container -->
+            <div id="packagesContainer"></div>
+
+            <!-- Quick Template Buttons -->
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+              <button type="button" class="btn-add-tier" onclick="window.MinozaAdmin.addPackageTier('bogo')">
+                <span>+ เพิ่มแบบ "ซื้อ 1 แถม 1 ฟรี"</span>
+              </button>
+              <button type="button" class="btn-add-tier" onclick="window.MinozaAdmin.addPackageTier('buy2get1')">
+                <span>+ เพิ่มแบบ "ซื้อ 2 แถม 1 ฟรี"</span>
+              </button>
+              <button type="button" class="btn-add-tier" onclick="window.MinozaAdmin.addPackageTier('buy1get2')">
+                <span>+ เพิ่มแบบ "ซื้อ 1 แถม 2 ฟรี"</span>
+              </button>
+              <button type="button" class="btn-add-tier" onclick="window.MinozaAdmin.addPackageTier('custom')">
+                <span>+ เพิ่มตัวเลือกกำหนดเอง</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Sticky Modal Footer: Always Visible -->
+        <div class="admin-modal-footer">
+          <button type="button" class="btn-secondary" onclick="window.MinozaAdmin.closeModal()">ยกเลิก</button>
+          <button type="submit" class="btn-primary-luxury">💾 บันทึกสินค้า (Save Product)</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="admin-modal-overlay" id="deleteModal">
+    <div class="admin-modal-card" style="max-width: 440px; height: auto;">
+      <div class="admin-modal-header">
+        <h3 style="color: #dc2626;">⚠️ ยืนยันการลบสินค้า</h3>
+        <button type="button" class="btn-modal-close" onclick="window.MinozaAdmin.closeDeleteModal()">✕</button>
+      </div>
+      <div class="admin-modal-body" style="padding: 20px;">
+        <p>คุณแน่ใจหรือไม่ว่าต้องการลบสินค้า <strong id="deleteItemName">--</strong> ออกจากระบบ?</p>
+        <p style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">การดำเนินการนี้จะลบรายการสินค้าออกจากฐานข้อมูลทันที</p>
+      </div>
+      <div class="admin-modal-footer">
+        <button type="button" class="btn-secondary" onclick="window.MinozaAdmin.closeDeleteModal()">ยกเลิก</button>
+        <button type="button" class="btn-primary-luxury" style="background: #dc2626;" onclick="window.MinozaAdmin.executeDelete()">🗑️ ลบสินค้านี้</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-notification" id="adminToast">
+    <span>✅ ดำเนินการสำเร็จ</span>
+  </div>
+
+  <!-- Admin JS -->
+  <script src="/js/admin.js"></script>
+</body>
+</html>

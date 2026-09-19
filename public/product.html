@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CROSS CHAIN | SILVER — MINOZA THAILAND BRAND</title>
+  <meta name="description" content="Iconic Cross Chain in surgical-grade 316L stainless steel. 100% waterproof, sweatproof, and backed by a lifetime warranty. Buy 1 Get 1 Free today." />
+  
+  <meta property="og:type" content="product" />
+  <meta property="og:title" content="CROSS CHAIN | SILVER — MINOZA THAILAND BRAND" />
+  <meta property="og:description" content="Handcrafted minimalist cross necklace. 100% waterproof. มีบริการเก็บเงินปลายทาง (COD) และจัดส่งฟรีทั่วไทย." />
+  <meta property="og:image" content="/images/jewelry/cross_chain_main.jpg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700;800&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <!-- 1. Header SAVA Amsterdam Style (MINOZA Branded) -->
+  <header class="sava-header">
+    <div class="sava-header-inner">
+      <!-- Left Navigation -->
+      <nav class="sava-nav-left">
+        <ul>
+          <li><a href="/" data-i18n="navHome">หน้าแรก</a></li>
+          <li><a href="/#bestSellers" data-i18n="navShop">สินค้าทั้งหมด <span style="font-size: 8px;">▼</span></a></li>
+          <li><a href="/#bestSellers" data-i18n="navBestSellers">สินค้าขายดี</a></li>
+          <li><a href="/#brandStory" data-i18n="navBrand">เกี่ยวกับแบรนด์</a></li>
+          <li><a href="/#contactSection" data-i18n="navContact">ติดต่อเรา</a></li>
+        </ul>
+      </nav>
+
+      <!-- Center Logo -->
+      <a href="/" class="sava-logo-center">
+        <div class="sava-logo-title">MINOZA</div>
+        <div class="sava-logo-sub">THAILAND BRAND</div>
+      </a>
+
+      <!-- Right Header Actions & Language Switcher (TH / EN) -->
+      <div class="sava-actions-right">
+        <button class="currency-select-btn" id="langToggleBtn" onclick="window.MinozaI18n.toggle()" title="สลับภาษา / Switch Language (TH / EN)">
+          <span id="langLabel">🇹🇭 ภาษาไทย (TH)</span>
+          <span style="font-size: 8px;">▼</span>
+        </button>
+
+        <button class="btn-data-stack" onclick="openAdminModal()" title="View Sales Data Stack" style="font-size: 10px; padding: 4px 8px; border-radius: 2px;">
+          Data Stack
+        </button>
+
+        <button class="sava-icon-btn" onclick="window.location.href='/#bestSellers'" title="Search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </button>
+
+        <a href="#expressCheckoutSec" class="sava-icon-btn" title="Account">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </a>
+
+        <button class="sava-icon-btn" id="cartBtn" title="Cart" onclick="window.MinozaStore.openCartDrawer()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+          <span class="sava-cart-badge" id="cartBadge">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 2. Product Landing Showcase (Interactive 2-Slide Carousel & Cohesive Luxury CI) -->
+  <main class="sava-pdp-section">
+    <div class="sava-pdp-grid">
+      
+      <!-- Left Column: Real 2-Slide Interactive Gallery Carousel -->
+      <div class="sava-pdp-gallery-wrap">
+        <div class="sava-carousel-viewport" id="galleryViewport">
+          <!-- Next / Prev Arrow Buttons -->
+          <button type="button" class="sava-carousel-arrow prev" onclick="slideGallery(-1)" aria-label="Previous Slide">‹</button>
+          <button type="button" class="sava-carousel-arrow next" onclick="slideGallery(1)" aria-label="Next Slide">›</button>
+
+          <!-- Sliding Track containing all 8 Photos -->
+          <div class="sava-carousel-track" id="galleryTrack">
+            <!-- Slide 1: Studio White Background -->
+            <div class="sava-carousel-slide">
+              <img src="/images/jewelry/cross_chain_main.jpg" alt="CROSS CHAIN | SILVER Studio View" />
+            </div>
+            <!-- Slide 2: Model Neck Back Under Sky -->
+            <div class="sava-carousel-slide">
+              <img src="/images/jewelry/cross_chain_neck_back.jpg" alt="CROSS CHAIN | SILVER Neck Back View" />
+            </div>
+            <!-- Slide 3: Chain Flatlay Detail -->
+            <div class="sava-carousel-slide">
+              <img src="/images/jewelry/cross_chain_flatlay.jpg" alt="CROSS CHAIN | SILVER Flatlay" />
+            </div>
+            <!-- Slide 4: Model In Blue Shirt -->
+            <div class="sava-carousel-slide">
+              <img src="/images/jewelry/cross_chain_blue_shirt.jpg" alt="CROSS CHAIN | SILVER Blue Shirt" />
+            </div>
+            <!-- Slide 5: Close-up Pendant On White Collar -->
+            <div class="sava-carousel-slide">
+              <img src="/images/jewelry/cross_chain_white_collar.jpg" alt="CROSS CHAIN | SILVER White Collar" />
+            </div>
+            <!-- Slide 6: Model In Plaid Grey Shirt -->
+            <div class="sava-carousel-slide">
+              <img src="/images/jewelry/cross_chain_plaid_shirt.jpg" alt="CROSS CHAIN | SILVER Plaid Shirt" />
+            </div>
+            <!-- Slide 7: Model In Sunset Lighting -->
+            <div class="sava-carousel-slide">
+              <img src="/images/jewelry/cross_chain_sunset.jpg" alt="CROSS CHAIN | SILVER Sunset" />
+            </div>
+            <!-- Slide 8: Model Back Double Layer -->
+            <div class="sava-carousel-slide">
+              <img src="/images/jewelry/cross_chain_double_layer.jpg" alt="CROSS CHAIN | SILVER Double Layer" />
+            </div>
+          </div>
+        </div>
+
+        <!-- 8-Thumbnail Interactive Strip Below -->
+        <div class="sava-thumbs-strip" id="galleryThumbStrip">
+          <button type="button" class="sava-thumb-btn active" onclick="goToSlide(0)">
+            <img src="/images/jewelry/cross_chain_main.jpg" alt="Thumb 1" />
+          </button>
+          <button type="button" class="sava-thumb-btn" onclick="goToSlide(1)">
+            <img src="/images/jewelry/cross_chain_neck_back.jpg" alt="Thumb 2" />
+          </button>
+          <button type="button" class="sava-thumb-btn" onclick="goToSlide(2)">
+            <img src="/images/jewelry/cross_chain_flatlay.jpg" alt="Thumb 3" />
+          </button>
+          <button type="button" class="sava-thumb-btn" onclick="goToSlide(3)">
+            <img src="/images/jewelry/cross_chain_blue_shirt.jpg" alt="Thumb 4" />
+          </button>
+          <button type="button" class="sava-thumb-btn" onclick="goToSlide(4)">
+            <img src="/images/jewelry/cross_chain_white_collar.jpg" alt="Thumb 5" />
+          </button>
+          <button type="button" class="sava-thumb-btn" onclick="goToSlide(5)">
+            <img src="/images/jewelry/cross_chain_plaid_shirt.jpg" alt="Thumb 6" />
+          </button>
+          <button type="button" class="sava-thumb-btn" onclick="goToSlide(6)">
+            <img src="/images/jewelry/cross_chain_sunset.jpg" alt="Thumb 7" />
+          </button>
+          <button type="button" class="sava-thumb-btn" onclick="goToSlide(7)">
+            <img src="/images/jewelry/cross_chain_double_layer.jpg" alt="Thumb 8" />
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Column: Cohesive Luxury Buy Box (Unified SAVA CI) -->
+      <div class="sava-buybox">
+        
+        <!-- Brand & Product Title (Original English Name Preserved) -->
+        <div>
+          <span class="sava-pdp-brand-tag" data-i18n="pdpBrandTag">MINOZA THAILAND BRAND</span>
+          <h1 class="sava-pdp-title">CROSS CHAIN | SILVER</h1>
+        </div>
+
+        <!-- Price Line -->
+        <div class="sava-pdp-pricing-row">
+          <del class="sava-pdp-orig-price" id="pdpOrigPrice">1,180 ฿</del>
+          <span class="sava-pdp-sale-price" id="pdpSalePrice">890 ฿</span>
+          <span class="sava-pdp-save-badge" id="pdpSaveBadge">SAVE 290 ฿</span>
+        </div>
+
+        <!-- Material Swatches -->
+        <div class="sava-material-row">
+          <span class="sava-material-label" data-i18n="pdpMaterial">MATERIAL — Premium 316L Stainless Steel (100% Waterproof)</span>
+          <div class="sava-swatches">
+            <div class="sava-swatch-item active" title="Silver">
+              <span class="swatch-color-box swatch-silver"></span>
+              <span data-i18n="pdpColorSilver">Silver (เงินแท้สถิต)</span>
+            </div>
+            <div class="sava-swatch-item gold" title="18K Gold" onclick="alert('สีทอง 18K Gold มีพร้อมส่งเช่นกันครับ สามารถระบุในหมายเหตุตอนสั่งซื้อได้เลย!')">
+              <span class="swatch-color-box swatch-gold"></span>
+              <span data-i18n="pdpColorGold">18K Gold</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Minimalist Luxury BOGO Bar -->
+        <div class="sava-bogo-bar-luxury">
+          <span data-i18n="pdpPromoBanner">🏷️ โปรโมชั่น ซื้อ 1 แถม 1 ฟรี — สั่งเซ็ตคู่สุดคุ้ม (ประหยัดทันที 290 ฿)</span>
+        </div>
+
+        <!-- Authentic Dynamic Dispatch Cutoff (Real Countdown to 16:00:00) -->
+        <div class="sava-dispatch-timer-luxury">
+          <span>🚚 <span data-i18n="pdpOrderWithin">สั่งซื้อภายใน</span> <strong id="dispatchCountdownBadge" class="countdown-badge">--:--:--</strong> <span id="dispatchRoundText">เพื่อจัดส่งด่วนรอบวันนี้ (ตัดรอบ 16:00 น.)</span></span>
+        </div>
+
+        <!-- Package Selector (User's Exact Table in Sleek CI) -->
+        <div class="sava-packages-luxury">
+          <!-- Package 1: 1 Piece -->
+          <div class="sava-pkg-card-luxury" id="pkg1" onclick="selectPackage(1)">
+            <div class="pkg-header-row">
+              <div class="pkg-title-wrap">
+                <div class="pkg-indicator-circle"></div>
+                <span class="pkg-name-text" data-i18n="pdpPkg1Title">ซื้อ 1 เส้น (ชิ้นเดี่ยว)</span>
+              </div>
+              <div>
+                <span class="pkg-orig-text">790 ฿</span>
+                <span class="pkg-price-text">590 ฿</span>
+              </div>
+            </div>
+            <div class="pkg-sub-line charge" data-i18n="pdpPkg1Sub">
+              + ค่าจัดส่งด่วน 50 ฿ (ยอดชำระ 640 ฿)
+            </div>
+          </div>
+
+          <!-- Package 2: 2 Pieces Pair (Bestseller Selected) -->
+          <div class="sava-pkg-card-luxury selected" id="pkg2" onclick="selectPackage(2)">
+            <span class="pkg-badge-black" data-i18n="pdpPkg2Badge">BESTSELLER / คู่คุ้มสุด</span>
+            <div class="pkg-header-row">
+              <div class="pkg-title-wrap">
+                <div class="pkg-indicator-circle"></div>
+                <span class="pkg-name-text" data-i18n="pdpPkg2Title">2 เส้น (คู่) — ซื้อ 1 แถม 1 ฟรี</span>
+              </div>
+              <div>
+                <span class="pkg-orig-text">1,180 ฿</span>
+                <span class="pkg-price-text" style="color: #c5221f;">890 ฿</span>
+              </div>
+            </div>
+            <div class="pkg-sub-line free" data-i18n="pdpPkg2Sub">
+              ✓ ฟรีค่าจัดส่งด่วนทั่วประเทศ (ประหยัดทันที 290 ฿)
+            </div>
+          </div>
+        </div>
+
+        <!-- 💥💥 BIG FEAR-BUSTER BADGES (COHESIVE LUXURY MONOCHROME CI) 💥💥 -->
+        <div class="sava-fear-container-luxury">
+          <!-- 1. COD Badge -->
+          <div class="sava-fear-card-luxury">
+            <div class="sava-fear-icon-box">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+            </div>
+            <div class="sava-fear-details">
+              <span class="sava-fear-main-title" data-i18n="pdpFearCodTitle">เก็บเงินปลายทาง (COD)</span>
+              <span class="sava-fear-sub-desc" data-i18n="pdpFearCodSub">เปิดกล่องเช็กของก่อนจ่ายเงิน มั่นใจ 100% ไม่ต้องโอนก่อน</span>
+            </div>
+          </div>
+
+          <!-- 2. Free Shipping Badge -->
+          <div class="sava-fear-card-luxury">
+            <div class="sava-fear-icon-box">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            </div>
+            <div class="sava-fear-details">
+              <span class="sava-fear-main-title" data-i18n="pdpFearShipTitle">จัดส่งฟรีทั่วไทย</span>
+              <span class="sava-fear-sub-desc" data-i18n="pdpFearShipSub">ส่งด่วน Kerry / Flash 1-2 วันถึงหน้าบ้าน ไม่มีบวกเพิ่ม</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main CTA Button (Add to Bag / Cart) -->
+        <button type="button" class="sava-btn-cta-luxury" id="btnMainOrder" onclick="addToBagFromPdp()">
+          <span id="btnOrderText">เพิ่มเข้าตะกร้า — 890 ฿</span>
+        </button>
+
+        <!-- Stock Line -->
+        <div class="sava-stock-line-luxury">
+          <span><span class="dot">●</span> <span data-i18n="pdpStockLine">ALMOST OUT OF STOCK (เหลือ 5 เซ็ตสุดท้าย)</span></span>
+          <span class="ship-text" data-i18n="pdpShipThailand">FREE SHIPPING TO THAILAND</span>
+        </div>
+
+        <!-- Trust Icons -->
+        <div class="sava-trust-icons-luxury">
+          <span data-i18n="pdpTrustCod">✓ เก็บเงินปลายทาง</span>
+          <span data-i18n="pdpTrustQr">✓ PromptPay QR</span>
+          <span data-i18n="pdpTrustCard">✓ Visa / Mastercard</span>
+          <span data-i18n="pdpTrustApple">✓ Apple Pay</span>
+          <span data-i18n="pdpTrustGoogle">✓ Google Pay</span>
+        </div>
+
+        <!-- Cohesive Callout Box -->
+        <div class="sava-callout-luxury">
+          <h4 data-i18n="pdpCalloutTitle">โปรโมชั่น ซื้อ 1 แถม 1 ฟรี</h4>
+          <p data-i18n="pdpCalloutText">
+            สั่งซื้อเซ็ตคู่ 2 เส้น วันนี้ รับสิทธิ์ส่งฟรีทันที + ส่วนลดเหลือเพียง <strong>890 ฿</strong> (จากปกติ 1,180 ฿) 
+            สามารถสลับใส่กับเสื้อเชิ้ต หรือมอบเป็นของขวัญคนพิเศษได้เลย
+          </p>
+        </div>
+
+        <!-- 4 Key Feature Icons (2x2 Grid) -->
+        <div class="sava-features-grid-luxury">
+          <div class="sava-feat-cell">
+            <span class="icon">💧</span>
+            <div>
+              <div class="title">100% Waterproof</div>
+              <div class="desc">Swim, shower, sweat — no limits</div>
+            </div>
+          </div>
+
+          <div class="sava-feat-cell">
+            <span class="icon">🛡️</span>
+            <div>
+              <div class="title">Lifetime Warranty</div>
+              <div class="desc">Including accidental damage</div>
+            </div>
+          </div>
+
+          <div class="sava-feat-cell">
+            <span class="icon">🔄</span>
+            <div>
+              <div class="title">Adjustable Sizes</div>
+              <div class="desc">Fits everyone due to unisize design (50+5cm)</div>
+            </div>
+          </div>
+
+          <div class="sava-feat-cell">
+            <span class="icon">🏛️</span>
+            <div>
+              <div class="title">THAILAND BRAND</div>
+              <div class="desc">Crafted with surgical-grade 316L steel</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Collapsible Accordions -->
+        <div class="sava-accordions-wrap">
+          <div class="sava-accordion-item">
+            <button class="sava-accordion-trigger" onclick="toggleAccordion('accDetails')">
+              <span>Details (รายละเอียดสินค้า)</span>
+              <span id="icon-accDetails">−</span>
+            </button>
+            <div class="sava-accordion-body" id="accDetails" style="display: block;">
+              <p>Introducing the iconic Cross Chain, a timeless symbol crafted to be worn with pride. Made from premium surgical-grade 316L stainless steel, every aspect of this necklace is meticulously designed for simplicity, style, and durability.</p>
+              <ul style="margin-top: 8px; padding-left: 18px;">
+                <li><strong>ขนาดความยาว:</strong> 50 ซม. + ข้อต่อปรับขยาย 5 ซม. (สวมใส่ได้พอดีคอทุกคน)</li>
+                <li><strong>ความกว้างโซ่:</strong> 2 มม. ดีไซน์มินิมอลเงางาม</li>
+                <li><strong>วัสดุ:</strong> สเตนเลสเกรดเครื่องมือแพทย์ 316L แท้ 100% (ไม่ก่อให้เกิดการแพ้ ไม่ลอกไม่ดำ)</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="sava-accordion-item">
+            <button class="sava-accordion-trigger" onclick="toggleAccordion('accCare')">
+              <span>Care (การดูแลรักษา)</span>
+              <span id="icon-accCare">+</span>
+            </button>
+            <div class="sava-accordion-body" id="accCare" style="display: none;">
+              <p>เครื่องประดับ MINOZA สามารถสวมใส่ทำกิจกรรมได้ทุกประเภท ทั้งอาบน้ำ ว่ายน้ำในสระ เล่นน้ำทะเล หรือออกกำลังกายในยิม โดยไม่ลอก ไม่ดำ และไม่เปลี่ยนสีตลอดการใช้งาน สามารถล้างด้วยน้ำสะอาดและเช็ดให้แห้งด้วยผ้านุ่มได้ตามปกติ</p>
+            </div>
+          </div>
+
+          <div class="sava-accordion-item">
+            <button class="sava-accordion-trigger" onclick="toggleAccordion('accReturns')">
+              <span>Returns &amp; Warranty (การรับประกันและส่งคืน)</span>
+              <span id="icon-accReturns">+</span>
+            </button>
+            <div class="sava-accordion-body" id="accReturns" style="display: none;">
+              <p>เรามอบความมั่นใจสูงสุดให้คุณ:</p>
+              <ul style="margin-top: 6px; padding-left: 18px;">
+                <li>รับประกันเปลี่ยนชิ้นใหม่ภายใน 30 วันหากมีตำหนิจากการผลิต</li>
+                <li>รับประกันสีไม่ลอกตลอดอายุการใช้งาน (Lifetime Color Warranty)</li>
+                <li>มีบริการเปิดกล่องเช็กสินค้าก่อนชำระเงินกับพนักงานส่ง (COD)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 3. Express 1-Page Checkout Form (Separated CI Luxury 2-Column Layout) -->
+    <section id="expressCheckoutSec" class="sava-checkout-wrapper">
+      <div class="sava-checkout-header">
+        <span class="badge" data-i18n="formBadge">EXPRESS ORDER FORM</span>
+        <h2 data-i18n="formTitle">แบบฟอร์มสั่งซื้อเก็บเงินปลายทางด่วน</h2>
+        <p data-i18n="formSub">กรอกข้อมูลจัดส่งด้านล่าง ตรวจรับของก่อนจ่ายเงินหน้าบ้าน จัดส่งด่วน 1-2 วันถึง</p>
+      </div>
+
+      <div class="sava-checkout-grid">
+        <!-- Left Column: Form & Payment -->
+        <div class="sava-checkout-form-box">
+          <form id="expressOrderForm" onsubmit="handleExpressFormSubmit(event)">
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+              <div class="sava-form-group">
+                <label data-i18n="formCustName">ชื่อ - นามสกุล ผู้รับสินค้า (Customer Name) *</label>
+                <input type="text" id="custName" required placeholder="เช่น ธนกร วัฒนศิลป์" />
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div class="sava-form-group">
+                  <label data-i18n="formCustPhone">เบอร์โทรศัพท์ติดต่อ (Phone Number) *</label>
+                  <input type="tel" id="custPhone" required placeholder="0812345678" />
+                </div>
+                <div class="sava-form-group">
+                  <label data-i18n="formCustEmail">อีเมล (Email สำหรับแจ้งสถานะพัสดุ)</label>
+                  <input type="email" id="custEmail" placeholder="yourname@gmail.com" />
+                </div>
+              </div>
+
+              <!-- Easy Thai Address Section with Dropdowns -->
+              <div class="sava-form-group">
+                <label data-i18n="formCustStreet">บ้านเลขที่ / หมู่บ้าน / อาคาร / ซอย / ถนน *</label>
+                <input type="text" id="custStreet" required placeholder="เช่น 128/9 หมู่บ้านพฤกษา ซอยสุขุมวิท 55 ถนนสุขุมวิท" />
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div class="sava-form-group">
+                  <label data-i18n="formCustProvince">จังหวัด (Province) *</label>
+                  <select id="custProvince" required style="width: 100%; padding: 13px 15px; border: 1.5px solid #d4d4d8; border-radius: 3px; font-size: 14.5px; font-family: inherit; color: #000000; background: #ffffff; line-height: 1.6;">
+                    <option value="">โปรดระบุ</option>
+                  </select>
+                </div>
+                <div class="sava-form-group">
+                  <label data-i18n="formCustDistrict">เขต / อำเภอ (District) *</label>
+                  <select id="custDistrict" required style="width: 100%; padding: 13px 15px; border: 1.5px solid #d4d4d8; border-radius: 3px; font-size: 14.5px; font-family: inherit; color: #000000; background: #ffffff; line-height: 1.6;">
+                    <option value="">โปรดระบุ</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div class="sava-form-group">
+                  <label data-i18n="formCustSubdistrict">แขวง / ตำบล (Subdistrict)</label>
+                  <select id="custSubdistrict" style="width: 100%; padding: 13px 15px; border: 1.5px solid #d4d4d8; border-radius: 3px; font-size: 14.5px; font-family: inherit; color: #000000; background: #ffffff; line-height: 1.6;">
+                    <option value="">โปรดระบุ</option>
+                  </select>
+                </div>
+                <div class="sava-form-group">
+                  <label data-i18n="formCustZipcode">รหัสไปรษณีย์ (Postal Code) *</label>
+                  <input type="text" id="custZipcode" required placeholder="เช่น 10110" />
+                </div>
+              </div>
+
+              <!-- Combined full address for API payload -->
+              <input type="hidden" id="custAddress" name="address" />
+
+              <!-- Payment Selector Cards -->
+              <div>
+                <label data-i18n="formPaymentMethod" style="display: block; font-size: 11px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 8px;">เลือกช่องทางชำระเงิน (Payment Method) *</label>
+                <div class="sava-payment-options">
+                  <!-- COD Option -->
+                  <div class="sava-pay-option-card selected" id="cardPayCod" onclick="selectPaymentType('cod')">
+                    <input type="radio" name="payType" id="radioCod" value="cod" checked style="margin-top: 2px;" />
+                    <div>
+                      <div style="font-size: 13px; font-weight: 800; color: #000;" data-i18n="formCodTitle">🚚 เก็บเงินปลายทาง (COD)</div>
+                      <div style="font-size: 11px; color: #71717a; margin-top: 2px;" data-i18n="formCodSub">ตรวจรับของก่อนจ่ายเงินสดหน้าบ้าน</div>
+                    </div>
+                  </div>
+
+                  <!-- PromptPay QR Option -->
+                  <div class="sava-pay-option-card" id="cardPayPromptPay" onclick="selectPaymentType('promptpay')">
+                    <span class="discount-pill" data-i18n="formPromptPayPromo">⚡ ลดทันที 50 ฿</span>
+                    <input type="radio" name="payType" id="radioPromptPay" value="promptpay" style="margin-top: 2px;" />
+                    <div>
+                      <div style="font-size: 13px; font-weight: 800; color: #000;" data-i18n="formPromptPayTitle">⚡ PromptPay QR Code</div>
+                      <div style="font-size: 11px; color: #71717a; margin-top: 2px;" data-i18n="formPromptPaySub">สแกนจ่ายผ่าน QR รับส่วนลดทันที 50 บาท</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Prominent Elevated Luxury Submit Button -->
+              <button type="submit" id="btnConfirmOrder" class="sava-btn-confirm-order">
+                <span id="btnConfirmText">ยืนยันการสั่งซื้อเก็บเงินปลายทาง (Confirm COD Order)</span> 🔒
+              </button>
+
+              <!-- Trust Micro List in CI -->
+              <div class="sava-guarantee-micro-list">
+                <div>✓ มั่นใจเปิดตรวจรับของก่อนชำระเงินทุกออเดอร์</div>
+                <div>✓ สแตนเลสสตีลแท้เกรดผ่าตัด 316L สีไม่ลอก ไม่ดำ รับประกันตลอดชีพ</div>
+                <div>✓ สั่งก่อน 16:00 น. จัดส่งออกวันนี้ทันที 1-2 วันถึง</div>
+              </div>
+            </div>
+          </form>
+
+          <!-- PromptPay QR Box (Hidden unless selected and created) -->
+          <div id="pdpQrArea" style="display: none; text-align: center; margin-top: 20px; padding: 22px; background: #fafafa; border: 1.5px solid #000000; border-radius: 4px;">
+            <h4 style="font-size: 15px; font-weight: 800; margin-bottom: 6px;">สแกนจ่ายผ่าน PromptPay QR Code</h4>
+            <p style="font-size: 13px; color: #666666; margin-bottom: 16px;">ยอดชำระ: <strong id="pdpQrTotal" style="color: #000; font-size: 24px; font-weight: 900;">840 ฿</strong> (ได้รับส่วนลด 50 ฿ เรียบร้อย)</p>
+            <div id="pdpQrContainer" style="display: flex; justify-content: center; margin-bottom: 14px;"></div>
+            <p style="font-size: 12px; color: #16a34a; font-weight: 700;">✓ เมื่อชำระเรียบร้อย ระบบจะส่งข้อความยืนยันและหมายเลขพัสดุให้ทันที</p>
+          </div>
+        </div>
+
+        <!-- Right Column: Separated Order Summary Card (CI Monochrome Luxury) -->
+        <aside class="sava-checkout-summary-box">
+          <div class="sava-summary-head">
+            <h3 data-i18n="summaryTitle">รายการสั่งซื้อ (ORDER SUMMARY)</h3>
+            <span id="summaryItemCountBadge">1 รายการ</span>
+          </div>
+
+          <!-- Dynamic Itemized List with Thumbnails & x1 Pills -->
+          <div id="checkoutItemsList" class="sava-summary-items-list">
+            <!-- Rendered by JS -->
+          </div>
+
+          <!-- Price Breakdown -->
+          <div class="sava-summary-breakdown">
+            <div class="sava-breakdown-row">
+              <span data-i18n="summarySubtotal">ยอดรวมสินค้า (Subtotal)</span>
+              <span id="summarySubtotalText" style="font-weight: 700; color: #000;">890 ฿</span>
+            </div>
+
+            <!-- PromptPay -50 ฿ Row (Shown when promptpay is active) -->
+            <div id="summaryDiscountRow" class="sava-breakdown-row discount-row" style="display: none;">
+              <span data-i18n="summaryPromptPayDiscount">ส่วนลดจ่ายผ่าน PromptPay QR</span>
+              <span id="summaryDiscountText">-50 ฿</span>
+            </div>
+
+            <div class="sava-breakdown-row">
+              <span data-i18n="summaryShipping">ค่าจัดส่งด่วน (Shipping)</span>
+              <span id="summaryShippingText" style="color: #16a34a; font-weight: 700;" data-i18n="summaryFree">ฟรี (FREE)</span>
+            </div>
+
+            <!-- Prominent TOTAL Row -->
+            <div class="sava-summary-total-row">
+              <span class="total-label" data-i18n="summaryTotal">TOTAL (ยอดสุทธิ)</span>
+              <span class="total-amount" id="summaryTotalText">890 ฿</span>
+            </div>
+          </div>
+
+          <!-- Real Dispatch Cutoff Note in CI -->
+          <div style="margin-top: 18px; padding: 12px; background: #ffffff; border: 1px solid #e5e5e5; border-radius: 3px; font-size: 11px; color: #52525b; display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 14px;">🚚</span>
+            <span data-i18n="summaryCutoffNotice"><strong>ตัดรอบส่งวันนี้ 16:00 น.</strong> จัดส่ง Kerry / Flash 1-2 วันถึง</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 4. Footer SAVA Style (Pure Luxury Monochrome) -->
+  <footer class="sava-site-footer" id="contactSection">
+    <div class="sava-footer-container">
+      <div class="sava-footer-grid">
+        <!-- Col 1: Brand Info -->
+        <div class="sava-footer-col">
+          <div class="sava-footer-logo-title">MINOZA</div>
+          <div class="sava-footer-logo-sub">THAILAND BRAND</div>
+          <p class="sava-footer-desc">
+            Understated luxury jewelry and architectural timepieces. Thailand brand, crafted for everyday wear.
+          </p>
+          <div class="sava-footer-guarantees">
+            <span>✓ 100% Waterproof &amp; Sweatproof</span>
+            <span>✓ Surgical-Grade 316L Stainless Steel</span>
+            <span>✓ Lifetime Color &amp; Damage Warranty</span>
+          </div>
+        </div>
+
+        <!-- Col 2: Collections -->
+        <div class="sava-footer-col">
+          <h4 class="sava-footer-heading">COLLECTIONS</h4>
+          <ul class="sava-footer-links">
+            <li><a href="/#bestSellers">Watches &amp; Timepieces</a></li>
+            <li><a href="/#bestSellers">Chains &amp; Necklaces</a></li>
+            <li><a href="/#bestSellers">Bracelets &amp; Cuffs</a></li>
+            <li><a href="/#bestSellers">Rings &amp; Bands</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Customer Care -->
+        <div class="sava-footer-col">
+          <h4 class="sava-footer-heading">HELP &amp; SERVICES</h4>
+          <ul class="sava-footer-links">
+            <li><a href="/#bestSellers">มีบริการเก็บเงินปลายทาง (COD)</a></li>
+            <li><a href="/#bestSellers">จัดส่งฟรีทั่วไทย 1-2 วันถึง</a></li>
+            <li><a href="/#bestSellers">รับประกันเปลี่ยนชิ้นใหม่ใน 30 วัน</a></li>
+            <li><a href="/#bestSellers">รับประกันสีไม่ลอกตลอดชีพ</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Trust & Payment -->
+        <div class="sava-footer-col">
+          <h4 class="sava-footer-heading">PAYMENT &amp; TRUST</h4>
+          <div class="sava-footer-badges">
+            <span>🚚 มีบริการเก็บเงินปลายทาง (COD) ทั่วไทย</span>
+            <span>⚡ PromptPay QR สแกนจ่ายปลอดภัย</span>
+            <span>💳 บัตรเครดิต/เดบิต Visa, Mastercard</span>
+            <span>🔒 ระบบความปลอดภัย 256-bit SSL</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="sava-footer-bottom">
+        <div class="sava-footer-copy">
+          &copy; 2026 MINOZA STORE (minozastore.com). All rights reserved.
+        </div>
+        <div class="sava-footer-currency">
+          THAILAND (THB ฿) • WORLDWIDE SHIPPING
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Slide-Out Cart Drawer -->
+  <div class="cart-overlay" id="cartOverlay" onclick="window.MinozaStore.closeCartDrawer()"></div>
+  <aside class="cart-drawer" id="cartDrawer">
+    <div class="cart-drawer-header">
+      <h3 class="cart-drawer-title" data-i18n="cartBagTitle">ตะกร้าของคุณ (<span id="cartDrawerCount">0</span>)</h3>
+      <button class="cart-close-btn" onclick="window.MinozaStore.closeCartDrawer()">✕</button>
+    </div>
+    <div class="cart-bogo-bar" id="cartBogoBar">
+      <div class="bogo-text" id="bogoBannerText" data-i18n="cartBogoUnlocked">🎉 ได้รับสิทธิ์ ซื้อ 1 แถม 1 ฟรีเรียบร้อยแล้ว!</div>
+      <div class="bogo-progress-track">
+        <div class="bogo-progress-fill" id="bogoProgressFill" style="width: 100%;"></div>
+      </div>
+    </div>
+    <div class="cart-items-list" id="cartItemsList"></div>
+
+    <!-- In-Cart Upsell Carousel (YOU MAY LIKE) -->
+    <div class="cart-upsell-section" id="cartUpsellSection">
+      <div class="cart-upsell-header">
+        <span class="cart-upsell-title" data-i18n="cartYouMayLike">สินค้าที่คุณอาจชอบ (YOU MAY LIKE)</span>
+        <div class="upsell-arrow-btns">
+          <button type="button" onclick="window.MinozaStore.shiftUpsell(-1)">‹</button>
+          <button type="button" onclick="window.MinozaStore.shiftUpsell(1)">›</button>
+        </div>
+      </div>
+      <div class="upsell-carousel-track" id="upsellTrack"></div>
+    </div>
+
+    <!-- Cart Drawer Footer & Checkout Action -->
+    <div class="cart-drawer-footer">
+      <div class="cart-summary-line">
+        <span data-i18n="cartOriginalVal">มูลค่าปกติ</span>
+        <del id="cartDrawerOriginal">1,180 ฿</del>
+      </div>
+      <div class="cart-summary-line bogo-savings-line" id="bogoSavingsRow" style="display: flex;">
+        <span data-i18n="cartBogoSavings">ส่วนลด 1 แถม 1 ฟรี</span>
+        <span class="bogo-green" id="cartDrawerSavings">-290 ฿</span>
+      </div>
+      <div class="cart-summary-line total-line">
+        <span data-i18n="cartTotalDue">ยอดชำระสุทธิ</span>
+        <span class="big-total" id="cartDrawerTotal">890 ฿</span>
+      </div>
+      <button type="button" class="btn-checkout-secure" id="btnDrawerCheckout" onclick="proceedToCheckoutFromDrawer()" data-i18n="cartProceedCheckout">
+        ดำเนินการชำระเงิน 🔒
+      </button>
+      <div class="cart-trust-badge" style="margin-top: 10px; font-size: 11px; text-align: center; color: #71717a;">
+        <span>🚚 มีบริการเก็บเงินปลายทาง (COD)</span> • <span>📦 จัดส่งฟรี</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Sales Data Stack Modal -->
+  <div class="admin-modal" id="adminModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2100; padding: 20px;">
+    <div style="max-width: 800px; margin: 40px auto; background: #fff; border-radius: 8px; padding: 24px; max-height: 85vh; overflow-y: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;">
+        <h3 style="font-size: 18px; font-weight: 800;">📊 MINOZA Live Sales Data Stack</h3>
+        <button onclick="closeAdminModal()" style="background: none; font-size: 20px; border: none; cursor: pointer;">✕</button>
+      </div>
+      <div style="margin-top: 16px;">
+        <div id="adminDataFeed" style="background: #0f172a; color: #38bdf8; font-family: monospace; font-size: 12px; padding: 16px; border-radius: 6px; overflow-x: auto; min-height: 200px;">
+          Loading telemetry...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/tracking.js"></script>
+  <script src="/js/i18n.js"></script>
+  <script src="/js/thai-address-data.js"></script>
+  <script src="/js/app.js"></script>
+
+  <script>
+    // ==========================================
+    // 1. True 2-Slide Interactive Gallery Slider
+    // ==========================================
+    let currentSlideIndex = 0;
+    let totalSlides = 8;
+    const track = document.getElementById('galleryTrack');
+
+    function updateSliderPosition() {
+      // On desktop, each slide is 50% width. Max index to slide is (totalSlides - 2)
+      const isMobile = window.innerWidth <= 960;
+      const stepPercent = isMobile ? 100 : 50;
+      const maxIndex = isMobile ? Math.max(0, totalSlides - 1) : Math.max(0, totalSlides - 2);
+      
+      const clampedIndex = Math.min(Math.max(0, currentSlideIndex), maxIndex);
+      currentSlideIndex = clampedIndex;
+
+      const translateX = clampedIndex * stepPercent;
+      if (track) track.style.transform = `translateX(-${translateX}%)`;
+
+      // Update active thumbnail border dynamically
+      const currentThumbs = document.querySelectorAll('.sava-thumb-btn');
+      currentThumbs.forEach((btn, idx) => {
+        if (idx === clampedIndex || (!isMobile && idx === clampedIndex + 1)) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    function slideGallery(direction) {
+      currentSlideIndex += direction;
+      updateSliderPosition();
+    }
+
+    function goToSlide(slideIdx) {
+      currentSlideIndex = slideIdx;
+      updateSliderPosition();
+    }
+
+    window.addEventListener('resize', updateSliderPosition);
+
+    // ==========================================
+    // 2. Package Selector Logic & Real-time Sync
+    // ==========================================
+    let selectedPackageId = 2; // Default to Package 2 (890 B, Bestseller)
+    let selectedPackageIdx = 1;
+    let currentLoadedProduct = null;
+    let currentProductPackages = [];
+    let currentPaymentType = 'cod';
+
+    async function syncProductFromApi() {
+      try {
+        const pathParts = window.location.pathname.split('/');
+        const urlParams = new URLSearchParams(window.location.search);
+        let productSlug = urlParams.get('slug') || urlParams.get('id') || urlParams.get('product');
+        if (!productSlug) {
+          const prodIdx = pathParts.indexOf('product');
+          if (prodIdx !== -1 && pathParts[prodIdx + 1]) {
+            productSlug = pathParts[prodIdx + 1].replace(/\/$/, '');
+          }
+        }
+        if (!productSlug && pathParts[1] && pathParts[1] !== 'product.html') {
+          productSlug = pathParts[1].replace(/\/$/, '');
+        }
+        if (!productSlug) productSlug = 'cross-chain';
+
+        const res = await fetch(`/api/products/${productSlug}`);
+        if (!res.ok) return;
+        const prod = await res.json();
+        if (!prod) return;
+
+        currentLoadedProduct = prod;
+
+        // 1. Sync Title & Brand
+        const titleEl = document.querySelector('.sava-pdp-title');
+        if (titleEl && prod.name) titleEl.textContent = prod.name;
+
+        // 2. Sync Gallery (Live Sync from Admin)
+        if (Array.isArray(prod.gallery) && prod.gallery.length > 0) {
+          totalSlides = prod.gallery.length;
+          if (track) {
+            track.innerHTML = prod.gallery.map((img, i) => `
+              <div class="sava-carousel-slide" style="${totalSlides === 1 ? 'flex: 0 0 100%; max-width: 100%;' : ''}">
+                <img src="${img}" alt="${prod.name} View ${i + 1}" onerror="this.src='/images/jewelry/cross_chain_main.jpg'" />
+              </div>
+            `).join('');
+          }
+
+          const thumbStrip = document.getElementById('galleryThumbStrip');
+          if (thumbStrip) {
+            thumbStrip.innerHTML = prod.gallery.map((img, i) => `
+              <button type="button" class="sava-thumb-btn ${i === 0 ? 'active' : ''}" onclick="goToSlide(${i})">
+                <img src="${img}" alt="Thumb ${i + 1}" onerror="this.src='/images/jewelry/cross_chain_main.jpg'" />
+              </button>
+            `).join('');
+          }
+
+          currentSlideIndex = 0;
+          updateSliderPosition();
+        }
+
+        // 3. Sync Material & Colors
+        if (prod.material) {
+          const matEl = document.querySelector('.sava-material-label');
+          if (matEl) matEl.textContent = prod.material;
+        }
+
+        if (Array.isArray(prod.colors) && prod.colors.length > 0) {
+          const swatchesEl = document.querySelector('.sava-swatches');
+          if (swatchesEl) {
+            swatchesEl.innerHTML = prod.colors.map((c, i) => {
+              const isGold = c.toLowerCase().includes('gold');
+              const isBlack = c.toLowerCase().includes('black');
+              const swatchClass = isGold ? 'swatch-gold' : (isBlack ? 'swatch-black' : 'swatch-silver');
+              return `
+                <div class="sava-swatch-item ${i === 0 ? 'active' : ''}" onclick="selectSwatch(this, '${c}')" title="${c}">
+                  <span class="swatch-color-box ${swatchClass}" style="${isBlack ? 'background:#18181b;' : ''}"></span>
+                  <span>${c}</span>
+                </div>
+              `;
+            }).join('');
+          }
+        }
+
+        // 4. Sync Dynamic Packages
+        if (Array.isArray(prod.packages) && prod.packages.length > 0) {
+          currentProductPackages = prod.packages;
+          const pkgsContainer = document.querySelector('.sava-packages-luxury');
+          if (pkgsContainer) {
+            pkgsContainer.innerHTML = prod.packages.map((pkg, idx) => {
+              const isPkgSold = Boolean(pkg.isSoldOut);
+              const badgeHtml = isPkgSold
+                ? `<span class="pkg-badge-black" style="background: #dc2626; color: #fff;">สินค้าหมด</span>`
+                : (pkg.badge ? `<span class="pkg-badge-black">${pkg.badge}</span>` : '');
+              const subLineClass = pkg.freeShipping ? 'free' : 'charge';
+              const subText = pkg.subText || (pkg.freeShipping ? '✓ ฟรีค่าจัดส่งด่วนทั่วประเทศ' : '+ ค่าจัดส่งด่วน 50 ฿');
+              const soldStyle = isPkgSold ? 'opacity: 0.55; cursor: not-allowed;' : '';
+
+              return `
+                <div class="sava-pkg-card-luxury" id="pkg_${idx}" style="${soldStyle}" onclick="selectDynamicPackage(${idx})">
+                  ${badgeHtml}
+                  <div class="pkg-header-row">
+                    <div class="pkg-title-wrap">
+                      <div class="pkg-indicator-circle"></div>
+                      <span class="pkg-name-text">${pkg.title}</span>
+                    </div>
+                    <div>
+                      ${pkg.originalPrice ? `<span class="pkg-orig-text">${Number(pkg.originalPrice).toLocaleString()} ฿</span>` : ''}
+                      <span class="pkg-price-text">${Number(pkg.price).toLocaleString()} ฿</span>
+                    </div>
+                  </div>
+                  <div class="pkg-sub-line ${subLineClass}">
+                    ${subText}
+                  </div>
+                </div>
+              `;
+            }).join('');
+
+            // Select default package (prefer bestseller if available, else first non-soldout)
+            let defaultIdx = 0;
+            const bogoIdx = prod.packages.findIndex((p, i) => i > 0 && !p.isSoldOut);
+            if (bogoIdx !== -1) {
+              defaultIdx = bogoIdx;
+            } else {
+              const firstAvail = prod.packages.findIndex(p => !p.isSoldOut);
+              if (firstAvail !== -1) defaultIdx = firstAvail;
+            }
+            selectDynamicPackage(defaultIdx);
+          }
+        }
+
+        // 5. Product-Level Sold Out Handling
+        if (prod.isSoldOut) {
+          const badgeEl = document.querySelector('.sava-badge-red');
+          if (badgeEl) {
+            badgeEl.textContent = '🔴 สินค้าหมดชั่วคราว (SOLD OUT)';
+            badgeEl.style.background = '#dc2626';
+            badgeEl.style.color = '#ffffff';
+          }
+          const btnOrder = document.getElementById('btnOrder');
+          const btnOrderText = document.getElementById('btnOrderText');
+          if (btnOrder) {
+            btnOrder.disabled = true;
+            btnOrder.style.background = '#94a3b8';
+            btnOrder.style.cursor = 'not-allowed';
+            btnOrder.style.boxShadow = 'none';
+          }
+          if (btnOrderText) {
+            btnOrderText.textContent = 'สินค้าหมดชั่วคราว (OUT OF STOCK)';
+          }
+
+          const expressCard = document.querySelector('.sava-express-checkout-card');
+          if (expressCard && !document.getElementById('pdpSoldNotice')) {
+            const soldNotice = document.createElement('div');
+            soldNotice.id = 'pdpSoldNotice';
+            soldNotice.style.cssText = 'background: #fee2e2; border: 1.5px solid #fca5a5; color: #b91c1c; padding: 14px; border-radius: 6px; font-weight: 700; margin-bottom: 16px; text-align: center;';
+            soldNotice.innerHTML = '⚠️ ขออภัย สินค้ารายการนี้หมดชั่วคราว (Out of Stock)<br><span style="font-size: 13px; font-weight: 400; color: #7f1d1d;">ขณะนี้ระบบปิดรับคำสั่งซื้อชั่วคราวสำหรับสินค้ารายการนี้</span>';
+            expressCard.parentNode.insertBefore(soldNotice, expressCard);
+            expressCard.style.opacity = '0.5';
+            expressCard.style.pointerEvents = 'none';
+          }
+        }
+      } catch (e) {
+        console.warn('syncProductFromApi error:', e);
+      }
+    }
+
+    function selectDynamicPackage(idx) {
+      if (!currentProductPackages || !currentProductPackages[idx]) {
+        return selectPackage(idx === 0 ? 1 : 2);
+      }
+      const pkg = currentProductPackages[idx];
+      if (pkg.isSoldOut) {
+        alert('ขออภัย ตัวเลือกแพ็กเกจนี้สินค้าหมดชั่วคราวครับ');
+        return;
+      }
+
+      selectedPackageIdx = idx;
+      selectedPackageId = (idx === 0) ? 1 : 2;
+
+      document.querySelectorAll('.sava-pkg-card-luxury').forEach((card, i) => {
+        if (i === idx) {
+          card.classList.add('selected');
+          const priceEl = card.querySelector('.pkg-price-text');
+          if (priceEl) priceEl.style.color = '#c5221f';
+        } else {
+          card.classList.remove('selected');
+          const priceEl = card.querySelector('.pkg-price-text');
+          if (priceEl) priceEl.style.color = '';
+        }
+      });
+
+      const origPrice = document.getElementById('pdpOrigPrice');
+      const salePrice = document.getElementById('pdpSalePrice');
+      const saveBadge = document.getElementById('pdpSaveBadge');
+      const btnOrderText = document.getElementById('btnOrderText');
+
+      const isThai = (localStorage.getItem('minozastore_lang') || 'th') === 'th';
+      const prefix = isThai ? 'เพิ่มเข้าตะกร้า' : 'ADD TO BAG';
+
+      if (origPrice && pkg.originalPrice) origPrice.textContent = `${Number(pkg.originalPrice).toLocaleString()} ฿`;
+      if (salePrice) salePrice.textContent = `${Number(pkg.price).toLocaleString()} ฿`;
+      if (saveBadge && pkg.originalPrice && pkg.originalPrice > pkg.price) {
+        saveBadge.textContent = `SAVE ${(pkg.originalPrice - pkg.price).toLocaleString()} ฿`;
+        saveBadge.style.display = 'inline-block';
+      } else if (saveBadge) {
+        saveBadge.style.display = 'none';
+      }
+      if (btnOrderText && (!currentLoadedProduct || !currentLoadedProduct.isSoldOut)) {
+        btnOrderText.textContent = `${prefix} — ${Number(pkg.price).toLocaleString()} ฿`;
+      }
+
+      updateCheckoutSummary();
+    }
+
+    function selectPackage(pkgId) {
+      selectedPackageId = pkgId;
+      selectedPackageIdx = (pkgId === 1) ? 0 : 1;
+      const pkg1 = document.getElementById('pkg1') || document.getElementById('pkg_0');
+      const pkg2 = document.getElementById('pkg2') || document.getElementById('pkg_1');
+      const origPrice = document.getElementById('pdpOrigPrice');
+      const salePrice = document.getElementById('pdpSalePrice');
+      const saveBadge = document.getElementById('pdpSaveBadge');
+      const btnOrderText = document.getElementById('btnOrderText');
+
+      if (pkgId === 1) {
+        if (pkg1) pkg1.classList.add('selected');
+        if (pkg2) pkg2.classList.remove('selected');
+
+        const isThai = (localStorage.getItem('minozastore_lang') || 'th') === 'th';
+        const prefix = isThai ? 'เพิ่มเข้าตะกร้า' : 'ADD TO BAG';
+
+        if (origPrice) origPrice.textContent = '790 ฿';
+        if (salePrice) salePrice.textContent = '590 ฿';
+        if (saveBadge) saveBadge.textContent = 'SAVE 200 ฿';
+        if (btnOrderText) btnOrderText.textContent = `${prefix} — 590 ฿`;
+      } else {
+        const isThai = (localStorage.getItem('minozastore_lang') || 'th') === 'th';
+        const prefix = isThai ? 'เพิ่มเข้าตะกร้า' : 'ADD TO BAG';
+
+        if (pkg2) pkg2.classList.add('selected');
+        if (pkg1) pkg1.classList.remove('selected');
+
+        if (origPrice) origPrice.textContent = '1,180 ฿';
+        if (salePrice) salePrice.textContent = '890 ฿';
+        if (saveBadge) saveBadge.textContent = 'SAVE 290 ฿';
+        if (btnOrderText) btnOrderText.textContent = `${prefix} — 890 ฿`;
+      }
+
+      updateCheckoutSummary();
+    }
+
+    function selectSwatch(el, colorName) {
+      document.querySelectorAll('.sava-swatch-item').forEach(s => s.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    // Add To Bag / Cart logic that opens slide-out drawer
+    function addToBagFromPdp() {
+      const isPkg2 = (selectedPackageId === 2);
+      
+      // Clear previous cross-chain entry so package choice is updated cleanly
+      window.MinozaStore.cart = window.MinozaStore.cart.filter(item => !item.id.includes('cross-chain'));
+
+      if (isPkg2) {
+        window.MinozaStore.cart.unshift({
+          id: 'cross-chain-bundle-2',
+          name: 'CROSS CHAIN | SILVER (เซ็ตคู่ 2 เส้น ซื้อ 1 แถม 1 ฟรี)',
+          price: 890,
+          originalPrice: 1180,
+          image: '/images/jewelry/cross_chain_main.jpg',
+          quantity: 1,
+          isBundle: true,
+          freeShipping: true
+        });
+      } else {
+        window.MinozaStore.cart.unshift({
+          id: 'cross-chain-single',
+          name: 'CROSS CHAIN | SILVER (ซื้อ 1 เส้น)',
+          price: 590,
+          originalPrice: 790,
+          image: '/images/jewelry/cross_chain_main.jpg',
+          quantity: 1,
+          isBundle: false,
+          shipping: 50
+        });
+      }
+
+      window.MinozaStore.updateCartUI();
+      window.MinozaStore.openCartDrawer();
+      updateCheckoutSummary();
+
+      window.MinozaTracking.track('AddToCart', {
+        content_name: isPkg2 ? 'CROSS CHAIN | SILVER (เซ็ตคู่ 2 เส้น ซื้อ 1 แถม 1 ฟรี)' : 'CROSS CHAIN | SILVER (ซื้อ 1 เส้น)',
+        content_ids: ['cross-chain'],
+        content_type: 'product',
+        value: isPkg2 ? 890 : 590,
+        currency: 'THB'
+      });
+    }
+
+    function proceedToCheckoutFromDrawer() {
+      window.MinozaStore.closeCartDrawer();
+      updateCheckoutSummary();
+      const el = document.getElementById('expressCheckoutSec');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function updateCheckoutFromCart() {
+      updateCheckoutSummary();
+    }
+
+    // Dynamic Separation of Order Summary & PromptPay 50 THB Discount
+    function updateCheckoutSummary() {
+      const isPkg2 = (selectedPackageId === 2);
+      const itemsList = document.getElementById('checkoutItemsList');
+      const itemCountBadge = document.getElementById('summaryItemCountBadge');
+      const subtotalEl = document.getElementById('summarySubtotalText');
+      const totalEl = document.getElementById('summaryTotalText');
+      const shipEl = document.getElementById('summaryShippingText');
+      const btnConfirmText = document.getElementById('btnConfirmText');
+      const discountRow = document.getElementById('summaryDiscountRow');
+
+      // Determine items: Cart takes precedence if non-empty, otherwise PDP package selection
+      let items = [];
+      if (window.MinozaStore && window.MinozaStore.cart && window.MinozaStore.cart.length > 0) {
+        items = window.MinozaStore.cart;
+      } else {
+        items = [{
+          id: isPkg2 ? 'cross-chain-bundle-2' : 'cross-chain-single',
+          name: isPkg2 ? 'CROSS CHAIN | SILVER (เซ็ตคู่ 2 เส้น ซื้อ 1 แถม 1 ฟรี)' : 'CROSS CHAIN | SILVER (ซื้อ 1 เส้น)',
+          price: isPkg2 ? 890 : 590,
+          originalPrice: isPkg2 ? 1180 : 790,
+          image: '/images/jewelry/cross_chain_main.jpg',
+          quantity: 1,
+          isBundle: isPkg2,
+          freeShipping: isPkg2
+        }];
+      }
+
+      // Render Itemized Rows with Thumbnails & Quantity Pills (Separated out of form as sketched)
+      if (itemsList) {
+        itemsList.innerHTML = items.map(item => `
+          <div class="sava-order-item-row">
+            <div class="sava-order-item-left">
+              <div class="sava-order-thumb-wrap">
+                <img src="${item.image || '/images/jewelry/cross_chain_main.jpg'}" alt="${item.name}" class="sava-order-item-thumb" />
+                <span class="sava-order-item-badge">x${item.quantity}</span>
+              </div>
+              <div class="sava-order-item-info">
+                <span class="sava-order-item-name">${item.name}</span>
+                <span class="sava-order-item-sub">Stainless Steel 316L / Silver</span>
+              </div>
+            </div>
+            <div class="sava-order-item-price">${(item.price * item.quantity).toLocaleString()} ฿</div>
+          </div>
+        `).join('');
+      }
+
+      const totalItemsCount = items.reduce((sum, i) => sum + i.quantity, 0);
+      if (itemCountBadge) {
+        itemCountBadge.textContent = `${totalItemsCount} รายการ`;
+      }
+
+      // Subtotal calculation
+      const subtotal = items.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+      if (subtotalEl) subtotalEl.textContent = `${subtotal.toLocaleString()} ฿`;
+
+      // Free shipping for 890+ or bundles
+      const hasFreeShip = subtotal >= 890 || items.some(i => i.freeShipping);
+      const shipFee = hasFreeShip ? 0 : 50;
+      if (shipEl) {
+        shipEl.textContent = hasFreeShip ? 'ฟรี (FREE)' : '50 ฿';
+        shipEl.style.color = hasFreeShip ? '#16a34a' : '#000000';
+      }
+
+      // PromptPay Discount (-50 ฿) Incentive
+      const isPromptPay = (currentPaymentType === 'promptpay');
+      const promptPayDiscount = isPromptPay ? 50 : 0;
+      if (discountRow) {
+        discountRow.style.display = isPromptPay ? 'flex' : 'none';
+      }
+
+      const finalTotal = Math.max(0, subtotal + shipFee - promptPayDiscount);
+      if (totalEl) {
+        totalEl.textContent = `${finalTotal.toLocaleString()} ฿`;
+      }
+
+      // Make Confirm Button Prominent and clear about discount
+      if (btnConfirmText) {
+        if (isPromptPay) {
+          btnConfirmText.textContent = `สแกน QR ชำระเงิน (รับส่วนลด 50 ฿: จ่ายเพียง ${finalTotal.toLocaleString()} ฿)`;
+        } else {
+          btnConfirmText.textContent = `ยืนยันการสั่งซื้อเก็บเงินปลายทาง (${finalTotal.toLocaleString()} ฿)`;
+        }
+      }
+    }
+
+    function scrollToExpressCheckout() {
+      const el = document.getElementById('expressCheckoutSec');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function selectPaymentType(type) {
+      currentPaymentType = type;
+      const cardCod = document.getElementById('cardPayCod');
+      const cardPromptPay = document.getElementById('cardPayPromptPay');
+      const radioCod = document.getElementById('radioCod');
+      const radioPromptPay = document.getElementById('radioPromptPay');
+      const qrArea = document.getElementById('pdpQrArea');
+      const btnConfirm = document.getElementById('btnConfirmOrder');
+
+      if (type === 'promptpay') {
+        if (cardPromptPay) cardPromptPay.classList.add('selected');
+        if (cardCod) cardCod.classList.remove('selected');
+        if (radioPromptPay) radioPromptPay.checked = true;
+      } else {
+        if (cardCod) cardCod.classList.add('selected');
+        if (cardPromptPay) cardPromptPay.classList.remove('selected');
+        if (radioCod) radioCod.checked = true;
+        if (qrArea) qrArea.style.display = 'none';
+        if (btnConfirm) btnConfirm.style.display = 'flex';
+      }
+
+      updateCheckoutSummary();
+    }
+
+    function toggleAccordion(id) {
+      const body = document.getElementById(id);
+      const icon = document.getElementById('icon-' + id);
+      if (body.style.display === 'none' || !body.style.display) {
+        body.style.display = 'block';
+        if (icon) icon.textContent = '−';
+      } else {
+        body.style.display = 'none';
+        if (icon) icon.textContent = '+';
+      }
+    }
+
+    async function handleExpressFormSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnConfirmOrder');
+      const btnConfirmText = document.getElementById('btnConfirmText');
+      btn.disabled = true;
+      btnConfirmText.textContent = 'กำลังบันทึกคำสั่งซื้อ...';
+
+      const isPkg2 = (selectedPackageId === 2);
+      let items = [];
+      if (window.MinozaStore && window.MinozaStore.cart && window.MinozaStore.cart.length > 0) {
+        items = window.MinozaStore.cart.map(i => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity, freeShipping: i.freeShipping }));
+      } else {
+        items = [{
+          id: isPkg2 ? 'cross-chain-bundle-2' : 'cross-chain-single',
+          name: isPkg2 ? 'CROSS CHAIN | SILVER (เซ็ตคู่ 2 เส้น ซื้อ 1 แถม 1 ฟรี)' : 'CROSS CHAIN | SILVER (ซื้อ 1 เส้น)',
+          price: isPkg2 ? 890 : 590,
+          quantity: 1,
+          freeShipping: isPkg2
+        }];
+      }
+
+      const subtotal = items.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+      const hasFreeShip = subtotal >= 890 || items.some(i => i.freeShipping);
+      const shipFee = hasFreeShip ? 0 : 50;
+      const isPromptPay = (currentPaymentType === 'promptpay');
+      const promptPayDiscount = isPromptPay ? 50 : 0;
+      const totalAmount = Math.max(0, subtotal + shipFee - promptPayDiscount);
+
+      if (window.MinozaThaiAddress) {
+        window.MinozaThaiAddress.updateCombinedAddress(
+          document.getElementById('custStreet'),
+          document.getElementById('custProvince'),
+          document.getElementById('custDistrict'),
+          document.getElementById('custSubdistrict'),
+          document.getElementById('custZipcode'),
+          document.getElementById('custAddress')
+        );
+      }
+      const fullAddress = document.getElementById('custAddress').value || document.getElementById('custStreet').value;
+
+      const payload = {
+        amount: totalAmount,
+        currency: 'thb',
+        paymentMethod: currentPaymentType,
+        cartItems: items,
+        customer: {
+          name: document.getElementById('custName').value,
+          phone: document.getElementById('custPhone').value,
+          email: document.getElementById('custEmail').value || 'no-email@customer.com',
+          address: fullAddress
+        }
+      };
+
+      try {
+        const res = await fetch('/api/create-payment-intent', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        if (currentPaymentType === 'promptpay' && data.qrCode) {
+          const qrArea = document.getElementById('pdpQrArea');
+          const qrTotal = document.getElementById('pdpQrTotal');
+          const qrContainer = document.getElementById('pdpQrContainer');
+          if (qrArea) qrArea.style.display = 'block';
+          if (qrTotal) qrTotal.textContent = `${totalAmount.toLocaleString()} ฿`;
+          if (qrContainer) {
+            qrContainer.innerHTML = `<img src="${data.qrCode}" alt="PromptPay QR Code" style="max-width: 240px; border-radius: 4px; box-shadow: 0 4px 14px rgba(0,0,0,0.12);" />`;
+          }
+          btn.style.display = 'none';
+          qrArea.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          alert(`🎉 ได้รับคำสั่งซื้อเก็บเงินปลายทางเรียบร้อยแล้วครับ!\n\nยอดชำระ: ${totalAmount.toLocaleString()} บาท\nทางร้านจะจัดส่งพัสดุให้ด่วนวันนี้ พร้อมแจ้งเลข Tracking ให้ทาง SMS ครับ`);
+          btn.disabled = false;
+          btnConfirmText.textContent = '✓ สั่งซื้อสำเร็จเรียบร้อย!';
+          btn.style.background = '#000000';
+        }
+
+        window.MinozaTracking.track('Purchase', {
+          content_name: 'CROSS CHAIN | SILVER',
+          value: totalAmount,
+          currency: 'THB',
+          payment_type: currentPaymentType
+        });
+      } catch (err) {
+        console.error('Error submitting order:', err);
+        alert('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
+        btn.disabled = false;
+        updateCheckoutSummary();
+      }
+    }
+
+    // 100% Authentic Dispatch Cutoff Timer - Dynamically counts down to 16:00:00 local time
+    function startAuthenticCutoffTimer() {
+      function tick() {
+        const now = new Date();
+        const target = new Date();
+        target.setHours(16, 0, 0, 0);
+
+        let isToday = true;
+        let diffMs = target.getTime() - now.getTime();
+
+        // If after 16:00:00 today, countdown to tomorrow's 16:00 cutoff
+        if (diffMs <= 0) {
+          isToday = false;
+          target.setDate(target.getDate() + 1);
+          diffMs = target.getTime() - now.getTime();
+        }
+
+        const hours = Math.floor(diffMs / (1000 * 60 * 60));
+        const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+
+        const pad = (n) => String(n).padStart(2, '0');
+        const badgeEl = document.getElementById('dispatchCountdownBadge');
+        const roundTextEl = document.getElementById('dispatchRoundText');
+
+        if (badgeEl) {
+          badgeEl.textContent = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+        }
+
+        if (roundTextEl) {
+          const isThai = (localStorage.getItem('minozastore_lang') || 'th') === 'th';
+          if (isToday) {
+            roundTextEl.textContent = isThai 
+              ? 'เพื่อจัดส่งด่วนรอบวันนี้ (ตัดรอบ 16:00 น.)' 
+              : 'for same-day dispatch (16:00 cutoff)';
+          } else {
+            roundTextEl.textContent = isThai 
+              ? 'เพื่อจัดส่งรอบวันพรุ่งนี้ (ตัดรอบ 16:00 น.)' 
+              : 'for tomorrow\'s dispatch round (16:00 cutoff)';
+          }
+        }
+      }
+
+      tick();
+      setInterval(tick, 1000);
+    }
+
+    function openAdminModal() {
+      document.getElementById('adminModal').style.display = 'block';
+      fetch('/api/orders')
+        .then(r => r.json())
+        .then(data => {
+          document.getElementById('adminDataFeed').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+        });
+    }
+
+    function closeAdminModal() {
+      document.getElementById('adminModal').style.display = 'none';
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      window.MinozaStore.init();
+      syncProductFromApi();
+      if (window.MinozaThaiAddress) {
+        window.MinozaThaiAddress.init({
+          provinceId: 'custProvince',
+          districtId: 'custDistrict',
+          subdistrictId: 'custSubdistrict',
+          zipcodeId: 'custZipcode',
+          streetId: 'custStreet',
+          fullAddressId: 'custAddress'
+        });
+      }
+      updateSliderPosition();
+      updateCheckoutSummary();
+      startAuthenticCutoffTimer();
+      window.MinozaTracking.track('ViewContent', {
+        content_name: 'CROSS CHAIN | SILVER',
+        value: 890,
+        currency: 'THB'
+      });
+    });
+  </script>
+</body>
+</html>
