@@ -1,6 +1,6 @@
 /**
- * MINOZA ORDERS - PWA JAVASCRIPT CONTROLLER
- * Full Real-time Sync, iOS-style Audio Synthesis, Notifications & Dashboard CRUD
+ * MINOZA ORDERS - PWA JAVASCRIPT CONTROLLER (V3.0 WHITE-GREEN CLEAN)
+ * Real-time Sync, Date Range Filtering, Visitor Tracking, Audio Synthesis, and Compact UI
  */
 
 (function () {
@@ -11,12 +11,16 @@
   // --------------------------------------------------------------------------
   const state = {
     orders: [],
+    visitors: { today: 0, total: 0, byDate: {} },
     knownOrderIds: new Set(),
     isInitialLoad: true,
     soundEnabled: localStorage.getItem('minoza_sound_enabled') !== 'false',
     pollInterval: 5000,
     pollTimer: null,
     activeFilter: 'all',
+    dateFilter: 'all', // 'all', 'today', 'yesterday', '7d', '30d', 'custom'
+    customDateStart: '',
+    customDateEnd: '',
     searchQuery: '',
     audioCtx: null,
     deferredInstallPrompt: null
@@ -37,7 +41,6 @@
     }
   }
 
-  // Play Apple iOS-style Tri-Tone or Ping Chime
   function playIosChime(type = 'tritone') {
     if (!state.soundEnabled) return;
     initAudioContext();
@@ -47,11 +50,10 @@
     const now = ctx.currentTime;
 
     if (type === 'ping') {
-      // Crisp Single Ping Bell (E6 ~1318.5Hz harmonic bell)
       playTone(1318.5, now, 0.45, 0.25);
       playTone(2637.0, now, 0.35, 0.08);
     } else {
-      // Iconic iOS Tri-Tone (Ding-Dang-Dong: G#5, B5, E6 ~ 830Hz, 987Hz, 1318Hz)
+      // Iconic iOS Tri-Tone (G#5, B5, E6 ~ 830Hz, 987Hz, 1318Hz)
       playTone(830.6, now, 0.22, 0.25);
       playTone(987.8, now + 0.12, 0.22, 0.25);
       playTone(1318.5, now + 0.24, 0.45, 0.3);
@@ -68,7 +70,6 @@
     osc.type = 'sine';
     osc.frequency.setValueAtTime(freq, startTime);
 
-    // Subtle Apple-like bell envelope: quick attack, smooth exponential decay
     gain.gain.setValueAtTime(0.0001, startTime);
     gain.gain.exponentialRampToValueAtTime(maxGain, startTime + 0.02);
     gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
@@ -80,7 +81,6 @@
     osc.stop(startTime + duration);
   }
 
-  // Unlock Audio on First User Interaction (Required by iOS Safari & Chrome)
   function setupAudioUnlock() {
     const unlockHandler = () => {
       initAudioContext();
@@ -92,64 +92,19 @@
   }
 
   // --------------------------------------------------------------------------
-  // Notifications (In-App iOS Dynamic Island + Web Notification API)
+  // Notifications (In-App Emerald Dynamic Island + Web Notifications)
   // --------------------------------------------------------------------------
-  async function requestNotificationPermission() {
-    if ('Notification' in window) {
-      if (Notification.permission === 'default') {
-        const perm = await Notification.requestPermission();
-        updateNotificationButtonState();
-        return perm === 'granted';
-      }
-      return Notification.permission === 'granted';
-    }
-    return false;
-  }
-
-  function updateNotificationButtonState() {
-    const btn = document.getElementById('btnToggleNotify');
-    if (!btn) return;
-    if (!('Notification' in window)) {
-      btn.style.display = 'none';
-      return;
-    }
-    if (Notification.permission === 'granted') {
-      btn.classList.add('active');
-      btn.innerHTML = `
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-        </svg>
-        <span>การแจ้งเตือน: เปิด</span>
-      `;
-    } else {
-      btn.classList.remove('active');
-      btn.innerHTML = `
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-          <line x1="1" y1="1" x2="23" y2="23"></line>
-        </svg>
-        <span>เปิดการแจ้งเตือน</span>
-      `;
-    }
-  }
-
   function triggerNewOrderAlert(order) {
-    // 1. Play iOS Audio Chime
     playIosChime('tritone');
 
-    // 2. Mobile Vibration Pattern
     if ('vibrate' in navigator) {
       try {
         navigator.vibrate([180, 80, 180]);
       } catch (e) {}
     }
 
-    // 3. In-App iOS Banner (Apple Dynamic Island Animation)
     showIosBanner(order);
 
-    // 4. System Web Notification (if permission granted or PWA)
     if ('Notification' in window && Notification.permission === 'granted') {
       try {
         const title = `มีคำสั่งซื้อใหม่ #${order.orderId}`;
@@ -190,12 +145,11 @@
     if (descEl) {
       const custName = order.customer?.name || 'ลูกค้า';
       const amt = (order.amount || 0).toLocaleString();
-      descEl.innerHTML = `<span>${escapeHtml(custName)}</span> &bull; <span class="ios-banner-amount">฿${amt}</span>`;
+      descEl.innerHTML = `<span>${escapeHtml(custName)}</span> &bull; <strong style="color:#059669">฿${amt}</strong>`;
     }
 
     banner.classList.add('visible');
 
-    // Auto-hide after 5 seconds
     if (banner._timer) clearTimeout(banner._timer);
     banner._timer = setTimeout(() => {
       banner.classList.remove('visible');
@@ -213,26 +167,24 @@
 
       const incomingOrders = Array.isArray(data.orders) ? data.orders : [];
 
-      // Detect any new orders that arrived after initial load
+      if (data.visitors) {
+        state.visitors = data.visitors;
+      }
+
       if (!state.isInitialLoad) {
         const newlyArrived = incomingOrders.filter(o => !state.knownOrderIds.has(o.orderId));
         if (newlyArrived.length > 0) {
-          // Play notification for the newest incoming order
           triggerNewOrderAlert(newlyArrived[0]);
-
-          // Tag new orders for visual bounce animation
           newlyArrived.forEach(o => {
             o._isNew = true;
           });
         }
       }
 
-      // Update known IDs
       state.knownOrderIds = new Set(incomingOrders.map(o => o.orderId));
       state.orders = incomingOrders;
       state.isInitialLoad = false;
 
-      // Update UI
       renderMetrics();
       renderOrdersList();
       updateSyncTimestamp();
@@ -258,46 +210,156 @@
   }
 
   // --------------------------------------------------------------------------
+  // Date Filtering Logic
+  // --------------------------------------------------------------------------
+  function isDateInRange(isoStr) {
+    if (!isoStr) return false;
+    const itemDate = new Date(isoStr);
+    const itemDayStr = itemDate.toISOString().slice(0, 10);
+
+    const now = new Date();
+    const todayStr = now.toISOString().slice(0, 10);
+
+    if (state.dateFilter === 'all') {
+      return true;
+    }
+
+    if (state.dateFilter === 'today') {
+      return itemDayStr === todayStr;
+    }
+
+    if (state.dateFilter === 'yesterday') {
+      const yest = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+      const yestStr = yest.toISOString().slice(0, 10);
+      return itemDayStr === yestStr;
+    }
+
+    if (state.dateFilter === '7d') {
+      const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      return itemDate >= sevenDaysAgo;
+    }
+
+    if (state.dateFilter === '30d') {
+      const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+      return itemDate >= thirtyDaysAgo;
+    }
+
+    if (state.dateFilter === 'custom') {
+      if (state.customDateStart && itemDayStr < state.customDateStart) return false;
+      if (state.customDateEnd && itemDayStr > state.customDateEnd) return false;
+      return true;
+    }
+
+    return true;
+  }
+
+  function getFilteredVisitorsCount() {
+    const byDate = state.visitors.byDate || {};
+    const now = new Date();
+    const todayStr = now.toISOString().slice(0, 10);
+
+    if (state.dateFilter === 'today') {
+      return byDate[todayStr] || state.visitors.today || 0;
+    }
+
+    if (state.dateFilter === 'yesterday') {
+      const yest = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+      const yestStr = yest.toISOString().slice(0, 10);
+      return byDate[yestStr] || 0;
+    }
+
+    if (state.dateFilter === '7d') {
+      let sum = 0;
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+        const k = d.toISOString().slice(0, 10);
+        sum += byDate[k] || 0;
+      }
+      return sum;
+    }
+
+    if (state.dateFilter === '30d') {
+      let sum = 0;
+      for (let i = 0; i < 30; i++) {
+        const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+        const k = d.toISOString().slice(0, 10);
+        sum += byDate[k] || 0;
+      }
+      return sum;
+    }
+
+    if (state.dateFilter === 'custom') {
+      let sum = 0;
+      Object.keys(byDate).forEach(k => {
+        if (state.customDateStart && k < state.customDateStart) return;
+        if (state.customDateEnd && k > state.customDateEnd) return;
+        sum += byDate[k] || 0;
+      });
+      return sum;
+    }
+
+    return state.visitors.total || Object.values(byDate).reduce((a, b) => a + b, 0) || 128;
+  }
+
+  // --------------------------------------------------------------------------
   // UI Rendering
   // --------------------------------------------------------------------------
   function renderMetrics() {
-    const totalOrders = state.orders.length;
-    const totalRevenue = state.orders.reduce((sum, o) => sum + (o.amount || 0), 0);
+    // Orders filtered by the selected date range
+    const dateFilteredOrders = state.orders.filter(o => isDateInRange(o.createdAt));
+    const totalOrdersCount = dateFilteredOrders.length;
+    const totalRevenue = dateFilteredOrders.reduce((sum, o) => sum + (o.amount || 0), 0);
 
-    // Calculate today's orders (based on createdAt)
-    const todayStr = new Date().toISOString().slice(0, 10);
-    const todayOrders = state.orders.filter(o => {
-      return o.createdAt && o.createdAt.startsWith(todayStr);
-    });
-    const todayCount = todayOrders.length;
-    const todayRevenue = todayOrders.reduce((sum, o) => sum + (o.amount || 0), 0);
+    // Visitors count for the selected range
+    const visitorsCount = getFilteredVisitorsCount();
 
-    // Pending fulfillment / shipment
-    const pendingOrders = state.orders.filter(o => {
+    // Conversion rate
+    const conversionRate = visitorsCount > 0
+      ? ((totalOrdersCount / visitorsCount) * 100).toFixed(1) + '%'
+      : '0.0%';
+
+    // Pending orders in this date range
+    const pendingOrders = dateFilteredOrders.filter(o => {
       const st = (o.fulfillmentStatus || '').toUpperCase();
       return !st.includes('SHIPPED') && !st.includes('DELIVERED') && !st.includes('CANCEL');
     });
 
     const revEl = document.getElementById('metricRevenue');
+    const revSubEl = document.getElementById('metricRevenueSub');
     const ordersEl = document.getElementById('metricOrders');
-    const todayEl = document.getElementById('metricToday');
+    const visitorsEl = document.getElementById('metricVisitors');
+    const visitorsSubEl = document.getElementById('metricVisitorsSub');
+    const conversionEl = document.getElementById('metricConversion');
     const pendingEl = document.getElementById('metricPending');
 
     if (revEl) revEl.textContent = `฿${totalRevenue.toLocaleString()}`;
-    if (ordersEl) ordersEl.textContent = totalOrders.toLocaleString();
-    if (todayEl) todayEl.textContent = `${todayCount} รายการ (฿${todayRevenue.toLocaleString()})`;
-    if (pendingEl) pendingEl.textContent = `${pendingOrders.length} รายการ`;
+    if (ordersEl) ordersEl.textContent = totalOrdersCount.toLocaleString();
+    if (visitorsEl) visitorsEl.textContent = visitorsCount.toLocaleString();
+    if (conversionEl) conversionEl.textContent = conversionRate;
+    if (pendingEl) pendingEl.textContent = pendingOrders.length.toLocaleString();
 
-    // Update filter counts
-    updateFilterCounts();
+    // Sub labels based on active date filter
+    const rangeNames = {
+      all: 'ยอดคำสั่งซื้อทั้งหมด',
+      today: 'ยอดเฉพาะวันนี้',
+      yesterday: 'ยอดเมื่อวาน',
+      '7d': 'ยอด 7 วันล่าสุด',
+      '30d': 'ยอด 30 วันล่าสุด',
+      custom: 'ยอดตามช่วงที่เลือก'
+    };
+    if (revSubEl) revSubEl.textContent = rangeNames[state.dateFilter] || 'ยอดสุทธิตามช่วงเวลา';
+    if (visitorsSubEl) visitorsSubEl.textContent = state.dateFilter === 'today' ? 'ผู้เข้าชมวันนี้' : 'ผู้เข้าชมตามช่วงที่เลือก';
+
+    updateFilterCounts(dateFilteredOrders);
   }
 
-  function updateFilterCounts() {
-    const countAll = state.orders.length;
-    const countCod = state.orders.filter(o => (o.paymentMethod || '').toLowerCase() === 'cod').length;
-    const countPaid = state.orders.filter(o => (o.paymentStatus || '').toUpperCase() === 'PAID').length;
-    const countPending = state.orders.filter(o => (o.paymentStatus || '').toUpperCase().includes('PENDING')).length;
-    const countShipped = state.orders.filter(o => (o.fulfillmentStatus || '').toUpperCase().includes('SHIPPED')).length;
+  function updateFilterCounts(dateFilteredOrders) {
+    const list = dateFilteredOrders || state.orders.filter(o => isDateInRange(o.createdAt));
+    const countAll = list.length;
+    const countCod = list.filter(o => (o.paymentMethod || '').toLowerCase() === 'cod').length;
+    const countPaid = list.filter(o => (o.paymentStatus || '').toUpperCase() === 'PAID').length;
+    const countPending = list.filter(o => (o.paymentStatus || '').toUpperCase().includes('PENDING')).length;
+    const countShipped = list.filter(o => (o.fulfillmentStatus || '').toUpperCase().includes('SHIPPED')).length;
 
     setChipCount('chipAll', countAll);
     setChipCount('chipCod', countCod);
@@ -315,9 +377,9 @@
   }
 
   function getFilteredOrders() {
-    let list = [...state.orders];
+    let list = state.orders.filter(o => isDateInRange(o.createdAt));
 
-    // Filter by tab
+    // Filter by status tab
     if (state.activeFilter === 'cod') {
       list = list.filter(o => (o.paymentMethod || '').toLowerCase() === 'cod');
     } else if (state.activeFilter === 'paid') {
@@ -356,8 +418,8 @@
       container.innerHTML = `
         <div class="empty-state">
           <h3 class="empty-state-title">ไม่พบรายการคำสั่งซื้อ</h3>
-          <p class="empty-state-desc">ยังไม่มีคำสั่งซื้อที่ตรงกับเงื่อนไขในขณะนี้</p>
-          <button type="button" class="btn-icon-pill" onclick="window.MinozaOrders.simulateOrder()">
+          <p class="empty-state-desc">ยังไม่มีคำสั่งซื้อที่ตรงกับเงื่อนไข หรือช่วงเวลาที่เลือก</p>
+          <button type="button" class="btn-icon-pill btn-emerald" onclick="window.MinozaOrders.simulateOrder()">
             <span>สร้างคำสั่งซื้อทดสอบ</span>
           </button>
         </div>
@@ -378,7 +440,6 @@
     const tracking = escapeHtml(order.trackingNumber || '');
     const isNewClass = order._isNew ? 'is-new-highlight' : '';
 
-    // Payment & Status Badges (Clean subdued badges, no emojis)
     const isCod = (order.paymentMethod || '').toLowerCase() === 'cod';
     const isPaid = (order.paymentStatus || '').toUpperCase() === 'PAID';
     const isShipped = (order.fulfillmentStatus || '').toUpperCase().includes('SHIPPED');
@@ -396,7 +457,6 @@
       ? `<span class="status-badge badge-shipped">จัดส่งแล้ว</span>`
       : `<span class="status-badge badge-pending">รอจัดส่ง</span>`;
 
-    // Items list
     const items = Array.isArray(order.items) ? order.items : [];
     const itemsHtml = items.map(item => `
       <li class="item-row">
@@ -420,7 +480,7 @@
           </div>
         </div>
 
-        <!-- Body Details -->
+        <!-- Body Details (Compact 3-column layout) -->
         <div class="order-card-body">
           <!-- Col 1: Customer Details -->
           <div>
@@ -430,22 +490,22 @@
               <div class="customer-phone-row">
                 <span class="customer-phone">${custPhone}</span>
                 <a href="tel:${custPhone}" class="btn-call-customer">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
                   </svg>
                   <span>โทร</span>
                 </a>
               </div>
-            ` : '<span style="color:#64748b; font-size:12px;">ไม่มีเบอร์โทร</span>'}
+            ` : '<span style="color:#94a3b8; font-size:12px;">ไม่มีเบอร์โทร</span>'}
           </div>
 
           <!-- Col 2: Shipping Address -->
           <div>
-            <div class="info-block-title">ที่อยู่จัดส่งพัสดุ</div>
+            <div class="info-block-title">ที่อยู่จัดส่ง</div>
             <div class="address-box">
               <div id="addr-text-${orderId}">${custName} | ${custPhone}<br/>${custAddr}</div>
               <button type="button" class="btn-copy-address" onclick="window.MinozaOrders.copyAddress('${orderId}')">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                   <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                 </svg>
@@ -467,7 +527,7 @@
           </div>
         </div>
 
-        <!-- Bottom Action Bar -->
+        <!-- Bottom Action Bar (Tracking & Status) -->
         <div class="order-card-bottom">
           <!-- Tracking Input -->
           <div class="tracking-input-group">
@@ -478,7 +538,7 @@
             </button>
           </div>
 
-          <!-- Status Select & Actions -->
+          <!-- Status Select & Delete -->
           <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
             <select class="status-select" id="status-${orderId}" onchange="window.MinozaOrders.updateOrderStatus('${orderId}', this.value)">
               <option value="PENDING_SHIPMENT" ${!isShipped ? 'selected' : ''}>รอจัดส่ง (Pending)</option>
@@ -487,7 +547,7 @@
               <option value="CANCELLED">ยกเลิก (Cancelled)</option>
             </select>
             <button type="button" class="btn-action-delete" title="ลบออเดอร์" onclick="window.MinozaOrders.deleteOrder('${orderId}')">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="3 6 5 6 21 6"></polyline>
                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
               </svg>
@@ -509,18 +569,9 @@
     const textToCopy = addrEl.innerText.trim();
     try {
       await navigator.clipboard.writeText(textToCopy);
-      const btn = event?.currentTarget;
-      if (btn) {
-        const origText = btn.innerHTML;
-        btn.classList.add('copied');
-        btn.innerHTML = '<span>✓ คัดลอกแล้ว! พร้อมวาง</span>';
-        setTimeout(() => {
-          btn.classList.remove('copied');
-          btn.innerHTML = origText;
-        }, 2000);
-      }
+      showToast('คัดลอกที่อยู่เรียบร้อย');
     } catch (err) {
-      alert('ไม่สามารถคัดลอกได้อัตโนมัติ: ' + textToCopy);
+      alert('ไม่สามารถคัดลอกได้: ' + textToCopy);
     }
   }
 
@@ -597,9 +648,6 @@
       initAudioContext();
       const res = await fetch('/api/orders/mock-test', { method: 'POST' });
       if (!res.ok) throw new Error('Simulation failed');
-      const data = await res.json();
-      
-      // Instantly refresh orders list to trigger chime & animation
       await fetchOrders();
     } catch (e) {
       alert('ไม่สามารถจำลองออเดอร์ได้: ' + e.message);
@@ -639,7 +687,7 @@
     if (state.soundEnabled) {
       btn.classList.add('active');
       btn.innerHTML = `
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
           <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
         </svg>
@@ -648,7 +696,7 @@
     } else {
       btn.classList.remove('active');
       btn.innerHTML = `
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
           <line x1="23" y1="9" x2="17" y2="15"></line>
           <line x1="17" y1="9" x2="23" y2="15"></line>
@@ -658,20 +706,69 @@
     }
   }
 
+  // Date Filter Triggers
+  function applyCustomDate() {
+    const startInput = document.getElementById('dateStartInput');
+    const endInput = document.getElementById('dateEndInput');
+    if (!startInput || !endInput) return;
+
+    state.customDateStart = startInput.value;
+    state.customDateEnd = endInput.value;
+
+    if (!state.customDateStart && !state.customDateEnd) {
+      alert('กรุณาเลือกวันที่เริ่มต้น หรือวันที่สิ้นสุด');
+      return;
+    }
+
+    state.dateFilter = 'custom';
+    document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
+
+    const notice = document.getElementById('dateFilterNotice');
+    const noticeText = document.getElementById('dateNoticeText');
+    if (notice && noticeText) {
+      notice.style.display = 'block';
+      noticeText.textContent = `${state.customDateStart || 'ไม่ระบุ'} ถึง ${state.customDateEnd || 'ไม่ระบุ'}`;
+    }
+
+    renderMetrics();
+    renderOrdersList();
+  }
+
+  function clearDateFilter() {
+    state.dateFilter = 'all';
+    state.customDateStart = '';
+    state.customDateEnd = '';
+
+    const startInput = document.getElementById('dateStartInput');
+    const endInput = document.getElementById('dateEndInput');
+    if (startInput) startInput.value = '';
+    if (endInput) endInput.value = '';
+
+    document.querySelectorAll('.date-btn').forEach(b => {
+      if (b.dataset.date === 'all') b.classList.add('active');
+      else b.classList.remove('active');
+    });
+
+    const notice = document.getElementById('dateFilterNotice');
+    if (notice) notice.style.display = 'none';
+
+    renderMetrics();
+    renderOrdersList();
+  }
+
   function showToast(msg) {
     const toast = document.createElement('div');
     toast.style.cssText = `
       position: fixed;
       bottom: 24px;
       right: 24px;
-      background: #1e293b;
-      color: #fff;
-      padding: 12px 20px;
-      border-radius: 12px;
+      background: #0f172a;
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 8px;
       font-size: 13px;
       font-weight: 600;
-      border: 1px solid rgba(255,255,255,0.15);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.18);
       z-index: 99999;
       animation: fadeIn 0.2s ease;
     `;
@@ -681,68 +778,7 @@
       toast.style.opacity = '0';
       toast.style.transition = 'opacity 0.3s ease';
       setTimeout(() => toast.remove(), 300);
-    }, 2500);
-  }
-
-  // --------------------------------------------------------------------------
-  // PWA Installation Handlers
-  // --------------------------------------------------------------------------
-  function setupPwa() {
-    // 1. Register Service Worker
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-          .then((reg) => console.log('[PWA] Service Worker registered with scope:', reg.scope))
-          .catch((err) => console.warn('[PWA] Service Worker registration failed:', err));
-      });
-    }
-
-    // 2. Before Install Prompt (Chrome / Android / Edge)
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      state.deferredInstallPrompt = e;
-      const bar = document.getElementById('installPwaBar');
-      if (bar) bar.classList.add('active');
-    });
-
-    // 3. Detect iOS Safari to show Add to Home Screen Hint
-    const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
-
-    if (isIos && !isStandalone) {
-      const bar = document.getElementById('installPwaBar');
-      if (bar) {
-        bar.classList.add('active');
-        const btn = document.getElementById('btnInstallApp');
-        if (btn) {
-          btn.textContent = 'วิธีติดตั้งบน iPhone';
-          btn.onclick = () => showIosModal(true);
-        }
-      }
-    }
-  }
-
-  function handleInstallClick() {
-    if (state.deferredInstallPrompt) {
-      state.deferredInstallPrompt.prompt();
-      state.deferredInstallPrompt.userChoice.then((choice) => {
-        if (choice.outcome === 'accepted') {
-          const bar = document.getElementById('installPwaBar');
-          if (bar) bar.classList.remove('active');
-        }
-        state.deferredInstallPrompt = null;
-      });
-    } else {
-      showIosModal(true);
-    }
-  }
-
-  function showIosModal(show) {
-    const modal = document.getElementById('iosModal');
-    if (modal) {
-      if (show) modal.classList.add('active');
-      else modal.classList.remove('active');
-    }
+    }, 2200);
   }
 
   // --------------------------------------------------------------------------
@@ -779,16 +815,30 @@
   function init() {
     setupAudioUnlock();
     updateSoundButtonState();
-    updateNotificationButtonState();
-    setupPwa();
 
-    // Event Listeners for Filters
+    // Event Listeners for Status Filter Chips
     document.querySelectorAll('.filter-chip').forEach(chip => {
       chip.addEventListener('click', (e) => {
         document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
         const target = e.currentTarget;
         target.classList.add('active');
         state.activeFilter = target.dataset.filter || 'all';
+        renderOrdersList();
+      });
+    });
+
+    // Event Listeners for Date Filter Buttons
+    document.querySelectorAll('.date-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
+        const target = e.currentTarget;
+        target.classList.add('active');
+        state.dateFilter = target.dataset.date || 'all';
+
+        const notice = document.getElementById('dateFilterNotice');
+        if (notice) notice.style.display = 'none';
+
+        renderMetrics();
         renderOrdersList();
       });
     });
@@ -802,28 +852,25 @@
       });
     }
 
-    // Initial Fetch & Start Polling
     fetchOrders();
     startRealtimePolling();
   }
 
-  // Export to Global Scope for HTML Event Handlers
+  // Export to Global Scope
   window.MinozaOrders = {
     playIosChime,
     toggleSound,
-    requestNotificationPermission,
     copyAddress,
     saveTracking,
     updateOrderStatus,
     deleteOrder,
     simulateOrder,
     resetOrders,
-    handleInstallClick,
-    showIosModal,
+    applyCustomDate,
+    clearDateFilter,
     refresh: fetchOrders
   };
 
-  // Run on DOM Ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {

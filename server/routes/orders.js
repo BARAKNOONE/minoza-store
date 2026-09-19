@@ -14,7 +14,10 @@ router.use((req, res, next) => {
  */
 router.get('/orders', async (req, res) => {
   try {
-    const orders = await store.getOrders();
+    const [orders, visitors] = await Promise.all([
+      store.getOrders(),
+      store.getVisitors ? store.getVisitors() : { today: 0, total: 0, byDate: {} }
+    ]);
 
     // Calculate quick marketing metrics
     const totalRevenue = orders.reduce((sum, o) => sum + (o.amount || 0), 0);
@@ -29,8 +32,22 @@ router.get('/orders', async (req, res) => {
       totalRevenue,
       currency: 'THB',
       campaignBreakdown,
+      visitors,
       orders
     });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/**
+ * POST /api/track-visitor
+ * Record a pageview/visitor
+ */
+router.post('/track-visitor', async (req, res) => {
+  try {
+    const updated = await store.recordVisitor();
+    res.json({ success: true, visitors: updated });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
