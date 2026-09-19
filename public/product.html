@@ -838,7 +838,7 @@
       }
       const pkg = currentProductPackages[idx];
       if (pkg.isSoldOut) {
-        alert('ขออภัย ตัวเลือกแพ็กเกจนี้สินค้าหมดชั่วคราวครับ');
+        alert('ขออภ���ย ตัวเลือกแพ็กเกจนี้สินค้าหมดชั่วคราวครับ');
         return;
       }
 
@@ -1293,5 +1293,11 @@
       });
     });
   </script>
+
+  <!-- Vercel Web Analytics -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
