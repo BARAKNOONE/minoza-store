@@ -585,7 +585,7 @@
 
 
   <!-- Scripts -->
-  <script src="/js/tracking.js"></script>
+  <script src="/js/meta-pixel.js"></script>
   <script src="/js/i18n.js"></script>
   <script src="/js/thai-address-data.js"></script>
   <script src="/js/app.js"></script>
@@ -950,7 +950,7 @@
       window.MinozaStore.openCartDrawer();
       updateCheckoutSummary();
 
-      window.MinozaTracking.track('AddToCart', {
+      if (window.MinozaTracking) window.MinozaTracking.track('AddToCart', {
         content_name: item.name,
         content_ids: [item.productId],
         content_type: 'product',
@@ -1166,8 +1166,8 @@
           btn.style.background = '#000000';
         }
 
-        window.MinozaTracking.track('Purchase', {
-          content_name: 'CROSS CHAIN | SILVER',
+        if (window.MinozaTracking) window.MinozaTracking.track('Purchase', {
+          content_name: currentLoadedProduct ? currentLoadedProduct.name : 'CROSS CHAIN | SILVER',
           value: totalAmount,
           currency: 'THB',
           payment_type: currentPaymentType
@@ -1270,7 +1270,7 @@
       updateSliderPosition();
       updateCheckoutSummary();
       startAuthenticCutoffTimer();
-      window.MinozaTracking.track('ViewContent', {
+      if (window.MinozaTracking) window.MinozaTracking.track('ViewContent', {
         content_name: currentLoadedProduct ? currentLoadedProduct.name : 'CROSS CHAIN | SILVER',
         value: currentLoadedProduct ? (currentLoadedProduct.price || 890) : 890,
         currency: 'THB'
