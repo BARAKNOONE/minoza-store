@@ -1,9 +1,8 @@
 {
-  "cleanUrls": true,
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api" },
-    { "source": "/admin", "destination": "/admin" },
-    { "source": "/product/(.*)", "destination": "/product" }
+    { "source": "/product/(.*)", "destination": "/api" },
+    { "source": "/admin", "destination": "/api" }
   ],
   "headers": [
     {
