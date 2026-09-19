@@ -30,6 +30,22 @@ async function seed() {
   }
 
   console.log('🎉 All products seeded successfully into Supabase!');
+
+  // Seed site_settings
+  const settingsPath = path.join(__dirname, 'data/site_settings.json');
+  if (fs.existsSync(settingsPath)) {
+    const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
+    const { error: setErr } = await supabase.from('site_settings').upsert({
+      id: 1,
+      data: settings,
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'id' });
+    if (setErr) {
+      console.error('❌ Failed to seed site_settings:', setErr.message);
+    } else {
+      console.log('✅ Seeded site_settings successfully!');
+    }
+  }
 }
 
 seed().catch(err => {

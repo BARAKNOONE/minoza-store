@@ -245,12 +245,15 @@ const adminsFilePath = path.join(__dirname, '../data/admins.json');
 
 async function getAdmins() {
   if (isEnabled()) {
-    const { data, error } = await supabase
-      .from('admins')
-      .select('id, username, name, role, created_at')
-      .order('created_at', { ascending: true });
-    if (error) throw error;
-    return data || [];
+    try {
+      const { data, error } = await supabase
+        .from('admins')
+        .select('id, username, name, role, created_at')
+        .order('created_at', { ascending: true });
+      if (!error && data) return data;
+    } catch (e) {
+      console.warn('Supabase getAdmins fallback to file:', e.message);
+    }
   }
   const admins = readJson(adminsFilePath, []);
   return admins.map(a => ({
@@ -264,13 +267,16 @@ async function getAdmins() {
 
 async function getAdminByUsername(username) {
   if (isEnabled()) {
-    const { data, error } = await supabase
-      .from('admins')
-      .select('*')
-      .eq('username', username.toLowerCase().trim())
-      .maybeSingle();
-    if (error) throw error;
-    return data || null;
+    try {
+      const { data, error } = await supabase
+        .from('admins')
+        .select('*')
+        .eq('username', username.toLowerCase().trim())
+        .maybeSingle();
+      if (!error && data) return data;
+    } catch (e) {
+      console.warn('Supabase getAdminByUsername fallback to file:', e.message);
+    }
   }
   const admins = readJson(adminsFilePath, []);
   return admins.find(a => a.username.toLowerCase() === username.toLowerCase().trim()) || null;
