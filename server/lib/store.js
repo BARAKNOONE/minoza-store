@@ -13,21 +13,49 @@ const fs = require('fs');
 const path = require('path');
 const { supabase, isEnabled } = require('./supabase');
 
+const os = require('os');
+
 const productsFilePath = path.join(__dirname, '../data/products.json');
 const ordersFilePath = path.join(__dirname, '../data/orders.json');
 const settingsFilePath = path.join(__dirname, '../data/site_settings.json');
 
+function getWritablePath(filePath) {
+  if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME) {
+    const filename = path.basename(filePath);
+    const tmpPath = path.join(os.tmpdir(), filename);
+    if (!fs.existsSync(tmpPath) && fs.existsSync(filePath)) {
+      try {
+        fs.copyFileSync(filePath, tmpPath);
+      } catch (e) {}
+    }
+    return tmpPath;
+  }
+  return filePath;
+}
+
 function readJson(filePath, fallback) {
-  if (!fs.existsSync(filePath)) return fallback;
+  const actualPath = getWritablePath(filePath);
+  const target = fs.existsSync(actualPath) ? actualPath : filePath;
+  if (!fs.existsSync(target)) return fallback;
   try {
-    return JSON.parse(fs.readFileSync(filePath, 'utf8') || JSON.stringify(fallback));
+    return JSON.parse(fs.readFileSync(target, 'utf8') || JSON.stringify(fallback));
   } catch (e) {
     return fallback;
   }
 }
 
 function writeJson(filePath, data) {
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
+  const actualPath = getWritablePath(filePath);
+  try {
+    fs.writeFileSync(actualPath, JSON.stringify(data, null, 2), 'utf8');
+  } catch (e) {
+    try {
+      const fallbackPath = path.join(os.tmpdir(), path.basename(filePath));
+      fs.writeFileSync(fallbackPath, JSON.stringify(data, null, 2), 'utf8');
+    } catch (err) {
+      console.error('writeJson error:', err);
+    }
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -164,6 +192,16 @@ async function addOrder(order) {
   orders.unshift(order);
   writeJson(ordersFilePath, orders);
   return order;
+}
+
+async function clearOrders() {
+  if (isEnabled()) {
+    const { error } = await supabase.from('orders').delete().neq('order_id', '');
+    if (error) throw error;
+    return [];
+  }
+  writeJson(ordersFilePath, []);
+  return [];
 }
 
 // ---------------------------------------------------------------------------
@@ -309,6 +347,7 @@ module.exports = {
   deleteProduct,
   getOrders,
   addOrder,
+  clearOrders,
   getSettings,
   updateSettings,
   getAdmins,

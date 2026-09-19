@@ -43,4 +43,22 @@ router.get('/orders', async (req, res) => {
   }
 });
 
+/**
+ * POST /api/orders/reset
+ * Reset mock orders & revenue back to zero
+ */
+router.post('/orders/reset', async (req, res) => {
+  try {
+    await store.clearOrders();
+    res.json({
+      success: true,
+      message: 'Orders and revenue reset to 0 successfully',
+      totalOrders: 0,
+      totalRevenue: 0
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;

@@ -83,7 +83,10 @@
         </div>
         <div class="stat-card">
           <div class="stat-info">
-            <div class="stat-label">คำสั่งซื้อสะสม (Orders)</div>
+            <div class="stat-label" style="display: flex; justify-content: space-between; align-items: center;">
+              <span>คำสั่งซื้อสะสม (Orders)</span>
+              <button type="button" onclick="window.MinozaAdmin.resetOrders()" style="background: none; border: none; color: #dc2626; font-size: 11px; font-weight: 600; cursor: pointer; padding: 2px 6px; border-radius: 4px; background: rgba(220,38,38,0.08);" title="ล้างข้อมูลคำสั่งซื้อทั้งหมดเป็น 0">ล้างค่า 0</button>
+            </div>
             <div class="stat-value" id="totalOrdersCount">--</div>
           </div>
           <div class="stat-icon">📦</div>

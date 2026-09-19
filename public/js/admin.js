@@ -1063,6 +1063,20 @@
     }
   }
 
+  async function resetOrders() {
+    if (!confirm('ยืนยันต้องการล้างข้อมูลคำสั่งซื้อและยอดขายทั้งหมดเป็น 0 หรือไม่?\n\n(ระบบจะเริ่มนับออเดอร์ใหม่จากลูกค้าจริงทันที)')) return;
+    try {
+      const res = await fetch('/api/orders/reset', { method: 'POST', headers: getAuthHeader() });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.error || 'Failed to reset orders');
+      if (totalOrdersEl) totalOrdersEl.textContent = '0';
+      if (totalRevenueEl) totalRevenueEl.textContent = '฿0';
+      showToast('รีเซ็ตคำสั่งซื้อและยอดขายเป็น 0 เรียบร้อยแล้ว');
+    } catch (err) {
+      showToast('ไม่สามารถรีเซ็ตได้: ' + err.message, true);
+    }
+  }
+
   // Event Listeners
   if (searchInput) searchInput.addEventListener('input', renderProducts);
   if (categoryFilter) categoryFilter.addEventListener('change', renderProducts);
@@ -1090,7 +1104,8 @@
     openCreateUserModal,
     closeUserModal,
     handleCreateUser,
-    deleteAdminUser
+    deleteAdminUser,
+    resetOrders
   };
 
   // Init
