@@ -199,6 +199,106 @@ async function updateSettings(partial) {
   return updated;
 }
 
+// ---------------------------------------------------------------------------
+// Admin Users
+// ---------------------------------------------------------------------------
+
+const adminsFilePath = path.join(__dirname, '../data/admins.json');
+
+async function getAdmins() {
+  if (isEnabled()) {
+    const { data, error } = await supabase
+      .from('admins')
+      .select('id, username, name, role, created_at')
+      .order('created_at', { ascending: true });
+    if (error) throw error;
+    return data || [];
+  }
+  const admins = readJson(adminsFilePath, []);
+  return admins.map(a => ({
+    id: a.id,
+    username: a.username,
+    name: a.name,
+    role: a.role,
+    created_at: a.created_at
+  }));
+}
+
+async function getAdminByUsername(username) {
+  if (isEnabled()) {
+    const { data, error } = await supabase
+      .from('admins')
+      .select('*')
+      .eq('username', username.toLowerCase().trim())
+      .maybeSingle();
+    if (error) throw error;
+    return data || null;
+  }
+  const admins = readJson(adminsFilePath, []);
+  return admins.find(a => a.username.toLowerCase() === username.toLowerCase().trim()) || null;
+}
+
+async function createAdmin({ username, passwordHash, name, role }) {
+  const newAdmin = {
+    id: 'admin-' + Date.now(),
+    username: username.toLowerCase().trim(),
+    password_hash: passwordHash,
+    name: name || username,
+    role: role || 'admin',
+    created_at: new Date().toISOString()
+  };
+
+  if (isEnabled()) {
+    const { error } = await supabase
+      .from('admins')
+      .insert(newAdmin);
+    if (error) throw error;
+    return {
+      id: newAdmin.id,
+      username: newAdmin.username,
+      name: newAdmin.name,
+      role: newAdmin.role,
+      created_at: newAdmin.created_at
+    };
+  }
+
+  const admins = readJson(adminsFilePath, []);
+  admins.push(newAdmin);
+  writeJson(adminsFilePath, admins);
+  return {
+    id: newAdmin.id,
+    username: newAdmin.username,
+    name: newAdmin.name,
+    role: newAdmin.role,
+    created_at: newAdmin.created_at
+  };
+}
+
+async function deleteAdmin(id) {
+  if (isEnabled()) {
+    const { count } = await supabase
+      .from('admins')
+      .select('*', { count: 'exact', head: true });
+    if (count <= 1) {
+      throw new Error('ไม่สามารถลบแอดมินคนสุดท้ายของระบบได้');
+    }
+    const { error } = await supabase
+      .from('admins')
+      .delete()
+      .eq('id', id);
+    if (error) throw error;
+    return true;
+  }
+
+  const admins = readJson(adminsFilePath, []);
+  if (admins.length <= 1) {
+    throw new Error('ไม่สามารถลบแอดมินคนสุดท้ายของระบบได้');
+  }
+  const filtered = admins.filter(a => a.id !== id);
+  writeJson(adminsFilePath, filtered);
+  return true;
+}
+
 module.exports = {
   isEnabled,
   getProducts,
@@ -210,5 +310,9 @@ module.exports = {
   getOrders,
   addOrder,
   getSettings,
-  updateSettings
+  updateSettings,
+  getAdmins,
+  getAdminByUsername,
+  createAdmin,
+  deleteAdmin
 };

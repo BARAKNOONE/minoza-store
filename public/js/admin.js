@@ -18,8 +18,10 @@
   // DOM: Tabs
   const tabBtnProducts = document.getElementById('tabBtnProducts');
   const tabBtnHomepage = document.getElementById('tabBtnHomepage');
+  const tabBtnUsers = document.getElementById('tabBtnUsers');
   const tabPaneProducts = document.getElementById('tabPaneProducts');
   const tabPaneHomepage = document.getElementById('tabPaneHomepage');
+  const tabPaneUsers = document.getElementById('tabPaneUsers');
 
   // DOM: Products Table & Filters
   const productsTableBody = document.getElementById('productsTableBody');
@@ -43,6 +45,8 @@
   const inputBadge = document.getElementById('prodBadge');
   const inputImage = document.getElementById('prodImage');
   const imagePreview = document.getElementById('imagePreview');
+  const inputHoverImage = document.getElementById('prodHoverImage');
+  const hoverImagePreview = document.getElementById('hoverImagePreview');
   const inputTagline = document.getElementById('prodTagline');
   const inputDescription = document.getElementById('prodDescription');
   const inputMaterial = document.getElementById('prodMaterial');
@@ -54,6 +58,8 @@
   // Drop Zones
   const mainDropZone = document.getElementById('mainDropZone');
   const mainFileInput = document.getElementById('mainFileInput');
+  const hoverDropZone = document.getElementById('hoverDropZone');
+  const hoverFileInput = document.getElementById('hoverFileInput');
   const galleryDropZone = document.getElementById('galleryDropZone');
   const galleryFileInput = document.getElementById('galleryFileInput');
 
@@ -153,11 +159,21 @@
     }
   }
 
-  // Setup Drop Zones for Main & Gallery
   setupDropZone(mainDropZone, mainFileInput, (url) => {
     inputImage.value = url;
     imagePreview.src = url;
   });
+
+  setupDropZone(hoverDropZone, hoverFileInput, (url) => {
+    if (inputHoverImage) inputHoverImage.value = url;
+    if (hoverImagePreview) hoverImagePreview.src = url;
+  });
+
+  if (inputHoverImage) {
+    inputHoverImage.addEventListener('input', () => {
+      if (hoverImagePreview) hoverImagePreview.src = inputHoverImage.value.trim() || '/images/jewelry/cross_chain_neck_back.jpg';
+    });
+  }
 
   setupDropZone(galleryDropZone, galleryFileInput, (url) => {
     if (!currentGallery.includes(url)) {
@@ -300,17 +316,33 @@
     tabBtnProducts.addEventListener('click', () => {
       tabBtnProducts.classList.add('active');
       tabBtnHomepage.classList.remove('active');
+      if (tabBtnUsers) tabBtnUsers.classList.remove('active');
       tabPaneProducts.classList.add('active');
       tabPaneHomepage.classList.remove('active');
+      if (tabPaneUsers) tabPaneUsers.classList.remove('active');
     });
 
     tabBtnHomepage.addEventListener('click', () => {
       tabBtnHomepage.classList.add('active');
       tabBtnProducts.classList.remove('active');
+      if (tabBtnUsers) tabBtnUsers.classList.remove('active');
       tabPaneHomepage.classList.add('active');
       tabPaneProducts.classList.remove('active');
+      if (tabPaneUsers) tabPaneUsers.classList.remove('active');
       loadHomepageSettings();
     });
+
+    if (tabBtnUsers) {
+      tabBtnUsers.addEventListener('click', () => {
+        tabBtnUsers.classList.add('active');
+        tabBtnProducts.classList.remove('active');
+        tabBtnHomepage.classList.remove('active');
+        if (tabPaneUsers) tabPaneUsers.classList.add('active');
+        tabPaneProducts.classList.remove('active');
+        tabPaneHomepage.classList.remove('active');
+        loadAdminUsers();
+      });
+    }
   }
 
   // Load Products & Orders
@@ -481,6 +513,8 @@
     ];
     renderPackages();
 
+    if (inputHoverImage) inputHoverImage.value = '';
+    if (hoverImagePreview) hoverImagePreview.src = '/images/jewelry/cross_chain_neck_back.jpg';
     if (inputIsSoldOut) inputIsSoldOut.checked = false;
     if (modalViewLiveBtn) modalViewLiveBtn.style.display = 'none';
 
@@ -506,6 +540,8 @@
     if (inputBadge) inputBadge.value = p.badge || 'BESTSELLER';
     if (inputImage) inputImage.value = p.image || '';
     if (imagePreview) imagePreview.src = p.image || '/images/jewelry/cross_chain_main.jpg';
+    if (inputHoverImage) inputHoverImage.value = p.hoverImage || '';
+    if (hoverImagePreview) hoverImagePreview.src = p.hoverImage || p.image || '/images/jewelry/cross_chain_neck_back.jpg';
     if (inputTagline) inputTagline.value = p.tagline || '';
     if (inputDescription) inputDescription.value = p.description || '';
     if (inputMaterial) inputMaterial.value = p.material || 'MATERIAL — พรีเมียม 316L Stainless Steel (กันน้ำ 100%)';
@@ -581,6 +617,7 @@
       originalPrice: inputOriginalPrice.value ? Number(inputOriginalPrice.value) : undefined,
       badge: inputBadge.value,
       image: inputImage.value.trim() || '/images/jewelry/cross_chain_main.jpg',
+      hoverImage: inputHoverImage && inputHoverImage.value.trim() ? inputHoverImage.value.trim() : undefined,
       gallery: currentGallery.length > 0 ? currentGallery : [inputImage.value.trim() || '/images/jewelry/cross_chain_main.jpg'],
       tagline: inputTagline.value.trim(),
       description: inputDescription.value.trim(),
@@ -599,7 +636,10 @@
 
       const res = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeader()
+        },
         body: JSON.stringify(payload)
       });
 
@@ -779,6 +819,250 @@
     }
   }
 
+  // =========================================================================
+  // AUTHENTICATION & ADMIN USER MANAGEMENT
+  // =========================================================================
+
+  function getAuthHeader() {
+    const token = localStorage.getItem('minoza_admin_token');
+    return token ? { 'Authorization': `Bearer ${token}` } : {};
+  }
+
+  async function checkAuth() {
+    const token = localStorage.getItem('minoza_admin_token');
+    const loginOverlay = document.getElementById('adminLoginView');
+    const userBadge = document.getElementById('adminUserBadge');
+    const currentAdminName = document.getElementById('currentAdminName');
+
+    if (!token) {
+      if (loginOverlay) loginOverlay.style.display = 'flex';
+      if (userBadge) userBadge.style.display = 'none';
+      return false;
+    }
+
+    try {
+      const res = await fetch('/api/admin/me', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error('Session invalid');
+      const data = await res.json();
+      if (data.success && data.user) {
+        if (loginOverlay) loginOverlay.style.display = 'none';
+        if (userBadge) userBadge.style.display = 'flex';
+        if (currentAdminName) currentAdminName.textContent = data.user.name || data.user.username;
+        return true;
+      } else {
+        throw new Error('Invalid user');
+      }
+    } catch (err) {
+      localStorage.removeItem('minoza_admin_token');
+      if (loginOverlay) loginOverlay.style.display = 'flex';
+      if (userBadge) userBadge.style.display = 'none';
+      return false;
+    }
+  }
+
+  async function handleLogin() {
+    const usernameInput = document.getElementById('loginUsername');
+    const passwordInput = document.getElementById('loginPassword');
+    const alertEl = document.getElementById('loginAlert');
+    const submitBtn = document.getElementById('loginSubmitBtn');
+
+    if (!usernameInput || !passwordInput) return;
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value;
+
+    if (alertEl) alertEl.style.display = 'none';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'กำลังตรวจสอบ...';
+    }
+
+    try {
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+      }
+
+      localStorage.setItem('minoza_admin_token', data.token);
+      localStorage.setItem('minoza_admin_user', JSON.stringify(data.user));
+
+      const loginOverlay = document.getElementById('adminLoginView');
+      if (loginOverlay) loginOverlay.style.display = 'none';
+
+      const userBadge = document.getElementById('adminUserBadge');
+      if (userBadge) userBadge.style.display = 'flex';
+      const currentAdminName = document.getElementById('currentAdminName');
+      if (currentAdminName) currentAdminName.textContent = data.user.name || data.user.username;
+
+      showToast(`ยินดีต้อนรับคุณ ${data.user.name || data.user.username}`);
+      await loadData();
+    } catch (err) {
+      if (alertEl) {
+        alertEl.textContent = err.message;
+        alertEl.style.display = 'block';
+      }
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'เข้าสู่ระบบ (Log In) 🔒';
+      }
+    }
+  }
+
+  async function logout() {
+    try {
+      await fetch('/api/admin/logout', {
+        method: 'POST',
+        headers: getAuthHeader()
+      });
+    } catch (e) {}
+
+    localStorage.removeItem('minoza_admin_token');
+    localStorage.removeItem('minoza_admin_user');
+    const loginOverlay = document.getElementById('adminLoginView');
+    if (loginOverlay) loginOverlay.style.display = 'flex';
+    const userBadge = document.getElementById('adminUserBadge');
+    if (userBadge) userBadge.style.display = 'none';
+    showToast('ออกจากระบบเรียบร้อยแล้ว');
+  }
+
+  async function loadAdminUsers() {
+    const tbody = document.getElementById('adminUsersTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 20px;">กำลังโหลดรายชื่อผู้ดูแล...</td></tr>`;
+
+    try {
+      const res = await fetch('/api/admin/users', { headers: getAuthHeader() });
+      if (res.status === 401) {
+        checkAuth();
+        return;
+      }
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.error || 'Failed to load users');
+
+      const users = data.users || [];
+      if (!users.length) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 20px;">ไม่พบรายชื่อผู้ดูแลในระบบ</td></tr>`;
+        return;
+      }
+
+      const currentTokenUser = JSON.parse(localStorage.getItem('minoza_admin_user') || '{}');
+
+      tbody.innerHTML = users.map(u => {
+        const isSelf = currentTokenUser && currentTokenUser.id === u.id;
+        const isLast = users.length <= 1;
+        const roleBadge = u.role === 'superadmin'
+          ? `<span style="background: #e0e7ff; color: #3730a3; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 700;">Super Admin</span>`
+          : u.role === 'staff'
+          ? `<span style="background: #f1f5f9; color: #475569; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 700;">Staff</span>`
+          : `<span style="background: #ecfdf5; color: #047857; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 700;">Admin</span>`;
+
+        const dateStr = u.created_at ? new Date(u.created_at).toLocaleDateString('th-TH') : '-';
+
+        const deleteBtn = (isSelf || isLast)
+          ? `<button type="button" disabled style="background: #f1f5f9; color: #94a3b8; border: none; padding: 5px 10px; border-radius: 4px; font-size: 12px; cursor: not-allowed;" title="${isSelf ? 'ไม่สามารถลบบัญชีตัวเองได้' : 'ไม่สามารถลบแอดมินคนสุดท้ายได้'}">ลบไม่ได้</button>`
+          : `<button type="button" onclick="window.MinozaAdmin.deleteAdminUser('${u.id}', '${escapeHtml(u.username)}')" style="background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; padding: 5px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; font-weight: 600;">🗑️ ลบ</button>`;
+
+        return `
+          <tr>
+            <td><strong style="color: #0f172a;">${u.username}</strong> ${isSelf ? '<span style="font-size: 11px; color: #64748b;">(คุณ)</span>' : ''}</td>
+            <td>${u.name || '-'}</td>
+            <td>${roleBadge}</td>
+            <td style="color: #64748b; font-size: 12.5px;">${dateStr}</td>
+            <td style="text-align: right;">${deleteBtn}</td>
+          </tr>
+        `;
+      }).join('');
+    } catch (err) {
+      console.error('loadAdminUsers error:', err);
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 20px; color: #dc2626;">โหลดข้อมูลไม่สำเร็จ: ${err.message}</td></tr>`;
+    }
+  }
+
+  function openCreateUserModal() {
+    const modal = document.getElementById('adminUserModal');
+    const alertEl = document.getElementById('userModalAlert');
+    const form = document.getElementById('adminUserForm');
+    if (form) form.reset();
+    if (alertEl) alertEl.style.display = 'none';
+    if (modal) modal.classList.add('active');
+  }
+
+  function closeUserModal() {
+    const modal = document.getElementById('adminUserModal');
+    if (modal) modal.classList.remove('active');
+  }
+
+  async function handleCreateUser() {
+    const username = document.getElementById('newAdminUsername').value.trim();
+    const name = document.getElementById('newAdminName').value.trim();
+    const password = document.getElementById('newAdminPassword').value;
+    const role = document.getElementById('newAdminRole').value;
+    const alertEl = document.getElementById('userModalAlert');
+    const saveBtn = document.getElementById('btnSaveAdminUser');
+
+    if (alertEl) alertEl.style.display = 'none';
+    if (saveBtn) {
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'กำลังบันทึก...';
+    }
+
+    try {
+      const res = await fetch('/api/admin/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeader()
+        },
+        body: JSON.stringify({ username, name, password, role })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'สร้างบัญชีแอดมินไม่สำเร็จ');
+      }
+
+      closeUserModal();
+      showToast(`เพิ่มแอดมิน "${username}" เรียบร้อยแล้ว`);
+      await loadAdminUsers();
+    } catch (err) {
+      if (alertEl) {
+        alertEl.textContent = err.message;
+        alertEl.style.display = 'block';
+      }
+    } finally {
+      if (saveBtn) {
+        saveBtn.disabled = false;
+        saveBtn.textContent = '💾 บันทึกแอดมินใหม่';
+      }
+    }
+  }
+
+  async function deleteAdminUser(id, username) {
+    if (!confirm(`คุณแน่ใจหรือไม่ว่าต้องการลบแอดมิน "${username}" ออกจากระบบ?`)) return;
+
+    try {
+      const res = await fetch(`/api/admin/users/${id}`, {
+        method: 'DELETE',
+        headers: getAuthHeader()
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'ลบไม่สำเร็จ');
+      }
+
+      showToast(`ลบแอดมิน "${username}" เรียบร้อยแล้ว`);
+      await loadAdminUsers();
+    } catch (err) {
+      showToast(err.message, true);
+    }
+  }
+
   // Event Listeners
   if (searchInput) searchInput.addEventListener('input', renderProducts);
   if (categoryFilter) categoryFilter.addEventListener('change', renderProducts);
@@ -800,9 +1084,20 @@
     addPackageTier,
     removePackageTier,
     updatePackageField,
-    saveHomepageSettings
+    saveHomepageSettings,
+    handleLogin,
+    logout,
+    openCreateUserModal,
+    closeUserModal,
+    handleCreateUser,
+    deleteAdminUser
   };
 
   // Init
-  document.addEventListener('DOMContentLoaded', loadData);
+  document.addEventListener('DOMContentLoaded', async () => {
+    const isAuthed = await checkAuth();
+    if (isAuthed) {
+      await loadData();
+    }
+  });
 })();

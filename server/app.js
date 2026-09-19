@@ -9,6 +9,7 @@ const orderRoutes = require('./routes/orders');
 const productRoutes = require('./routes/products');
 const uploadRoutes = require('./routes/upload');
 const settingsRoutes = require('./routes/settings');
+const authRoutes = require('./routes/auth');
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api', orderRoutes);
+app.use('/api/admin', authRoutes.router);
 
 // Admin Dashboard route
 app.get('/admin', (req, res) => {

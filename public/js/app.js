@@ -154,7 +154,8 @@ window.MinozaStore = {
           <a href="/product/${p.slug || p.id}" class="sava-card-media" style="position: relative; display: block; overflow: hidden;">
             ${badgePill}
             ${soldOverlay}
-            <img src="${mainImg}" alt="${p.name}" loading="lazy" onerror="this.src='/images/jewelry/cross_chain_main.jpg'" style="${isSoldOut ? 'filter: grayscale(40%);' : ''}" />
+            <img src="${mainImg}" class="img-primary" alt="${p.name}" loading="lazy" onerror="this.src='/images/jewelry/cross_chain_main.jpg'" style="${isSoldOut ? 'filter: grayscale(40%);' : ''}" />
+            ${p.hoverImage ? `<img src="${p.hoverImage}" class="img-hover" alt="${p.name} Hover" loading="lazy" onerror="this.style.display='none'" />` : ''}
             ${quickAddBtn}
           </a>
           <div class="sava-card-body">

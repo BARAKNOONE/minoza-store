@@ -45,9 +45,6 @@
           <span style="font-size: 8px;">▼</span>
         </button>
 
-        <button class="btn-data-stack" onclick="openAdminModal()" title="View Sales Data Stack" style="font-size: 10px; padding: 4px 8px; border-radius: 2px;">
-          Data Stack
-        </button>
 
         <button class="sava-icon-btn" onclick="window.location.href='/#bestSellers'" title="Search">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -632,20 +629,6 @@
     </div>
   </aside>
 
-  <!-- Sales Data Stack Modal -->
-  <div class="admin-modal" id="adminModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2100; padding: 20px;">
-    <div style="max-width: 800px; margin: 40px auto; background: #fff; border-radius: 8px; padding: 24px; max-height: 85vh; overflow-y: auto;">
-      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;">
-        <h3 style="font-size: 18px; font-weight: 800;">📊 MINOZA Live Sales Data Stack</h3>
-        <button onclick="closeAdminModal()" style="background: none; font-size: 20px; border: none; cursor: pointer;">✕</button>
-      </div>
-      <div style="margin-top: 16px;">
-        <div id="adminDataFeed" style="background: #0f172a; color: #38bdf8; font-family: monospace; font-size: 12px; padding: 16px; border-radius: 6px; overflow-x: auto; min-height: 200px;">
-          Loading telemetry...
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Scripts -->
   <script src="/js/tracking.js"></script>
@@ -1274,18 +1257,6 @@
       setInterval(tick, 1000);
     }
 
-    function openAdminModal() {
-      document.getElementById('adminModal').style.display = 'block';
-      fetch('/api/orders')
-        .then(r => r.json())
-        .then(data => {
-          document.getElementById('adminDataFeed').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
-        });
-    }
-
-    function closeAdminModal() {
-      document.getElementById('adminModal').style.display = 'none';
-    }
 
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {

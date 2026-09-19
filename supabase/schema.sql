@@ -36,6 +36,17 @@ alter table products enable row level security;
 alter table orders enable row level security;
 alter table site_settings enable row level security;
 
+create table if not exists admins (
+  id text primary key,
+  username text unique not null,
+  password_hash text not null,
+  name text,
+  role text default 'admin',
+  created_at timestamptz not null default now()
+);
+
+alter table admins enable row level security;
+
 -- Storage bucket for admin-uploaded product images (server/routes/upload.js).
 -- Create it once (Project > Storage > New bucket), name: uploads, Public: ON.
 -- Or run:

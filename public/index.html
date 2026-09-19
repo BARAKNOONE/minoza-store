@@ -59,9 +59,6 @@
           <span style="font-size: 8px;">▼</span>
         </button>
 
-        <button class="btn-data-stack" onclick="openAdminModal()" title="View Sales Data Stack" style="font-size: 10px; padding: 4px 8px; border-radius: 2px;">
-          Data Stack
-        </button>
 
         <button class="sava-icon-btn" onclick="document.getElementById('bestSellers').scrollIntoView({behavior: 'smooth'})" title="Search">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -202,7 +199,8 @@
       <div class="sava-product-card" id="card-riviera-silver">
         <a href="/product/riviera-silver" class="sava-card-media">
           <span class="sava-badge-pill">NEW</span>
-          <img src="/images/jewelry/riviera_silver.jpg" alt="RIVIERA | SILVER" loading="lazy" />
+          <img src="/images/jewelry/riviera_silver.jpg" class="img-primary" alt="RIVIERA | SILVER" loading="lazy" />
+          <img src="/images/jewelry/riviera_watch_silver.jpg" class="img-hover" alt="RIVIERA | SILVER Hover" loading="lazy" />
           <button type="button" class="sava-quick-add-btn" onclick="event.preventDefault(); window.MinozaStore.addToCart('riviera-silver')">Quick Add +</button>
         </a>
         <div class="sava-card-body">
@@ -222,7 +220,8 @@
       <div class="sava-product-card" id="card-minoza-one-white">
         <a href="/product/minoza-one-white" class="sava-card-media">
           <span class="sava-badge-pill">BESTSELLER</span>
-          <img src="/images/jewelry/minoza_one_white.jpg" alt="MINOZA ONE WHITE | SILVER" loading="lazy" />
+          <img src="/images/jewelry/minoza_one_white.jpg" class="img-primary" alt="MINOZA ONE WHITE | SILVER" loading="lazy" />
+          <img src="/images/jewelry/riviera_watch_twotone.jpg" class="img-hover" alt="MINOZA ONE WHITE | SILVER Hover" loading="lazy" />
           <button type="button" class="sava-quick-add-btn" data-i18n="quickAdd" onclick="event.preventDefault(); window.MinozaStore.addToCart('minoza-one-white')">ใส่ตะกร้า +</button>
         </a>
         <div class="sava-card-body">
@@ -242,7 +241,8 @@
       <div class="sava-product-card" id="card-cross-chain">
         <a href="/product/cross-chain" class="sava-card-media">
           <span class="sava-badge-pill">BESTSELLER</span>
-          <img src="/images/jewelry/cross_chain_silver.jpg" alt="CROSS CHAIN | SILVER" loading="lazy" />
+          <img src="/images/jewelry/cross_chain_silver.jpg" class="img-primary" alt="CROSS CHAIN | SILVER" loading="lazy" />
+          <img src="/images/jewelry/cross_chain_neck_back.jpg" class="img-hover" alt="CROSS CHAIN | SILVER Hover" loading="lazy" />
           <button type="button" class="sava-quick-add-btn" data-i18n="quickAdd" onclick="event.preventDefault(); window.MinozaStore.addToCart('cross-chain')">ใส่ตะกร้า +</button>
         </a>
         <div class="sava-card-body">
@@ -262,7 +262,8 @@
       <div class="sava-product-card" id="card-cross-bracelet">
         <a href="/product/cross-bracelet" class="sava-card-media">
           <span class="sava-badge-pill">BESTSELLER</span>
-          <img src="/images/jewelry/cross_bracelet_silver.jpg" alt="CROSS BRACELET | SILVER" loading="lazy" />
+          <img src="/images/jewelry/cross_bracelet_silver.jpg" class="img-primary" alt="CROSS BRACELET | SILVER" loading="lazy" />
+          <img src="/images/jewelry/cross_bracelet_model.jpg" class="img-hover" alt="CROSS BRACELET | SILVER Hover" loading="lazy" />
           <button type="button" class="sava-quick-add-btn" data-i18n="quickAdd" onclick="event.preventDefault(); window.MinozaStore.addToCart('cross-bracelet')">ใส่ตะกร้า +</button>
         </a>
         <div class="sava-card-body">
@@ -282,7 +283,8 @@
       <div class="sava-product-card" id="card-rope-chain-3mm">
         <a href="/product/rope-chain-3mm" class="sava-card-media">
           <span class="sava-badge-pill">BESTSELLER</span>
-          <img src="/images/jewelry/rope_chain_silver.jpg" alt="ROPE CHAIN 3MM | SILVER" loading="lazy" />
+          <img src="/images/jewelry/rope_chain_silver.jpg" class="img-primary" alt="ROPE CHAIN 3MM | SILVER" loading="lazy" />
+          <img src="/images/jewelry/rope_chain_model.jpg" class="img-hover" alt="ROPE CHAIN 3MM | SILVER Hover" loading="lazy" />
           <button type="button" class="sava-quick-add-btn" data-i18n="quickAdd" onclick="event.preventDefault(); window.MinozaStore.addToCart('rope-chain-3mm')">ใส่ตะกร้า +</button>
         </a>
         <div class="sava-card-body">
@@ -302,7 +304,8 @@
       <div class="sava-product-card" id="card-green-gemstone-chain">
         <a href="/product/green-gemstone-chain" class="sava-card-media">
           <span class="sava-badge-pill">BESTSELLER</span>
-          <img src="/images/jewelry/green_gemstone_gold.jpg" alt="GREEN GEMSTONE CHAIN | 18K GOLD" loading="lazy" />
+          <img src="/images/jewelry/green_gemstone_gold.jpg" class="img-primary" alt="GREEN GEMSTONE CHAIN | 18K GOLD" loading="lazy" />
+          <img src="/images/jewelry/white_clover_model.jpg" class="img-hover" alt="GREEN GEMSTONE CHAIN | 18K GOLD Hover" loading="lazy" />
           <button type="button" class="sava-quick-add-btn" data-i18n="quickAdd" onclick="event.preventDefault(); window.MinozaStore.addToCart('green-gemstone-chain')">ใส่ตะกร้า +</button>
         </a>
         <div class="sava-card-body">
@@ -322,7 +325,8 @@
       <div class="sava-product-card" id="card-rope-bracelet-3mm">
         <a href="/product/rope-bracelet-3mm" class="sava-card-media">
           <span class="sava-badge-pill">BESTSELLER</span>
-          <img src="/images/jewelry/rope_bracelet_silver.jpg" alt="ROPE BRACELET 3MM | SILVER" loading="lazy" />
+          <img src="/images/jewelry/rope_bracelet_silver.jpg" class="img-primary" alt="ROPE BRACELET 3MM | SILVER" loading="lazy" />
+          <img src="/images/jewelry/cross_bracelet_model.jpg" class="img-hover" alt="ROPE BRACELET 3MM | SILVER Hover" loading="lazy" />
           <button type="button" class="sava-quick-add-btn" data-i18n="quickAdd" onclick="event.preventDefault(); window.MinozaStore.addToCart('rope-bracelet-3mm')">ใส่ตะกร้า +</button>
         </a>
         <div class="sava-card-body">
@@ -342,7 +346,8 @@
       <div class="sava-product-card" id="card-ocean-clover-bracelet">
         <a href="/product/ocean-clover-bracelet" class="sava-card-media">
           <span class="sava-badge-pill">BESTSELLER</span>
-          <img src="/images/jewelry/ocean_clover_silver.jpg" alt="OCEAN CLOVER BRACELET | SILVER" loading="lazy" />
+          <img src="/images/jewelry/ocean_clover_silver.jpg" class="img-primary" alt="OCEAN CLOVER BRACELET | SILVER" loading="lazy" />
+          <img src="/images/jewelry/ocean_clover_model.jpg" class="img-hover" alt="OCEAN CLOVER BRACELET | SILVER Hover" loading="lazy" />
           <button type="button" class="sava-quick-add-btn" data-i18n="quickAdd" onclick="event.preventDefault(); window.MinozaStore.addToCart('ocean-clover-bracelet')">ใส่ตะกร้า +</button>
         </a>
         <div class="sava-card-body">
@@ -357,6 +362,7 @@
           </div>
         </div>
       </div>
+
     </div>
 
     <!-- Bottom Centered Link -->
@@ -595,21 +601,6 @@
     </div>
   </div>
 
-  <!-- 11. Sales Data Stack Modal (For Admin & Conversions Verification) -->
-  <div class="admin-modal" id="adminModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2100; padding: 20px;">
-    <div style="max-width: 800px; margin: 40px auto; background: #fff; border-radius: 8px; padding: 24px; max-height: 85vh; overflow-y: auto;">
-      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;">
-        <h3 style="font-size: 18px; font-weight: 800;">📊 MINOZA Live Sales Data Stack &amp; CAPI Logs</h3>
-        <button onclick="closeAdminModal()" style="background: none; font-size: 20px; border: none; cursor: pointer;">✕</button>
-      </div>
-      <div style="margin-top: 16px;">
-        <p style="font-size: 13px; color: #64748b; margin-bottom: 12px;">Data Stack live feed from <code>/api/orders</code>:</p>
-        <div id="adminDataFeed" style="background: #0f172a; color: #38bdf8; font-family: monospace; font-size: 12px; padding: 16px; border-radius: 6px; overflow-x: auto; min-height: 200px;">
-          Loading orders and pixel telemetry...
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Scripts -->
   <script src="/js/tracking.js"></script>
@@ -712,21 +703,6 @@
       }
     }
 
-    function openAdminModal() {
-      document.getElementById('adminModal').style.display = 'block';
-      fetch('/api/orders')
-        .then(r => r.json())
-        .then(data => {
-          document.getElementById('adminDataFeed').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
-        })
-        .catch(err => {
-          document.getElementById('adminDataFeed').textContent = 'Error loading data: ' + err.message;
-        });
-    }
-
-    function closeAdminModal() {
-      document.getElementById('adminModal').style.display = 'none';
-    }
 
     // Load and Apply Live Homepage Settings from Admin
     async function loadLiveHomepageSettings() {

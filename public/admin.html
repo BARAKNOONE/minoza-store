@@ -27,6 +27,12 @@
       <a href="/product/cross-chain" target="_blank" class="btn-nav-outline">
         <span>✝️ ดูหน้าสินค้า (PDP)</span>
       </a>
+      <div class="admin-user-pill" id="adminUserBadge" style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; background: #f1f5f9; padding: 6px 12px; border-radius: 20px; border: 1px solid #cbd5e1;">
+        <span>👤 <strong id="currentAdminName">Admin</strong></span>
+      </div>
+      <button type="button" class="btn-nav-outline" onclick="window.MinozaAdmin.logout()" style="color: #dc2626; border-color: #fca5a5; cursor: pointer;">
+        <span>🚪 ออกจากระบบ (Logout)</span>
+      </button>
     </div>
   </header>
 
@@ -37,6 +43,9 @@
     </button>
     <button type="button" class="admin-tab-btn" id="tabBtnHomepage">
       <span>🏠 จัดการหน้าแรก (Homepage Banners &amp; Tiles)</span>
+    </button>
+    <button type="button" class="admin-tab-btn" id="tabBtnUsers">
+      <span>👥 จัดการผู้ดูแลระบบ (Admin Users)</span>
     </button>
   </nav>
 
@@ -250,7 +259,37 @@
             <span>💾 บันทึกการตั้งค่าหน้าแรก (Save Homepage Settings)</span>
           </button>
         </div>
-      </form>
+    </div>
+
+    <!-- TAB 3: ADMIN USERS MANAGEMENT -->
+    <div class="tab-pane" id="tabPaneUsers">
+      <div class="admin-page-header">
+        <div class="admin-title-area">
+          <h1>👥 จัดการผู้ดูแลระบบ (Admin Users)</h1>
+          <p>จัดการบัญชีผู้มีสิทธิ์เข้าใช้งานหลังบ้าน เพิ่มแอดมินใหม่ และกำหนดบทบาทผู้ใช้งาน</p>
+        </div>
+        <button type="button" class="btn-primary-luxury" onclick="window.MinozaAdmin.openCreateUserModal()">
+          <span>➕ เพิ่มแอดมินใหม่ (Add Admin)</span>
+        </button>
+      </div>
+
+      <!-- Admin Users Table -->
+      <div class="admin-table-container">
+        <table class="admin-table" id="adminUsersTable">
+          <thead>
+            <tr>
+              <th>ชื่อผู้ใช้ (Username)</th>
+              <th>ชื่อ-นามสกุล / ชื่อแสดง</th>
+              <th>บทบาท (Role)</th>
+              <th>วันที่สร้าง</th>
+              <th style="text-align: right;">จัดการ</th>
+            </tr>
+          </thead>
+          <tbody id="adminUsersTableBody">
+            <tr><td colspan="5" style="text-align:center; padding: 20px;">กำลังโหลดรายชื่อผู้ดูแล...</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
   </main>
@@ -356,10 +395,30 @@
             </div>
           </div>
 
-          <!-- Section 3: Product Gallery (Multi-Images) -->
+          <!-- Section 2.1: Hover Image (Drag & Drop) -->
           <div class="form-section-box">
             <div class="form-section-title">
-              <span>🖼️ 3. รูปภาพประกอบสินค้า (Product Gallery - หลายมุมมอง)</span>
+              <span>🔄 3. รูปภาพสลับเมื่อเอาเมาส์ชี้ (Hover Image / Lifestyle Photo)</span>
+            </div>
+            <div class="form-group">
+              <label>รูปภาพสลับเมื่อลูกค้าเอาเมาส์ชี้ที่การ์ดสินค้าหน้าแรก (เช่น รูปนายแบบใส่ หรือมุมมองอื่น)</label>
+              <div class="drop-zone" id="hoverDropZone">
+                <span class="drop-zone-icon">📁</span>
+                <div class="drop-zone-text">คลิกหรือลากไฟล์รูปภาพสลับ Hover มาวางที่นี่</div>
+                <div class="drop-zone-sub">รองรับ JPG, PNG, WebP</div>
+                <input type="file" id="hoverFileInput" accept="image/*" />
+              </div>
+              <div class="image-preview-bar">
+                <img id="hoverImagePreview" src="/images/jewelry/cross_chain_neck_back.jpg" alt="Hover Preview" class="preview-thumb-main" onerror="this.src='/images/jewelry/cross_chain_neck_back.jpg'" />
+                <input type="text" id="prodHoverImage" placeholder="/images/jewelry/cross_chain_neck_back.jpg หรือ /uploads/..." />
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 4: Product Gallery (Multi-Images) -->
+          <div class="form-section-box">
+            <div class="form-section-title">
+              <span>🖼️ 4. รูปภาพประกอบสินค้า (Product Gallery - หลายมุมมอง)</span>
             </div>
             <div class="form-group">
               <label>ลากไฟล์รูปภาพหลายๆ รูปรวมกันมาวาง เพื่อเพิ่มภาพในแกลเลอรี</label>
@@ -482,6 +541,76 @@
         <button type="button" class="btn-secondary" onclick="window.MinozaAdmin.closeDeleteModal()">ยกเลิก</button>
         <button type="button" class="btn-primary-luxury" style="background: #dc2626;" onclick="window.MinozaAdmin.executeDelete()">🗑️ ลบสินค้านี้</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Add Admin User Modal -->
+  <div class="admin-modal-overlay" id="adminUserModal">
+    <div class="admin-modal-card" style="max-width: 480px; height: auto;">
+      <div class="admin-modal-header">
+        <h3>➕ เพิ่มผู้ดูแลระบบใหม่ (Add Admin)</h3>
+        <button type="button" class="btn-modal-close" onclick="window.MinozaAdmin.closeUserModal()">✕</button>
+      </div>
+      <form id="adminUserForm" onsubmit="event.preventDefault(); window.MinozaAdmin.handleCreateUser();" style="display: flex; flex-direction: column; flex: 1; min-height: 0;">
+        <div class="admin-modal-body" style="padding: 20px;">
+          <div id="userModalAlert" style="display: none; background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; font-size: 13px; padding: 10px 12px; border-radius: 6px; margin-bottom: 16px; font-weight: 600;"></div>
+
+          <div class="form-group">
+            <label for="newAdminUsername">ชื่อผู้ใช้ (Username) *</label>
+            <input type="text" id="newAdminUsername" required placeholder="เช่น manager1 (ตัวพิมพ์เล็กหรือตัวเลข)" />
+          </div>
+
+          <div class="form-group">
+            <label for="newAdminName">ชื่อ-นามสกุล / ชื่อแสดง *</label>
+            <input type="text" id="newAdminName" required placeholder="เช่น สมชาย ผู้จัดการ" />
+          </div>
+
+          <div class="form-group">
+            <label for="newAdminPassword">รหัสผ่าน (Password) *</label>
+            <input type="password" id="newAdminPassword" required minlength="6" placeholder="อย่างน้อย 6 ตัวอักษร" />
+          </div>
+
+          <div class="form-group">
+            <label for="newAdminRole">บทบาท (Role)</label>
+            <select id="newAdminRole">
+              <option value="superadmin">Super Admin (สิทธิ์สูงสุด)</option>
+              <option value="admin" selected>Admin (ผู้ดูแลทั่วไป)</option>
+              <option value="staff">Staff (เจ้าหน้าที่)</option>
+            </select>
+          </div>
+        </div>
+        <div class="admin-modal-footer">
+          <button type="button" class="btn-secondary" onclick="window.MinozaAdmin.closeUserModal()">ยกเลิก</button>
+          <button type="submit" class="btn-primary-luxury" id="btnSaveAdminUser">💾 บันทึกแอดมินใหม่</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Fullscreen Luxury Login Overlay (Shown when unauthenticated) -->
+  <div id="adminLoginView" style="display: none; position: fixed; inset: 0; background: linear-gradient(135deg, #090d16 0%, #0f172a 100%); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+    <div style="width: 100%; max-width: 420px; background: #ffffff; border-radius: 12px; padding: 36px 32px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); text-align: center;">
+      <div style="display: inline-block; background: #000; color: #fff; font-weight: 800; font-size: 13px; letter-spacing: 0.15em; padding: 6px 14px; border-radius: 4px; margin-bottom: 16px;">MINOZA</div>
+      <h2 style="font-size: 22px; font-weight: 800; color: #0f172a; margin-bottom: 6px;">ระบบจัดการหลังบ้าน</h2>
+      <p style="font-size: 13px; color: #64748b; margin-bottom: 24px;">กรุณาเข้าสู่ระบบเพื่อจัดการสินค้าและร้านค้า</p>
+
+      <form id="adminLoginForm" onsubmit="event.preventDefault(); window.MinozaAdmin.handleLogin();" style="text-align: left;">
+        <div id="loginAlert" style="display: none; background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; font-size: 13px; padding: 10px 12px; border-radius: 6px; margin-bottom: 16px; font-weight: 600;"></div>
+        
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label style="display: block; font-size: 12.5px; font-weight: 700; color: #334155; margin-bottom: 6px;">ชื่อผู้ใช้ (Username)</label>
+          <input type="text" id="loginUsername" required placeholder="admin" style="width: 100%; padding: 11px 14px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 14px;" />
+        </div>
+
+        <div class="form-group" style="margin-bottom: 24px;">
+          <label style="display: block; font-size: 12.5px; font-weight: 700; color: #334155; margin-bottom: 6px;">รหัสผ่าน (Password)</label>
+          <input type="password" id="loginPassword" required placeholder="••••••••" style="width: 100%; padding: 11px 14px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 14px;" />
+        </div>
+
+        <button type="submit" id="loginSubmitBtn" style="width: 100%; background: #000000; color: #ffffff; border: none; padding: 13px; border-radius: 6px; font-weight: 700; font-size: 14px; cursor: pointer; transition: background 0.2s;">
+          เข้าสู่ระบบ (Log In) 🔒
+        </button>
+      </form>
     </div>
   </div>
 
