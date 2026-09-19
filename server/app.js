@@ -43,13 +43,37 @@ app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/admin.html'));
 });
 
+let cachedProductHtml = null;
+function getProductHtmlTemplate() {
+  if (cachedProductHtml && process.env.NODE_ENV === 'production') {
+    return cachedProductHtml;
+  }
+  const possiblePaths = [
+    path.join(__dirname, '../public/product.html'),
+    path.join(process.cwd(), 'public/product.html'),
+    path.join(__dirname, 'public/product.html'),
+    path.join(__dirname, '../../public/product.html')
+  ];
+  for (const p of possiblePaths) {
+    if (fs.existsSync(p)) {
+      try {
+        cachedProductHtml = fs.readFileSync(p, 'utf8');
+        return cachedProductHtml;
+      } catch (e) {}
+    }
+  }
+  return null;
+}
+
 // Product details route with Server-Side Hydration (zero flicker, zero delay)
 app.get(['/product/:id', '/product/:id/*'], async (req, res) => {
   try {
     const rawId = req.params.id ? String(req.params.id).replace(/\/+$/, '').trim() : '';
     const product = await store.getProduct(rawId);
-    const htmlPath = path.join(__dirname, '../public/product.html');
-    let html = fs.readFileSync(htmlPath, 'utf8');
+    let html = getProductHtmlTemplate();
+    if (!html) {
+      return res.sendFile(path.join(__dirname, '../public/product.html'));
+    }
 
     if (product) {
       // 1. Pre-render Page Titles & Head Meta
