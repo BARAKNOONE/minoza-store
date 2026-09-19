@@ -7,9 +7,23 @@
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api" },
     { "source": "/product/(.*)", "destination": "/api" },
-    { "source": "/admin", "destination": "/api" }
+    { "source": "/admin", "destination": "/api" },
+    { "source": "/", "destination": "/api" },
+    { "source": "/index.html", "destination": "/api" }
   ],
   "headers": [
+    {
+      "source": "/",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate, max-age=0" }
+      ]
+    },
+    {
+      "source": "/index.html",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate, max-age=0" }
+      ]
+    },
     {
       "source": "/api/(.*)",
       "headers": [

@@ -31,7 +31,12 @@ window.MinozaStore = {
 
   fetchProducts: async function () {
     try {
-      const res = await fetch('/api/products');
+      if (window.__INITIAL_PRODUCTS__ && Array.isArray(window.__INITIAL_PRODUCTS__) && window.__INITIAL_PRODUCTS__.length > 0) {
+        this.products = window.__INITIAL_PRODUCTS__;
+        return;
+      }
+      const ts = Date.now();
+      const res = await fetch(`/api/products?_t=${ts}`, { cache: 'no-store' });
       this.products = await res.json();
     } catch (err) {
       console.error('Failed to load products:', err);
@@ -126,6 +131,12 @@ window.MinozaStore = {
   renderCatalog: function () {
     const grid = document.getElementById('bestsellersGrid') || document.getElementById('catalogGrid');
     if (!grid || !this.products.length) return;
+
+    // Avoid wiping the grid if server already rendered the exact cards
+    const currentCards = grid.querySelectorAll('.sava-product-card');
+    if (window.__INITIAL_PRODUCTS__ && currentCards.length === this.products.length) {
+      return;
+    }
 
     const isThai = (localStorage.getItem('minozastore_lang') || 'th') === 'th';
 

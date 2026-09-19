@@ -23,8 +23,8 @@ app.use('/api/webhook/stripe', express.raw({ type: 'application/json' }));
 app.use(express.json({ limit: '30mb' }));
 app.use(express.urlencoded({ limit: '30mb', extended: true }));
 
-// Serve static frontend files from /public
-app.use(express.static(path.join(__dirname, '../public')));
+// Serve static frontend files from /public (index: false so SSR route handles home page)
+app.use(express.static(path.join(__dirname, '../public'), { index: false }));
 
 // API Routes
 app.use('/api', paymentRoutes);
@@ -59,6 +59,28 @@ function getProductHtmlTemplate() {
       try {
         cachedProductHtml = fs.readFileSync(p, 'utf8');
         return cachedProductHtml;
+      } catch (e) {}
+    }
+  }
+  return null;
+}
+
+let cachedIndexHtml = null;
+function getIndexHtmlTemplate() {
+  if (cachedIndexHtml && process.env.NODE_ENV === 'production') {
+    return cachedIndexHtml;
+  }
+  const possiblePaths = [
+    path.join(__dirname, '../public/index.html'),
+    path.join(process.cwd(), 'public/index.html'),
+    path.join(__dirname, 'public/index.html'),
+    path.join(__dirname, '../../public/index.html')
+  ];
+  for (const p of possiblePaths) {
+    if (fs.existsSync(p)) {
+      try {
+        cachedIndexHtml = fs.readFileSync(p, 'utf8');
+        return cachedIndexHtml;
       } catch (e) {}
     }
   }
@@ -220,9 +242,104 @@ app.get(['/product/:id', '/product/:id/*'], async (req, res) => {
   }
 });
 
-// Fallback to index.html (Home Page)
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/index.html'));
-});
+// Home page route with Server-Side Hydration (zero flicker, immediate up-to-date products & images)
+async function renderHomePage(req, res) {
+  try {
+    const [products, settings] = await Promise.all([
+      store.getProducts().catch(() => []),
+      store.getSettings().catch(() => ({}))
+    ]);
+
+    let html = getIndexHtmlTemplate();
+    if (!html) {
+      return res.sendFile(path.join(__dirname, '../public/index.html'));
+    }
+
+    // 1. Pre-render Bestsellers Grid with latest products
+    if (Array.isArray(products) && products.length > 0) {
+      const isThai = true;
+      const cardsHtml = products.map(p => {
+        const isSoldOut = Boolean(p.isSoldOut);
+        const badgePill = isSoldOut
+          ? `<span class="sava-badge-pill" style="background: #dc2626; color: #fff; border: 1px solid #b91c1c;">SOLD OUT</span>`
+          : `<span class="sava-badge-pill">${p.badge || 'BESTSELLER'}</span>`;
+
+        const origPriceHtml = p.originalPrice
+          ? `<span class="orig-price" data-thb="${Number(p.originalPrice).toLocaleString()} ฿">${Number(p.originalPrice).toLocaleString()} ฿</span>`
+          : '';
+
+        const quickAddBtn = isSoldOut
+          ? `<button type="button" class="sava-quick-add-btn" disabled style="background: #94a3b8; color: #fff; cursor: not-allowed; opacity: 0.85;">สินค้าหมด</button>`
+          : `<button type="button" class="sava-quick-add-btn" data-i18n="quickAdd" onclick="event.preventDefault(); window.MinozaStore.addToCart('${p.id}')">ใส่ตะกร้า +</button>`;
+
+        const soldOverlay = isSoldOut
+          ? `<div style="position: absolute; inset: 0; background: rgba(0,0,0,0.55); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 13.5px; letter-spacing: 0.05em; z-index: 2; pointer-events: none;">สินค้าหมดชั่วคราว</div>`
+          : '';
+
+        const mainImg = p.image || '/images/jewelry/cross_chain_main.jpg';
+
+        return `
+      <!-- Product: ${p.name} -->
+      <div class="sava-product-card ${isSoldOut ? 'product-sold-out' : ''}" id="card-${p.id}">
+        <a href="/product/${p.slug || p.id}" class="sava-card-media" style="position: relative; display: block; overflow: hidden;">
+          ${badgePill}
+          ${soldOverlay}
+          <img src="${mainImg}" class="img-primary" alt="${p.name}" loading="lazy" onerror="this.src='/images/jewelry/cross_chain_main.jpg'" style="${isSoldOut ? 'filter: grayscale(40%);' : ''}" />
+          ${p.hoverImage ? `<img src="${p.hoverImage}" class="img-hover" alt="${p.name} Hover" loading="lazy" onerror="this.style.display='none'" />` : ''}
+          ${quickAddBtn}
+        </a>
+        <div class="sava-card-body">
+          <div class="sava-card-rating">
+            <span class="stars">★★★★★</span>
+            <span>(${p.reviewCount || 120})</span>
+          </div>
+          <h3 class="sava-card-title"><a href="/product/${p.slug || p.id}">${p.name}</a></h3>
+          <div class="sava-card-pricing">
+            ${origPriceHtml}
+            <span class="sale-price" data-thb="${Number(p.price).toLocaleString()} ฿">${Number(p.price).toLocaleString()} ฿</span>
+          </div>
+        </div>
+      </div>`;
+      }).join('\n');
+
+      html = html.replace(
+        /<!-- START_BESTSELLERS_GRID -->[\s\S]*?<!-- END_BESTSELLERS_GRID -->/i,
+        `<!-- START_BESTSELLERS_GRID -->\n    <div class="sava-product-grid" id="bestsellersGrid">\n${cardsHtml}\n    </div>\n    <!-- END_BESTSELLERS_GRID -->`
+      );
+    }
+
+    // 2. Pre-render Dual Tiles & Hero from Live Settings
+    if (settings && typeof settings === 'object') {
+      if (settings.tiles) {
+        if (settings.tiles.leftImage) {
+          html = html.replace(/(<img\s+src=")[^"]*("\s+alt="Limited Edition Watches"[^>]*>)/i, `$1${settings.tiles.leftImage}$2`);
+        }
+        if (settings.tiles.rightImage) {
+          html = html.replace(/(<img\s+src=")[^"]*("\s+alt="Bestseller Collection"[^>]*>)/i, `$1${settings.tiles.rightImage}$2`);
+        }
+      }
+      if (settings.hero && settings.hero.bgImage) {
+        html = html.replace(/(<section\s+class="sava-hero-section"[^>]*)>/i, `$1 style="background-image: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.6)), url('${settings.hero.bgImage}');">`);
+      }
+    }
+
+    // 3. Inject Initial Hydration Script
+    const safeProductsJson = JSON.stringify(products).replace(/</g, '\\u003c');
+    const safeSettingsJson = JSON.stringify(settings || {}).replace(/</g, '\\u003c');
+    const hydrationScript = `<script id="serverHomeData">window.__INITIAL_PRODUCTS__ = ${safeProductsJson}; window.__INITIAL_SETTINGS__ = ${safeSettingsJson};</script>`;
+    html = html.replace('</head>', `  ${hydrationScript}\n</head>`);
+
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+    return res.send(html);
+  } catch (err) {
+    console.error('Error rendering homepage SSR:', err);
+    return res.sendFile(path.join(__dirname, '../public/index.html'));
+  }
+}
+
+app.get(['/', '/index.html'], renderHomePage);
+
+// Fallback to index.html with SSR (Home Page)
+app.get('*', renderHomePage);
 
 module.exports = app;

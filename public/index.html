@@ -194,6 +194,7 @@
     </div>
 
     <!-- 4-Column Product Grid -->
+    <!-- START_BESTSELLERS_GRID -->
     <div class="sava-product-grid" id="bestsellersGrid">
       <!-- Product 1: Riviera Silver -->
       <div class="sava-product-card" id="card-riviera-silver">
@@ -364,6 +365,7 @@
       </div>
 
     </div>
+    <!-- END_BESTSELLERS_GRID -->
 
     <!-- Bottom Centered Link -->
     <div class="sava-all-bestsellers-cta">
@@ -770,7 +772,12 @@
 
     // Load and Apply Live Homepage Settings from Cache & API
     async function loadLiveHomepageSettings() {
-      // 1. Instant load from localStorage cache (0ms)
+      // 1. Instant load from server SSR (0ms)
+      if (window.__INITIAL_SETTINGS__ && Object.keys(window.__INITIAL_SETTINGS__).length > 0) {
+        applyHomepageSettings(window.__INITIAL_SETTINGS__);
+        return;
+      }
+      // Fallback to localStorage cache
       try {
         const cached = localStorage.getItem('minoza_homepage_settings');
         if (cached) applyHomepageSettings(JSON.parse(cached));
