@@ -1319,7 +1319,7 @@ button {
   height: 85vh;
   min-height: 520px;
   max-height: 820px;
-  background-image: url('/images/lifestyle/hero_yacht_model.jpg');
+  background-image: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.6)), url('/images/hero_yacht_model.jpg');
   background-size: cover;
   background-position: center top;
   display: flex;

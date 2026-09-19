@@ -130,20 +130,20 @@
   <!-- 4. Split 50/50 Dual Tiles (Limited Edition Watches & Bestseller Collection) -->
   <section class="sava-dual-tiles">
     <!-- Tile 1: Limited Edition Watches -->
-    <a href="/product/riviera-silver" class="sava-tile-card">
-      <img src="/images/lifestyle/banner_limited_watch.jpg" alt="Limited Edition Watches" loading="lazy" />
+    <a href="/#bestSellers" class="sava-tile-card">
+      <img src="/images/tile_watches.jpg" alt="Limited Edition Watches" loading="eager" />
       <div class="sava-tile-content">
-        <h2 class="sava-tile-title" data-i18n="tile1Title">นาฬิการุ่นลิมิเต็ด</h2>
-        <div class="sava-tile-btn" data-i18n="tile1Btn">ดูนาฬิกาทั้งหมด <span>→</span></div>
+        <h2 class="sava-tile-title">LIMITED EDITION</h2>
+        <div class="sava-tile-btn">ดูคอลเลกชันนาฬิกา <span>→</span></div>
       </div>
     </a>
 
     <!-- Tile 2: Bestseller Collection -->
-    <a href="#bestSellers" class="sava-tile-card">
-      <img src="/images/lifestyle/banner_bestsellers_villa.jpg" alt="Bestseller Collection" loading="lazy" />
+    <a href="/#bestSellers" class="sava-tile-card">
+      <img src="/images/tile_jewelry.jpg" alt="Bestseller Collection" loading="eager" />
       <div class="sava-tile-content">
-        <h2 class="sava-tile-title" data-i18n="tile2Title">คอลเลกชันขายดีที่สุด</h2>
-        <div class="sava-tile-btn" data-i18n="tile2Btn">เลือกซื้อเลย <span>→</span></div>
+        <h2 class="sava-tile-title">BESTSELLER COLLECTION</h2>
+        <div class="sava-tile-btn">เลือกซื้อเลย <span>→</span></div>
       </div>
     </a>
   </section>
@@ -704,54 +704,85 @@
     }
 
 
-    // Load and Apply Live Homepage Settings from Admin
-    async function loadLiveHomepageSettings() {
-      try {
-        const res = await fetch('/api/settings/homepage');
-        if (!res.ok) return;
-        const settings = await res.json();
+    // Apply Homepage Settings only if values differ (Prevents image flicker/flash)
+    function applyHomepageSettings(settings) {
+      if (!settings) return;
 
-        // 1. Hero
-        if (settings.hero) {
-          const heroSec = document.querySelector('.sava-hero-section');
-          if (heroSec && settings.hero.bgImage) {
+      // 1. Hero
+      if (settings.hero) {
+        const heroSec = document.querySelector('.sava-hero-section');
+        if (heroSec && settings.hero.bgImage) {
+          const targetBg = `url('${settings.hero.bgImage}')`;
+          if (!heroSec.style.backgroundImage || !heroSec.style.backgroundImage.includes(settings.hero.bgImage)) {
             heroSec.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.6)), url('${settings.hero.bgImage}')`;
           }
-          const heroRating = document.querySelector('.sava-hero-rating');
-          if (heroRating && settings.hero.rating) {
-            heroRating.textContent = settings.hero.rating;
-          }
-          const heroTitle = document.querySelector('.sava-hero-title');
-          if (heroTitle && settings.hero.title) {
-            heroTitle.innerHTML = settings.hero.title;
-          }
         }
+        const heroRating = document.querySelector('.sava-hero-rating');
+        if (heroRating && settings.hero.rating && heroRating.textContent.trim() !== settings.hero.rating.trim()) {
+          heroRating.textContent = settings.hero.rating;
+        }
+        const heroTitle = document.querySelector('.sava-hero-title');
+        if (heroTitle && settings.hero.title && heroTitle.innerHTML.trim() !== settings.hero.title.trim()) {
+          heroTitle.innerHTML = settings.hero.title;
+        }
+      }
 
-        // 2. Marquee
-        if (settings.marquee && settings.marquee.text) {
-          document.querySelectorAll('.sava-marquee-item').forEach(item => {
+      // 2. Marquee
+      if (settings.marquee && settings.marquee.text) {
+        document.querySelectorAll('.sava-marquee-item').forEach(item => {
+          if (item.textContent !== settings.marquee.text) {
             item.textContent = settings.marquee.text;
-          });
-        }
+          }
+        });
+      }
 
-        // 3. Tiles
-        if (settings.tiles) {
-          const tiles = document.querySelectorAll('.sava-dual-tiles .sava-tile-card');
-          if (tiles[0] && settings.tiles.leftImage) {
-            const img = tiles[0].querySelector('img');
-            if (img) img.src = settings.tiles.leftImage;
-            const title = tiles[0].querySelector('.sava-tile-title');
-            if (title && settings.tiles.leftTitle) title.textContent = settings.tiles.leftTitle;
-            if (settings.tiles.leftLink) tiles[0].href = settings.tiles.leftLink;
+      // 3. Tiles (Guarded to prevent image flash)
+      if (settings.tiles) {
+        const tiles = document.querySelectorAll('.sava-dual-tiles .sava-tile-card');
+        if (tiles[0] && settings.tiles.leftImage) {
+          const img = tiles[0].querySelector('img');
+          if (img && img.getAttribute('src') !== settings.tiles.leftImage) {
+            img.src = settings.tiles.leftImage;
           }
-          if (tiles[1] && settings.tiles.rightImage) {
-            const img = tiles[1].querySelector('img');
-            if (img) img.src = settings.tiles.rightImage;
-            const title = tiles[1].querySelector('.sava-tile-title');
-            if (title && settings.tiles.rightTitle) title.textContent = settings.tiles.rightTitle;
-            if (settings.tiles.rightLink) tiles[1].href = settings.tiles.rightLink;
+          const title = tiles[0].querySelector('.sava-tile-title');
+          if (title && settings.tiles.leftTitle && title.textContent !== settings.tiles.leftTitle) {
+            title.textContent = settings.tiles.leftTitle;
+          }
+          if (settings.tiles.leftLink && tiles[0].getAttribute('href') !== settings.tiles.leftLink) {
+            tiles[0].href = settings.tiles.leftLink;
           }
         }
+        if (tiles[1] && settings.tiles.rightImage) {
+          const img = tiles[1].querySelector('img');
+          if (img && img.getAttribute('src') !== settings.tiles.rightImage) {
+            img.src = settings.tiles.rightImage;
+          }
+          const title = tiles[1].querySelector('.sava-tile-title');
+          if (title && settings.tiles.rightTitle && title.textContent !== settings.tiles.rightTitle) {
+            title.textContent = settings.tiles.rightTitle;
+          }
+          if (settings.tiles.rightLink && tiles[1].getAttribute('href') !== settings.tiles.rightLink) {
+            tiles[1].href = settings.tiles.rightLink;
+          }
+        }
+      }
+    }
+
+    // Load and Apply Live Homepage Settings from Cache & API
+    async function loadLiveHomepageSettings() {
+      // 1. Instant load from localStorage cache (0ms)
+      try {
+        const cached = localStorage.getItem('minoza_homepage_settings');
+        if (cached) applyHomepageSettings(JSON.parse(cached));
+      } catch (e) {}
+
+      // 2. Background sync from server
+      try {
+        const res = await fetch('/api/settings/homepage?_t=' + Date.now(), { cache: 'no-store' });
+        if (!res.ok) return;
+        const settings = await res.json();
+        localStorage.setItem('minoza_homepage_settings', JSON.stringify(settings));
+        applyHomepageSettings(settings);
       } catch (e) {
         console.warn('Could not load live homepage settings:', e);
       }
