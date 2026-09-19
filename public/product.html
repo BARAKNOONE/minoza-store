@@ -110,6 +110,7 @@
         <!-- Material Swatches -->
         <div class="sava-material-row">
           <span class="sava-material-label" data-i18n="pdpMaterial">MATERIAL — Premium 316L Stainless Steel (100% Waterproof)</span>
+          <!-- START_SWATCHES -->
           <div class="sava-swatches">
             <div class="sava-swatch-item active" title="Silver">
               <span class="swatch-color-box swatch-silver"></span>
@@ -120,6 +121,7 @@
               <span data-i18n="pdpColorGold">18K Gold</span>
             </div>
           </div>
+          <!-- END_SWATCHES -->
         </div>
 
         <!-- Minimalist Luxury BOGO Bar -->
@@ -708,20 +710,26 @@
           if (matEl) matEl.textContent = prod.material;
         }
 
-        if (Array.isArray(prod.colors) && prod.colors.length > 0) {
+        if (Array.isArray(prod.colors)) {
           const swatchesEl = document.querySelector('.sava-swatches');
           if (swatchesEl) {
-            swatchesEl.innerHTML = prod.colors.map((c, i) => {
-              const isGold = c.toLowerCase().includes('gold');
-              const isBlack = c.toLowerCase().includes('black');
-              const swatchClass = isGold ? 'swatch-gold' : (isBlack ? 'swatch-black' : 'swatch-silver');
-              return `
-                <div class="sava-swatch-item ${i === 0 ? 'active' : ''}" onclick="selectSwatch(this, '${c}')" title="${c}">
-                  <span class="swatch-color-box ${swatchClass}" style="${isBlack ? 'background:#18181b;' : ''}"></span>
-                  <span>${c}</span>
-                </div>
-              `;
-            }).join('');
+            if (prod.colors.length === 0) {
+              swatchesEl.innerHTML = '';
+              swatchesEl.style.display = 'none';
+            } else {
+              swatchesEl.style.display = 'flex';
+              swatchesEl.innerHTML = prod.colors.map((c, i) => {
+                const isGold = c.toLowerCase().includes('gold');
+                const isBlack = c.toLowerCase().includes('black');
+                const swatchClass = isGold ? 'swatch-gold' : (isBlack ? 'swatch-black' : 'swatch-silver');
+                return `
+                  <div class="sava-swatch-item ${i === 0 ? 'active' : ''}" onclick="selectSwatch(this, '${c}')" title="${c}">
+                    <span class="swatch-color-box ${swatchClass}" style="${isBlack ? 'background:#18181b;' : ''}"></span>
+                    <span>${c}</span>
+                  </div>
+                `;
+              }).join('');
+            }
           }
         }
 

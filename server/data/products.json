@@ -137,7 +137,14 @@
       "แถมกล่องพรีเมียม MINOZA Velvet Jewelry Box",
       "รับประกันสีไม่ลอก ไม่ดำตลอดอายุการใช้งาน"
     ],
-    "hoverImage": "/images/jewelry/cross_bracelet_model.jpg"
+    "hoverImage": "/images/jewelry/cross_bracelet_model.jpg",
+    "material": "พรีเมียม 316L Stainless Steel (กันน้ำ 100%)",
+    "colors": [
+      "Silver"
+    ],
+    "isSoldOut": false,
+    "inStock": true,
+    "updatedAt": "2026-09-19T02:24:56.160Z"
   },
   {
     "id": "rope-chain-3mm",

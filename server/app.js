@@ -175,22 +175,35 @@ app.get(['/product/:id', '/product/:id/*'], async (req, res) => {
       );
 
       // 5. Pre-render Swatches if present
-      if (Array.isArray(product.colors) && product.colors.length > 0) {
-        const swatchesHtml = product.colors.map((c, i) => {
-          const isGold = c.toLowerCase().includes('gold');
-          const isBlack = c.toLowerCase().includes('black');
-          const swatchClass = isGold ? 'swatch-gold' : (isBlack ? 'swatch-black' : 'swatch-silver');
-          return `
+      if (Array.isArray(product.colors)) {
+        let swatchesReplacement = '';
+        if (product.colors.length > 0) {
+          const swatchesHtml = product.colors.map((c, i) => {
+            const isGold = c.toLowerCase().includes('gold');
+            const isBlack = c.toLowerCase().includes('black');
+            const swatchClass = isGold ? 'swatch-gold' : (isBlack ? 'swatch-black' : 'swatch-silver');
+            return `
             <div class="sava-swatch-item ${i === 0 ? 'active' : ''}" onclick="selectSwatch(this, '${c}')" title="${c}">
               <span class="swatch-color-box ${swatchClass}" style="${isBlack ? 'background:#18181b;' : ''}"></span>
               <span>${c}</span>
             </div>`;
-        }).join('\n');
+          }).join('\n');
+          swatchesReplacement = `<!-- START_SWATCHES -->\n          <div class="sava-swatches">\n${swatchesHtml}\n          </div>\n          <!-- END_SWATCHES -->`;
+        } else {
+          swatchesReplacement = `<!-- START_SWATCHES -->\n          <div class="sava-swatches" style="display:none;"></div>\n          <!-- END_SWATCHES -->`;
+        }
 
-        html = html.replace(
-          /<div class="sava-swatches">[\s\S]*?<\/div>/i,
-          `<div class="sava-swatches">\n${swatchesHtml}\n          </div>`
-        );
+        if (html.includes('<!-- START_SWATCHES -->')) {
+          html = html.replace(
+            /<!-- START_SWATCHES -->[\s\S]*?<!-- END_SWATCHES -->/,
+            swatchesReplacement
+          );
+        } else {
+          html = html.replace(
+            /<div class="sava-swatches">[\s\S]*?<\/div>\s*<\/div>\s*<!-- Minimalist Luxury BOGO Bar -->/i,
+            `${swatchesReplacement}\n        </div>\n\n        <!-- Minimalist Luxury BOGO Bar -->`
+          );
+        }
       }
 
       // 6. Pre-render Packages if present
