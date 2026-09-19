@@ -772,6 +772,39 @@
       if (rightImage) rightImage.value = tiles.rightImage || '';
       if (rightPreview) rightPreview.src = tiles.rightImage || '/images/tile_jewelry.jpg';
 
+      // 4. Payment Methods Settings
+      const payments = settings.payments || {};
+      const promptpayInput = document.getElementById('settingPromptpayEnabled');
+      const codInput = document.getElementById('settingCodEnabled');
+      const promptpayBadge = document.getElementById('promptpayStatusBadge');
+      const codBadge = document.getElementById('codStatusBadge');
+
+      function updatePromptPayBadge(enabled) {
+        if (!promptpayBadge) return;
+        promptpayBadge.textContent = enabled ? 'เปิดใช้งาน' : 'ปิดใช้งาน';
+        promptpayBadge.style.background = enabled ? '#dcfce7' : '#fee2e2';
+        promptpayBadge.style.color = enabled ? '#15803d' : '#dc2626';
+      }
+
+      function updateCodBadge(enabled) {
+        if (!codBadge) return;
+        codBadge.textContent = enabled ? 'เปิดใช้งาน' : 'ปิดใช้งาน';
+        codBadge.style.background = enabled ? '#dcfce7' : '#fee2e2';
+        codBadge.style.color = enabled ? '#15803d' : '#dc2626';
+      }
+
+      if (promptpayInput) {
+        promptpayInput.checked = Boolean(payments.promptpayEnabled);
+        updatePromptPayBadge(promptpayInput.checked);
+        promptpayInput.onchange = () => updatePromptPayBadge(promptpayInput.checked);
+      }
+
+      if (codInput) {
+        codInput.checked = payments.codEnabled !== undefined ? Boolean(payments.codEnabled) : true;
+        updateCodBadge(codInput.checked);
+        codInput.onchange = () => updateCodBadge(codInput.checked);
+      }
+
       // Setup dropzones for Homepage images
       setupDropZone(document.getElementById('heroDropZone'), document.getElementById('heroFileInput'), (url) => {
         if (heroImage) heroImage.value = url;
@@ -828,6 +861,10 @@
         rightButton: 'เลือกซื้อเลย →',
         rightLink: '/#bestSellers',
         rightImage: document.getElementById('settingRightTileImage')?.value || '/images/tile_jewelry.jpg'
+      },
+      payments: {
+        promptpayEnabled: Boolean(document.getElementById('settingPromptpayEnabled')?.checked),
+        codEnabled: document.getElementById('settingCodEnabled') ? Boolean(document.getElementById('settingCodEnabled').checked) : true
       }
     };
 

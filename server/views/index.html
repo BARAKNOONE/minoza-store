@@ -573,14 +573,18 @@
 
           <div>
             <label style="display: block; font-size: 12px; font-weight: 700; margin-bottom: 6px;">เลือกวิธีชำระเงิน (Payment Method)</label>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-              <label style="border: 2px solid #000; border-radius: 6px; padding: 12px; display: flex; align-items: center; gap: 8px; cursor: pointer; background: #f8fafc;">
-                <input type="radio" name="mPayMethod" value="promptpay" checked />
-                <span><strong>PromptPay QR</strong> (สแกนจ่ายทันที)</span>
+            <div style="display: flex; flex-direction: column; gap: 10px;" id="mPayMethodsContainer">
+              <label id="mOptionCod" style="border: 2px solid #000; border-radius: 6px; padding: 12px; display: flex; align-items: center; gap: 8px; cursor: pointer; background: #f8fafc;">
+                <input type="radio" name="mPayMethod" value="cod" checked />
+                <span><strong>🚚 เก็บเงินปลายทาง (COD)</strong> (ตรวจรับของก่อนจ่ายเงินสด)</span>
               </label>
-              <label style="border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+              <label id="mOptionPromptPay" style="border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                <input type="radio" name="mPayMethod" value="promptpay" />
+                <span><strong>⚡ PromptPay QR</strong> (สแกนจ่ายทันที)</span>
+              </label>
+              <label id="mOptionCard" style="border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; display: flex; align-items: center; gap: 8px; cursor: pointer;">
                 <input type="radio" name="mPayMethod" value="card" />
-                <span><strong>Credit Card</strong> (Visa/Mastercard)</span>
+                <span><strong>💳 บัตรเครดิต/เดบิต</strong> (Visa/Mastercard)</span>
               </label>
             </div>
           </div>
@@ -768,6 +772,40 @@
           }
         }
       }
+
+      // 4. Payment Methods Visibility
+      if (settings.payments) {
+        const promptpayEnabled = Boolean(settings.payments.promptpayEnabled);
+        const optPromptPay = document.getElementById('mOptionPromptPay');
+        const optCod = document.getElementById('mOptionCod');
+        const radioCod = document.querySelector('input[name="mPayMethod"][value="cod"]');
+
+        if (optPromptPay) {
+          optPromptPay.style.display = promptpayEnabled ? 'flex' : 'none';
+        }
+        if (!promptpayEnabled) {
+          if (radioCod) radioCod.checked = true;
+          if (optCod) {
+            optCod.style.border = '2px solid #000';
+            optCod.style.background = '#f8fafc';
+          }
+        }
+      }
+
+      // Selection change listener for payment methods
+      document.querySelectorAll('input[name="mPayMethod"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+          document.querySelectorAll('#mPayMethodsContainer label').forEach(lbl => {
+            lbl.style.border = '1px solid #cbd5e1';
+            lbl.style.background = '#ffffff';
+          });
+          const parent = e.target.closest('label');
+          if (parent) {
+            parent.style.border = '2px solid #000';
+            parent.style.background = '#f8fafc';
+          }
+        });
+      });
     }
 
     // Load and Apply Live Homepage Settings from Cache & API

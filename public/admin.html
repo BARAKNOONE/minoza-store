@@ -260,9 +260,49 @@
           </div>
         </div>
 
+        <!-- 4. Payment Methods Section -->
+        <div class="form-section-box">
+          <div class="form-section-title">
+            <span>💳 4. ช่องทางการชำระเงิน (Payment Methods)</span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+            เปิดหรือปิดใช้งานช่องทางการชำระเงินบนหน้าร้าน หากยังไม่ได้เชื่อมต่อระบบ Stripe หรือ PromptPay สามารถกดปิดสวิตช์ชั่วคราวได้ทันที
+          </p>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <!-- PromptPay Toggle -->
+            <label style="display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border: 1.5px solid #e2e8f0; border-radius: 8px; background: #ffffff; cursor: pointer; transition: all 0.2s ease;">
+              <div style="display: flex; flex-direction: column; gap: 4px;">
+                <div style="font-weight: 800; font-size: 14.5px; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
+                  <span>⚡ PromptPay QR Code (สแกนจ่ายทันที)</span>
+                  <span id="promptpayStatusBadge" style="font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 700; background: #fee2e2; color: #dc2626;">ปิดใช้งาน</span>
+                </div>
+                <div style="font-size: 12.5px; color: var(--text-secondary);">เปิด/ปิดการสแกนจ่าย PromptPay บนหน้าสินค้าและตะกร้า (ปิดไว้ก่อนจนกว่าจะผูก Stripe/PromptPay)</div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <input type="checkbox" id="settingPromptpayEnabled" style="width: 22px; height: 22px; cursor: pointer; accent-color: #000;" />
+              </div>
+            </label>
+
+            <!-- COD Toggle -->
+            <label style="display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border: 1.5px solid #e2e8f0; border-radius: 8px; background: #ffffff; cursor: pointer; transition: all 0.2s ease;">
+              <div style="display: flex; flex-direction: column; gap: 4px;">
+                <div style="font-weight: 800; font-size: 14.5px; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
+                  <span>🚚 เก็บเงินปลายทาง (Cash on Delivery - COD)</span>
+                  <span id="codStatusBadge" style="font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 700; background: #dcfce7; color: #15803d;">เปิดใช้งาน</span>
+                </div>
+                <div style="font-size: 12.5px; color: var(--text-secondary);">ให้ลูกค้าเปิดกล่องตรวจเช็คของก่อนจ่ายเงินสดหน้าบ้าน (แนะนำเป็นช่องทางหลัก)</div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <input type="checkbox" id="settingCodEnabled" checked style="width: 22px; height: 22px; cursor: pointer; accent-color: #000;" />
+              </div>
+            </label>
+          </div>
+        </div>
+
         <div style="text-align: right; margin-top: 18px;">
           <button type="button" id="saveHomepageBtn" class="btn-primary-luxury" onclick="window.MinozaAdmin.saveHomepageSettings(event)">
-            <span>💾 บันทึกการตั้งค่าหน้าแรก (Save Homepage Settings)</span>
+            <span>💾 บันทึกการตั้งค่าหน้าแรกและระบบ (Save Settings)</span>
           </button>
         </div>
       </form>

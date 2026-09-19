@@ -1228,10 +1228,35 @@
     }
 
 
+    function initPaymentSettings() {
+      function apply(settings) {
+        if (!settings || !settings.payments) return;
+        const promptpayEnabled = Boolean(settings.payments.promptpayEnabled);
+        const cardPromptPay = document.getElementById('cardPayPromptPay');
+        const trustQr = document.querySelector('[data-i18n="pdpTrustQr"]');
+        if (cardPromptPay) {
+          cardPromptPay.style.display = promptpayEnabled ? 'flex' : 'none';
+        }
+        if (trustQr) {
+          trustQr.style.display = promptpayEnabled ? 'inline' : 'none';
+        }
+        if (!promptpayEnabled && currentPaymentType === 'promptpay') {
+          selectPaymentType('cod');
+        }
+      }
+
+      if (window.__INITIAL_SETTINGS__) {
+        apply(window.__INITIAL_SETTINGS__);
+      } else {
+        fetch('/api/settings/homepage?_t=' + Date.now()).then(r => r.json()).then(apply).catch(() => {});
+      }
+    }
+
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
       window.MinozaStore.init();
       syncProductFromApi();
+      initPaymentSettings();
       if (window.MinozaThaiAddress) {
         window.MinozaThaiAddress.init({
           provinceId: 'custProvince',

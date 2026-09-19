@@ -93,7 +93,10 @@ function getIndexHtmlTemplate() {
 app.get(['/product/:id', '/product/:id/*'], async (req, res) => {
   try {
     const rawId = req.params.id ? String(req.params.id).replace(/\/+$/, '').trim() : '';
-    const product = await store.getProduct(rawId);
+    const [product, settings] = await Promise.all([
+      store.getProduct(rawId),
+      store.getSettings().catch(() => ({}))
+    ]);
     let html = getProductHtmlTemplate();
     if (!html) {
       return res.sendFile(path.join(__dirname, '../public/product.html'));
@@ -243,9 +246,17 @@ app.get(['/product/:id', '/product/:id/*'], async (req, res) => {
         );
       }
 
-      // 7. Inject Server-Rendered JSON Data in <head> for zero-delay hydration
+      // 7. Payment Methods Visibility based on Settings
+      const isPromptPayEnabled = settings?.payments?.promptpayEnabled !== undefined ? Boolean(settings.payments.promptpayEnabled) : false;
+      if (!isPromptPayEnabled) {
+        html = html.replace('id="cardPayPromptPay"', 'id="cardPayPromptPay" style="display: none;"');
+        html = html.replace(/<span\s+data-i18n="pdpTrustQr"[^>]*>[\s\S]*?<\/span>/i, '<span data-i18n="pdpTrustQr" style="display: none;">✓ PromptPay QR</span>');
+      }
+
+      // 8. Inject Server-Rendered JSON Data in <head> for zero-delay hydration
       const safeJson = JSON.stringify(product).replace(/</g, '\\u003c');
-      const hydrationScript = `<script id="serverProductData">window.__INITIAL_PRODUCT__ = ${safeJson};</script>`;
+      const safeSettingsJson = JSON.stringify(settings || {}).replace(/</g, '\\u003c');
+      const hydrationScript = `<script id="serverProductData">window.__INITIAL_PRODUCT__ = ${safeJson}; window.__INITIAL_SETTINGS__ = ${safeSettingsJson};</script>`;
       html = html.replace('</head>', `  ${hydrationScript}\n</head>`);
     }
 
@@ -335,6 +346,12 @@ async function renderHomePage(req, res) {
       }
       if (settings.hero && settings.hero.bgImage) {
         html = html.replace(/(<section\s+class="sava-hero-section"[^>]*)>/i, `$1 style="background-image: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.6)), url('${settings.hero.bgImage}');">`);
+      }
+
+      // Pre-render Payment Methods in Homepage Checkout Modal
+      const isPromptPayEnabled = settings.payments?.promptpayEnabled !== undefined ? Boolean(settings.payments.promptpayEnabled) : false;
+      if (!isPromptPayEnabled) {
+        html = html.replace('id="mOptionPromptPay"', 'id="mOptionPromptPay" style="display: none;"');
       }
     }
 

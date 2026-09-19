@@ -18,5 +18,9 @@
     "rightButton": "เลือกซื้อเลย →",
     "rightLink": "/#bestSellers",
     "rightImage": "/images/tile_jewelry.jpg"
+  },
+  "payments": {
+    "promptpayEnabled": false,
+    "codEnabled": true
   }
 }
