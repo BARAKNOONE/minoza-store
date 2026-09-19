@@ -657,7 +657,7 @@
       originalPrice: inputOriginalPrice.value ? Number(inputOriginalPrice.value) : undefined,
       badge: inputBadge.value,
       image: inputImage.value.trim() || '/images/jewelry/cross_chain_main.jpg',
-      hoverImage: inputHoverImage && inputHoverImage.value.trim() ? inputHoverImage.value.trim() : undefined,
+      hoverImage: inputHoverImage ? inputHoverImage.value.trim() : undefined,
       gallery: currentGallery.length > 0 ? currentGallery : [inputImage.value.trim() || '/images/jewelry/cross_chain_main.jpg'],
       tagline: inputTagline.value.trim(),
       description: inputDescription.value.trim(),

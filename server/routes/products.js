@@ -52,6 +52,7 @@ router.post('/', async (req, res) => {
       price,
       originalPrice,
       image,
+      hoverImage,
       gallery,
       tagline,
       description,
@@ -99,7 +100,7 @@ router.post('/', async (req, res) => {
         title: bundle2Title || '2 ชิ้น — ซื้อ 1 แถม 1 ฟรี',
         qty: 2,
         price: bundle2Price !== undefined ? Number(bundle2Price) : Number(price),
-        originalPrice: (originalPrice ? Number(originalPrice) : Math.round(Number(price) * 1.3)) * 2,
+        originalPrice: originalPrice ? Number(originalPrice) * 2 : Math.round(Number(price) * 2.6),
         badge: 'BESTSELLER / คู่คุ้มสุด',
         freeShipping: true,
         subText: '✓ ฟรีค่าจัดส่งด่วนทั่วประเทศ'
@@ -118,6 +119,7 @@ router.post('/', async (req, res) => {
       price: Number(price),
       originalPrice: originalPrice ? Number(originalPrice) : Math.round(Number(price) * 1.3),
       image: mainImg,
+      hoverImage: hoverImage !== undefined ? (hoverImage ? hoverImage.trim() : '') : (galleryArr[1] || mainImg),
       gallery: galleryArr,
       tagline: tagline || '',
       description: description || '',
@@ -166,6 +168,7 @@ router.put('/:id', async (req, res) => {
       price,
       originalPrice,
       image,
+      hoverImage,
       gallery,
       tagline,
       description,
@@ -182,8 +185,16 @@ router.put('/:id', async (req, res) => {
     if (Array.isArray(gallery)) {
       galleryArr = gallery;
     }
-    if (mainImg && !galleryArr.includes(mainImg)) {
-      galleryArr.unshift(mainImg);
+    if (mainImg) {
+      if (current.image && current.image !== mainImg) {
+        const oldIdx = galleryArr.indexOf(current.image);
+        if (oldIdx !== -1) {
+          galleryArr.splice(oldIdx, 1);
+        }
+      }
+      if (!galleryArr.includes(mainImg)) {
+        galleryArr.unshift(mainImg);
+      }
     }
 
     const updatedProduct = {
@@ -195,6 +206,7 @@ router.put('/:id', async (req, res) => {
       price: price !== undefined ? Number(price) : current.price,
       originalPrice: originalPrice !== undefined ? Number(originalPrice) : current.originalPrice,
       image: mainImg,
+      hoverImage: hoverImage !== undefined ? (hoverImage ? hoverImage.trim() : '') : current.hoverImage,
       gallery: galleryArr,
       tagline: tagline !== undefined ? tagline : current.tagline,
       description: description !== undefined ? description : current.description,

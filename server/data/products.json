@@ -28,7 +28,15 @@
       "กล่องพรีเมียม MINOZA Leather Watch Box",
       "รับประกันตัวเรือนและกลไกศูนย์ 2 ปีเต็ม"
     ],
-    "hoverImage": "/images/jewelry/riviera_watch_silver.jpg"
+    "hoverImage": "/images/jewelry/riviera_watch_silver.jpg",
+    "material": "พรีเมียม 316L Stainless Steel (กันน้ำ 100%)",
+    "colors": [
+      "Silver",
+      "18K Gold"
+    ],
+    "isSoldOut": false,
+    "inStock": true,
+    "updatedAt": "2026-09-19T02:18:58.744Z"
   },
   {
     "id": "minoza-one-white",
