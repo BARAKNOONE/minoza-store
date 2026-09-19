@@ -35,8 +35,8 @@ async function sendMetaPurchaseEvent({
   fbc,
   eventId
 }) {
-  const pixelId = process.env.META_PIXEL_ID || 'MOCK_PIXEL_ID';
-  const accessToken = process.env.META_CAPI_ACCESS_TOKEN;
+  const pixelId = process.env.META_PIXEL_ID || '1997718753854281';
+  const accessToken = process.env.META_CAPI_ACCESS_TOKEN || 'EAAM7t3hnzxwBSsqqmC0pYn7On5Rjw47Lyhnq61G8BbxhEvPfJThSRZA1y5ZCB95EQHalwD8ijaObdkpTcEJ8hYxlkZCGR0AMkTSv0H5Y2cuvmG14dhSBZBc7ZBZA4v8siyfEmNGI21fNunrpMzvzMTqJPZB2Yv3w5j2nzFjwKR6yM3qeACawa3pq3UGlYCG5m6ZAJQZDZD';
 
   const normalizedPhone = normalizePhone(customer.phone);
   const nameParts = (customer.name || '').trim().split(/\s+/);
@@ -86,8 +86,8 @@ async function sendMetaPurchaseEvent({
   console.log(`[Meta CAPI] 🚀 Dispatching Purchase event for Order #${orderId} (Amount: ฿${amount})`);
   console.log(`[Meta CAPI] Event ID: ${eventId}, EMQ Match Fields: Phone, Name, City, IP, UA`);
 
-  if (!accessToken || pixelId === 'MOCK_PIXEL_ID') {
-    console.log(`[Meta CAPI - Demo Mode] Simulated successfully! (Add META_PIXEL_ID and META_CAPI_ACCESS_TOKEN in .env for production)`);
+  if (!accessToken) {
+    console.log(`[Meta CAPI - Demo Mode] Simulated successfully! (No access token found)`);
     return { success: true, mode: 'simulated', eventId, payload: eventPayload };
   }
 
