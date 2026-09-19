@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const store = require('../lib/store');
+const { sendMetaPurchaseEvent } = require('../services/metaCapi');
 
 // Initialize Stripe if valid secret key is present
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
@@ -78,6 +79,25 @@ router.post('/create-payment-intent', async (req, res) => {
     };
 
     await store.addOrder(newOrder);
+
+    // 🚀 Fire Meta CAPI Purchase event server-side (deduped with Pixel via eventId)
+    const capiEventId = eventId || `evt_${orderId}`;
+    sendMetaPurchaseEvent({
+      orderId,
+      amount: totalAmount,
+      currency: 'THB',
+      customer: {
+        name: customer.name,
+        phone: customer.phone,
+        email: customer.email,
+        items: rawItems
+      },
+      clientIp: req.headers['x-forwarded-for'] || req.socket.remoteAddress || '127.0.0.1',
+      userAgent: req.headers['user-agent'] || '',
+      fbp: req.headers['x-fbp'] || '',
+      fbc: req.headers['x-fbc'] || '',
+      eventId: capiEventId
+    }).catch(err => console.error('[CAPI Error]', err.message));
 
     console.log(`\n======================================================`);
     console.log(`🎉 [ORDER RECEIVED - ${paymentMethod.toUpperCase()}] Order #${orderId} | Total: ฿${totalAmount}`);
